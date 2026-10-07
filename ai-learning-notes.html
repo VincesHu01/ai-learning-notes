@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 学习笔记 · 体系化整理</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg:#0d1117; --bg2:#161b22; --fg:#e6edf3; --muted:#8b949e; --accent:#58a6ff;
+  --green:#3fb950; --border:#30363d; --code:#1f2937;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; }
+header { padding:28px 32px; background:linear-gradient(135deg,#161b22,#0d1117); border-bottom:1px solid var(--border); }
+header h1 { margin:0 0 6px; font-size:26px; color:#fff; }
+header p { margin:0; color:var(--muted); font-size:14px; }
+.layout { display:flex; min-height:calc(100vh - 110px); }
+nav { width:280px; flex:none; border-right:1px solid var(--border); background:var(--bg2); padding:18px 14px; position:sticky; top:0; align-self:flex-start; max-height:100vh; overflow:auto; }
+nav h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin:4px 8px 10px; }
+nav ul { list-style:none; margin:0; padding:0; }
+nav li a { display:block; padding:5px 10px; color:var(--fg); text-decoration:none; border-radius:6px; font-size:13.5px; }
+nav li.lvl2 a { padding-left:10px; font-weight:600; }
+nav li.lvl3 a { padding-left:22px; font-size:12.5px; color:var(--muted); }
+nav li a:hover { background:#21323f; color:var(--accent); }
+main { flex:1; padding:28px 40px 80px; max-width:980px; }
+h1,h2,h3,h4 { color:#fff; line-height:1.35; scroll-margin-top:16px; }
+h2 { font-size:22px; margin-top:38px; padding-bottom:8px; border-bottom:2px solid var(--accent); }
+h3 { font-size:18px; margin-top:26px; color:#cdd9e5; }
+h4 { font-size:15px; color:var(--accent); }
+p { margin:12px 0; }
+a { color:var(--accent); }
+code { background:var(--code); padding:2px 6px; border-radius:4px; font-family:"SFMono-Regular",Consolas,monospace; font-size:13px; color:#ffa657; }
+pre.code { background:var(--code); padding:14px 16px; border-radius:8px; overflow:auto; border:1px solid var(--border); }
+pre.code code { color:#e6edf3; padding:0; background:none; }
+.tbl { border-collapse:collapse; width:100%; margin:16px 0; font-size:14px; }
+.tbl th,.tbl td { border:1px solid var(--border); padding:8px 11px; text-align:left; vertical-align:top; }
+.tbl th { background:#1c2530; color:#fff; }
+.tbl tbody tr:nth-child(even) { background:#11161d; }
+blockquote { border-left:4px solid var(--accent); background:#11161d; margin:14px 0; padding:10px 16px; color:var(--muted); border-radius:0 8px 8px 0; }
+.mermaid { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; margin:18px 0; text-align:center; overflow:auto; }
+.mermaid svg { max-width:100%; height:auto; }
+.foot { margin-top:50px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
+@media (max-width:820px) { nav { display:none; } main { padding:20px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI 学习笔记 · 体系化整理</h1>
+  <p>思维导图 + 流程图可视化版 · 由真实 AI 学习对话提炼 · 覆盖 78 个豆包提问 + 9 个千问深度提问</p>
+</header>
+<div class="layout">
+<nav>
+  <h3>目录导航</h3>
+  <ul><li class="lvl1"><a href="#ai-学习笔记-体系化整理ai-learning-notes">AI 学习笔记 · 体系化整理（AI Learning Notes）</a></li>
+<li class="lvl2"><a href="#目录">目录</a></li>
+<li class="lvl2"><a href="#0-知识体系总览">0. 知识体系总览</a></li>
+<li class="lvl2"><a href="#模块一-大模型基础">模块一 · 大模型基础</a></li>
+<li class="lvl3"><a href="#11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</a></li>
+<li class="lvl3"><a href="#12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</a></li>
+<li class="lvl3"><a href="#13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</a></li>
+<li class="lvl3"><a href="#14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</a></li>
+<li class="lvl3"><a href="#15-从零训一个-01b-模型的完整流程">1.5 从零训一个 0.1B 模型的完整流程</a></li>
+<li class="lvl3"><a href="#16-moe-稀疏模型总参数-vs-激活参数">1.6 MoE 稀疏模型（总参数 vs 激活参数）</a></li>
+<li class="lvl3"><a href="#17-开源协议mit-apache-20-gpl">1.7 开源协议：MIT / Apache 2.0 / GPL</a></li>
+<li class="lvl2"><a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></li>
+<li class="lvl3"><a href="#21-预训练-vs-后训练">2.1 预训练 vs 后训练</a></li>
+<li class="lvl3"><a href="#22-对齐算法谱系">2.2 对齐算法谱系</a></li>
+<li class="lvl3"><a href="#23-基座模型接着编的问题">2.3 基座模型「接着编」的问题</a></li>
+<li class="lvl3"><a href="#24-scaling-law-与评测">2.4 Scaling Law 与评测</a></li>
+<li class="lvl3"><a href="#25-微调一个大模型的流程">2.5 微调一个大模型的流程</a></li>
+<li class="lvl2"><a href="#模块三-agent-体系">模块三 · Agent 体系</a></li>
+<li class="lvl3"><a href="#31-agent-的完整定义">3.1 Agent 的完整定义</a></li>
+<li class="lvl3"><a href="#32-harness执行运行时项目经理">3.2 Harness（执行运行时）=「项目经理」</a></li>
+<li class="lvl3"><a href="#33-mcp模型上下文协议ai-世界的-usb-c">3.3 MCP（模型上下文协议）=「AI 世界的 USB-C」</a></li>
+<li class="lvl3"><a href="#34-react-循环">3.4 ReAct 循环</a></li>
+<li class="lvl3"><a href="#35-rag检索增强生成">3.5 RAG（检索增强生成）</a></li>
+<li class="lvl3"><a href="#36-skill-vs-plugin">3.6 Skill vs Plugin</a></li>
+<li class="lvl3"><a href="#37-编排框架langchain-langgraph-autogen-react">3.7 编排框架：LangChain / LangGraph / AutoGen / ReAct</a></li>
+<li class="lvl3"><a href="#38-记忆检索与上下文">3.8 记忆检索与上下文</a></li>
+<li class="lvl3"><a href="#39-gpt-6-astra-对-react-链路的增强">3.9 GPT-6 Astra 对 ReAct 链路的增强</a></li>
+<li class="lvl3"><a href="#310-kv-cache小学生版">3.10 KV-Cache（小学生版）</a></li>
+<li class="lvl3"><a href="#311-其他概念速记">3.11 其他概念速记</a></li>
+<li class="lvl2"><a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></li>
+<li class="lvl3"><a href="#41-算力-显存-带宽-三大件">4.1 算力 / 显存 / 带宽 三大件</a></li>
+<li class="lvl3"><a href="#42-芯片如何训练大模型">4.2 芯片如何训练大模型</a></li>
+<li class="lvl3"><a href="#43-为什么放显存跑能不能放内存">4.3 为什么放显存跑？能不能放内存？</a></li>
+<li class="lvl3"><a href="#44-训练到使用的硬件旅程">4.4 训练到使用的硬件旅程</a></li>
+<li class="lvl3"><a href="#45-cuda-生态详细展开">4.5 CUDA 生态（详细展开）</a></li>
+<li class="lvl3"><a href="#46-ollama-与本地推理">4.6 Ollama 与本地推理</a></li>
+<li class="lvl3"><a href="#47-windows-显存-vs-macos-统一内存">4.7 Windows 显存 vs macOS 统一内存</a></li>
+<li class="lvl3"><a href="#48-mac-单核多核p-核e-核rtx-与常见显卡">4.8 Mac 单核/多核、P 核/E 核、RTX 与常见显卡</a></li>
+<li class="lvl3"><a href="#49-rtx-5070ti-5090-与-mac-对标">4.9 RTX 5070Ti / 5090 与 Mac 对标</a></li>
+<li class="lvl3"><a href="#410-大厂用什么训练">4.10 大厂用什么训练？</a></li>
+<li class="lvl3"><a href="#411-mac-m5-32g-能跑训练吗">4.11 Mac M5 32G 能跑训练吗？</a></li>
+<li class="lvl3"><a href="#412-ollama-qwen354b-解析">4.12 Ollama `qwen3.5:4b` 解析</a></li>
+<li class="lvl2"><a href="#模块五-大模型生态">模块五 · 大模型生态</a></li>
+<li class="lvl3"><a href="#51-大模型家族总览思维导图">5.1 大模型家族总览（思维导图）</a></li>
+<li class="lvl3"><a href="#52-gpt-家族55-56-6">5.2 GPT 家族：5.5 / 5.6 / 6</a></li>
+<li class="lvl3"><a href="#53-垂类-vs-通用模型">5.3 垂类 vs 通用模型</a></li>
+<li class="lvl3"><a href="#54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</a></li>
+<li class="lvl3"><a href="#55-产业链芯片-云厂商-第三方服务商">5.5 产业链：芯片 / 云厂商 / 第三方服务商</a></li>
+<li class="lvl3"><a href="#56-豆包的商业化">5.6 豆包的商业化</a></li>
+<li class="lvl3"><a href="#57-小米-mimo-系列">5.7 小米 MiMo 系列</a></li>
+<li class="lvl3"><a href="#58-各家通用模型擅长速查">5.8 各家通用模型擅长（速查）</a></li>
+<li class="lvl3"><a href="#59-具体模型科普">5.9 具体模型科普</a></li>
+<li class="lvl2"><a href="#模块六-ai-产品经理视角">模块六 · AI 产品经理视角</a></li>
+<li class="lvl3"><a href="#61-ai-产品经理的-ai-知识占比">6.1 AI 产品经理的 AI 知识占比</a></li>
+<li class="lvl3"><a href="#62-ai-产品评测与标注大厂语境">6.2 AI 产品评测与标注（大厂语境）</a></li>
+<li class="lvl3"><a href="#63-muse-qmuse-hive字节系">6.3 Muse / Qmuse / Hive（字节系）</a></li>
+<li class="lvl3"><a href="#64-工程与组织概念">6.4 工程与组织概念</a></li>
+<li class="lvl3"><a href="#65-9-家互联网公司面试素材">6.5 9 家互联网公司面试素材</a></li>
+<li class="lvl3"><a href="#66-能否应对-ai-产品面试">6.6 能否应对 AI 产品面试？</a></li>
+<li class="lvl3"><a href="#67-ai-味为什么重">6.7 「AI 味」为什么重？</a></li>
+<li class="lvl3"><a href="#68-chatgpt-如何操控软件界面爬取截图">6.8 ChatGPT 如何操控软件/界面/爬取/截图？</a></li>
+<li class="lvl3"><a href="#69-豆包答案的加粗引用表情如何实现">6.9 豆包答案的加粗/引用/表情如何实现？</a></li>
+<li class="lvl2"><a href="#模块七-深度原理追问千问-9-问">模块七 · 深度原理追问（千问 9 问）</a></li>
+<li class="lvl2"><a href="#问题覆盖索引">📋 问题覆盖索引</a></li>
+<li class="lvl3"><a href="#豆包ai学习荟萃24-问">豆包·AI学习荟萃（24 问）</a></li>
+<li class="lvl3"><a href="#豆包workbuddy走红原因25-问">豆包·WorkBuddy走红原因（25 问）</a></li>
+<li class="lvl3"><a href="#豆包大模型训练全流程29-问">豆包·大模型训练全流程（29 问）</a></li>
+<li class="lvl3"><a href="#千问深度-9-问">千问·深度 9 问</a></li>
+</ul>
+</nav>
+<main>
+<h1 id="ai-学习笔记-体系化整理ai-learning-notes">AI 学习笔记 · 体系化整理（AI Learning Notes）</h1>
+<blockquote>一份从真实对话中提炼的体系化 AI 学习笔记。内容覆盖：<strong>大模型基础、训练与对齐、Agent 体系、算力硬件、大模型生态、AI 产品经理视角</strong>，以及一组<strong>深度原理追问（千问 9 问）</strong>。  原始素材：用户在豆包（Doubao）导出的 3 段对话（共 78 个提问）+ 千问（Qianwen）分享页的 9 个深度提问。  本文力求「通俗易懂 + 保留专业术语」，并配思维导图与流程图帮助建立体系。文末附有 <strong>📋 问题覆盖索引</strong>，逐题标注答案所在章节，确保无遗漏。</blockquote>
+<p>---</p>
+<h2 id="目录">目录</h2>
+<p>1. <a href="#0-知识体系总览">知识体系总览（思维导图）</a></p>
+<p>2. <a href="#模块一-大模型基础">模块一 · 大模型基础</a></p>
+<p>3. <a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></p>
+<p>4. <a href="#模块三-agent-体系">模块三 · Agent 体系</a></p>
+<p>5. <a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></p>
+<p>6. <a href="#模块五-大模型生态">模块五 · 大模型生态</a></p>
+<p>7. <a href="#模块六-ai-产品经理视角">模块六 · AI 产品经理视角</a></p>
+<p>8. <a href="#模块七-深度原理追问千问-9-问">模块七 · 深度原理追问（千问 9 问）</a></p>
+<p>9. <a href="#-问题覆盖索引">📋 问题覆盖索引</a></p>
+<p>---</p>
+<h2 id="0-知识体系总览">0. 知识体系总览</h2>
+<div class="mermaid">
+mindmap
+  root((AI<br/>学习笔记))
+    大模型基础
+      参数与文件格式 GGUF/Safetensors
+      Tokenizer 分词器
+      Transformer 与 Attention
+      预训练 vs 推理
+      训练全流程 0.1B 实战
+      MoE 稀疏模型
+      开源协议 MIT/Apache/GPL
+    训练与对齐
+      预训练/后训练
+      SFT / RLHF / DPO / GRPO
+      RLVR / AgentRL / Reasoning RL
+      Scaling Law
+      评测 lm-eval-harness
+     Agent 体系
+      Agent=LLM+Harness+MCP+Skill+Memory
+      Harness 项目经理
+      MCP 工具协议 USB-C
+      ReAct 循环
+      RAG 检索增强
+      Skill vs Plugin
+      LangChain 编排框架
+    算力与硬件
+      算力/显存/带宽
+      前向/反向/分布式训练
+      CUDA 生态
+      Ollama 本地推理
+      GPU vs Mac 统一内存
+      RTX / Mac Studio
+    大模型生态
+      GPT 家族 5.5/5.6/6 Astra
+      Qwen3 / 豆包 Seed
+      Gemini / Claude
+      MiMo / 各家擅长
+      垂类 vs 通用
+      开放权重四成本
+      商业化 豆包
+    AI 产品经理
+      知识占比 45%
+      评测与标注
+      Muse/Qmuse/Hive
+      端到端/DevRel/Side Project
+      9 家面试素材
+</div>
+<p>---</p>
+<h2 id="模块一-大模型基础">模块一 · 大模型基础</h2>
+<h3 id="11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</h3>
+<p>用户下载的「大模型参数」本质上是<strong>成百上千万乃至上万亿个浮点数（权重）</strong>，训练结束后被序列化成二进制文件。常见格式：</p>
+<table class="tbl"><thead><tr><th>格式</th><th>全称 / 特点</th><th>典型使用方</th></tr></thead><tbody><tr><td><strong>GGUF</strong></td><td>GPT-Generated Unified Format， llama.cpp / Ollama 专用，单文件、自带分词器与元数据</td><td>本地推理（Ollama、LM Studio）</td></tr><tr><td><strong>Safetensors</strong></td><td>Hugging Face 推出，安全（无可执行代码）、极速加载的张量格式</td><td>HF 生态、训练/微调</td></tr><tr><td><strong>PyTorch <code>.bin</code> / <code>.pt</code></strong></td><td>传统 <code>torch.save</code> 权重，兼容性最好但加载较慢、有安全隐患</td><td>研究、旧模型</td></tr><tr><td><strong>AWQ / GPTQ</strong></td><td>量化（4-bit/8-bit）后的压缩权重，体积大幅缩小</td><td>显存受限的设备</td></tr></tbody></table>
+<blockquote><strong>体积参考</strong>：一个 7B~8B 的 FP16 模型约 <strong>13–14 GB</strong>；量化到 4-bit 后可降到约 4–5 GB，才能在消费级显卡/ Mac 上跑起来。</blockquote>
+<h3 id="12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</h3>
+<p>Tokenizer 把人类文本切成模型能处理的<strong> token（最小语义/字符单元）</strong>。它重要在：</p>
+<ul><li>决定<strong>词表大小</strong>与<strong>压缩率</strong>——同样一段话，token 数越少，推理越快、越省显存；</li><li>多语言（尤其是中文）切分策略直接影响模型效果；</li><li>手写一个 BPE（Byte-Pair Encoding）Tokenizer 是从零训模型的第一步：先统计语料里最高频的字节/字符对，逐层合并成子词。</li></ul>
+<div class="mermaid">
+flowchart LR
+  A[原始文本] --> B[按字节/字符切分]
+  B --> C[统计相邻对频率]
+  C --> D[合并最高频对 → 新子词]
+  D --> E[重复直到达到词表大小]
+  E --> F[BPE 词表 + 编码表]
+  F --> G[文本 ↔ token id 互转]
+</div>
+<h3 id="13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</h3>
+<p>Transformer 是现代大模型的<strong>统一架构</strong>，预训练和推理都基于它（但计算方式不同：训练并行处理整段；推理自回归逐 token 生成）。</p>
+<ul><li><strong>Attention（注意力）本质</strong>：让每个 token 在理解自己时，「抬头看一眼」上下文里和它最相关的其他 token。</li><li><strong>Q / K / V</strong>：</li><li><strong>Q（Query 查询）</strong>：「我在找什么信息」</li><li><strong>K（Key 键）</strong>：「我这里有什么信息标签」</li><li><strong>V（Value 值）</strong>：「我这里的具体信息内容」</li><li>计算 <strong>Q 与 K 的相似度</strong>（点积 + softmax 得到权重），用权重<strong>加权求和 V</strong>，得到融合了全局上下文的新表示。这个加权后的 V 直接用于<strong>预测下一个 token</strong>。</li><li><strong>前馈神经网络（FFN）</strong>：Attention 之后对每个位置独立做的两层全连接变换，负责「消化」注意力聚合来的信息、增加非线性表达力。神经网络（含 FFN）整体负责把输入映射到输出、拟合复杂函数。</li></ul>
+<div class="mermaid">
+flowchart TD
+  X[输入 token 序列] --> E[Embedding 嵌入]
+  E --> Q[K/Q/V 线性投影]
+  Q --> A["Attention: softmax(Q·Kᵀ/√d) · V"]
+  A --> N[Add & Norm]
+  N --> F[前馈神经网络 FFN]
+  F --> N2[Add & Norm]
+  N2 --> O[输出表示 → 预测下一 token]
+</div>
+<blockquote><strong>预训练 vs 推理中的 Q/K/V</strong>：两者都会产生 Q/K/V，因为都是把文本送进同一套 Transformer 算注意力。区别是预训练<strong>没有 KV-Cache</strong>（一次性并行算完整个序列），而推理为了生成第 N 个 token，会把前面所有 token 的 K/V 缓存下来（KV-Cache），避免每次重新计算历史。</blockquote>
+<h3 id="14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</h3>
+<ul><li><strong>训练的本质</strong>：调整海量浮点参数，使「给定前文，预测下一个字」的错误尽可能小。不是把书本背下来，而是统计学习人类语言的模式、事实与逻辑，最终产出一堆权重文件。</li><li><strong>训练（造模型）</strong>：输入海量文本 → 反复前向 + 反向传播 + 梯度更新 → 成本极高，需成千上万 GPU → 产出权重。</li><li><strong>推理（用模型）</strong>：加载训练好的权重 → 只做前向计算生成回答 → <strong>不改动任何参数</strong> → 可单卡 / 手机 / 本地。</li><li><strong>联系</strong>：训练产出权重，推理消费权重；推理效果上限由训练质量决定。</li><li><strong>类比</strong>：训练＝反复刷题并不断修改笔记；推理＝拿着写完的笔记做题，笔记不再修改。</li></ul>
+<blockquote><strong>iOS vs Windows 类比芯片</strong>：Windows 工作站 = GPU 训练集群（可插多卡、吃巨量显存、做分布式重型计算）；iOS 手机 = 终端（NPU 只能跑轻量模型推理，完全做不了万亿级训练，内存/算力/带宽全不够）。</blockquote>
+<h3 id="15-从零训一个-01b-模型的完整流程">1.5 从零训一个 0.1B 模型的完整流程</h3>
+<p>用户提出的「硬核实战清单」可拆为以下阶段（这也是理解大模型训练全貌的最佳路径）：</p>
+<div class="mermaid">
+flowchart TD
+  S0[原始语料 raw dump] --> S1[清洗语料]
+  S1 --> S2[手写 BPE Tokenizer]
+  S2 --> S3[搭建 Transformer 基座<br/>手写 Triton/FlexAttention kernel]
+  S3 --> S4[多卡预训练<br/>拟合 Scaling Law 并外推]
+  S4 --> S5["同一基座做对照:<br/>SFT / DPO / RLVR"]
+  S5 --> S6[lm-eval-harness 评测]
+  S6 --> S7[搭可验证环境 + Harness]
+  S7 --> S8[训长程 Agent<br/>鼓励 self-judge 循环]
+</div>
+<ul><li><strong>raw dump 清洗</strong>：去重、去噪、过滤低质/隐私数据，是质量基石。</li><li><strong>手写 kernel</strong>：用 Triton（NVIDIA）或 FlexAttention（Apple/跨平台）手写 attention 算子，测多卡训练/推理的性能增益——这是理解底层性能的关键。</li><li><strong>Scaling Law</strong>：用小规模实验拟合「参数量/数据量/算力 →  loss」的关系，再外推到更大规模该投多少资源。</li><li><strong>对照实验</strong>：在同一基座上分别跑 SFT / DPO / RLVR，直观对比不同对齐方式的效果。</li><li><strong>评测</strong>：用 lm-eval-harness 跑标准基准。</li><li><strong>Agent</strong>：最后接上 Harness，训能自我审视（self-judge）的长程 Agent。</li></ul>
+<h3 id="16-moe-稀疏模型总参数-vs-激活参数">1.6 MoE 稀疏模型（总参数 vs 激活参数）</h3>
+<p>稠密模型（Dense）每次推理都要激活全部参数；<strong>MoE（混合专家）</strong> 把参数分成多个「专家」，每个 token 只路由激活其中少数几个。</p>
+<ul><li>例：<strong>MiMo Pro</strong> 总参数约 1.02 万亿，激活参数仅约 420 亿——用「总参数大」保证容量，用「激活少」控制单次成本。</li><li><strong>豆包 Seed</strong> 约 200B 总参数 / 20B 激活，也是 MoE。</li></ul>
+<blockquote>这意味着「200B 模型」≠「每次都要算 200B」，实际计算量接近一个 20B 稠密模型，但能力上限更高。</blockquote>
+<h3 id="17-开源协议mit-apache-20-gpl">1.7 开源协议：MIT / Apache 2.0 / GPL</h3>
+<table class="tbl"><thead><tr><th>协议</th><th>宽松度</th><th>关键差异</th><th>典型模型</th></tr></thead><tbody><tr><td><strong>MIT</strong></td><td>最宽松</td><td>几乎无限制，只需保留版权声明</td><td>Qwen 部分、众多开源项目</td></tr><tr><td><strong>Apache 2.0</strong></td><td>宽松</td><td>含专利授权条款，商用友好</td><td>Qwen3-8B、Llama 系</td></tr><tr><td><strong>GPL</strong></td><td>强 copyleft</td><td>衍生作品必须同样开源</td><td>较少用于大模型权重</td></tr></tbody></table>
+<blockquote><strong>MIT 协议</strong>通俗说：你可以随意用、改、闭源商用，只要保留原作者署名即可。</blockquote>
+<p>---</p>
+<h2 id="模块二-训练与对齐">模块二 · 训练与对齐</h2>
+<h3 id="21-预训练-vs-后训练">2.1 预训练 vs 后训练</h3>
+<ul><li><strong>预训练（Pre-training）</strong>：在海量无标注文本上「学知识」，目标是预测下一个 token，建立语言/世界知识的底座。</li><li><strong>后训练（Post-training）</strong>：在预训练底座上「学听话」，让模型符合指令、对齐人类偏好、强化推理。包含 SFT、RLHF、DPO、RLVR 等。</li></ul>
+<blockquote>用户问「SFT 和 Post-training 是什么关系」——<strong>SFT 是后训练的一个具体阶段/手段</strong>，后训练是更大的总称。</blockquote>
+<h3 id="22-对齐算法谱系">2.2 对齐算法谱系</h3>
+<div class="mermaid">
+flowchart TD
+  Base[基座模型<br/>「可能接着你的问题乱编」] --> SFT[SFT 监督微调<br/>用人工示范教格式/指令]
+  SFT --> RLHF[RLHF<br/>PPO + 奖励模型 RM<br/>人类偏好对齐]
+  SFT --> DPO[DPO<br/>直接偏好优化<br/>无需单独 RM]
+  RLHF --> RLAIF[RLAIF<br/>AI 反馈替代人类反馈]
+  SFT --> RLVR[RLVR<br/>可验证奖励<br/>数学/代码有标准答案]
+  RLVR --> GRPO[GRPO<br/>组内相对奖励<br/>省去 critic]
+  RLVR --> ORPO[ORPO<br/>偏好融入 SFT 一步]
+  RLVR --> AgentRL[AgentRL<br/>在 Agent 轨迹上做强化]
+  RLVR --> ReasonRL[Reasoning RL<br/>强化推理链]
+</div>
+<ul><li><strong>SFT（Supervised Fine-Tuning）</strong>：用「指令-回答」示范数据微调，教模型按格式/指令作答。</li><li><strong>RLHF（Reinforcement Learning from Human Feedback）</strong>：训练一个<strong>奖励模型 RM</strong> 学习人类偏好，再用 <strong>PPO</strong> 强化学习让模型输出更高分回答。</li><li><strong>DPO（Direct Preference Optimization）</strong>：绕开单独训练 RM 与 PPO，直接在「偏好对（更优/更劣）」上优化，更简洁稳定。</li><li><strong>RLAIF</strong>：用 AI 反馈替代人类反馈，降低标注成本。</li><li><strong>RLVR（Reinforcement Learning with Verifiable Rewards）</strong>：当答案<strong>可验证</strong>（数学有标准解、代码能跑通测试）时，用「对/错」作为奖励，比主观偏好更可靠。</li><li><strong>GRPO</strong>：组内样本相对打分，省去价值网络（critic），训练更高效，是 DeepSeek 等常用的强化变体。</li><li><strong>ORPO</strong>：把「偏好对齐」合并进 SFT 一步完成。</li><li><strong>AgentRL / Reasoning RL</strong>：在 Agent 执行轨迹 / 长链推理上做强化学习。</li></ul>
+<blockquote><strong>记忆法（用户原创）</strong>：SFT＝「照着标准答案抄」；RLHF＝「请老师打分再改」；DPO＝「直接告诉你 A 比 B 好，你往 A 靠」；RLVR＝「做有标准答案的题，对了给糖」。 <strong>叠加顺序</strong>：实际工业界常把 SFT → RLHF/DPO → RLVR/AgentRL 串起来用，并非互斥。</blockquote>
+<h3 id="23-基座模型接着编的问题">2.3 基座模型「接着编」的问题</h3>
+<p>预训练底座只是「续写机器」，你问它问题，它可能<strong>顺着问题继续编下去</strong>（幻觉/不跟随指令）。这正是对齐（SFT/RLHF/推理强化）要解决的：把「续写」改造成「听懂指令、基于事实作答」。</p>
+<h3 id="24-scaling-law-与评测">2.4 Scaling Law 与评测</h3>
+<ul><li><strong>Scaling Law</strong>：模型性能随参数量、数据量、算力平滑提升的经验律。可先在小火上做实验拟合曲线，再外推大模型该投多少资源。</li><li><strong>评测（如何搭评测集 / 怎么评）</strong>：</li></ul>
+<p>  1. 选基准（见下）；</p>
+<p>  2. 构造/清洗题目集（含领域专属题，如旅游管理文献题）；</p>
+<p>  3. 用 <strong>lm-eval-harness</strong> 跑分，对比不同对齐策略；</p>
+<p>  4. 关注「能力边界」而非单点分数。</p>
+<ul><li><strong>国际主流 LLM 评测标准</strong>（千问 9 问之一）：MMLU（知识）、HumanEval / MBPP（代码）、SWE-bench（真实工程修复）、ARC-AGI（类通用智能）、GPQA（研究生级科学）、以及第三方榜单 <strong>Artificial Analysis Intelligence Index（AA Index）</strong> 综合智力指数。</li></ul>
+<h3 id="25-微调一个大模型的流程">2.5 微调一个大模型的流程</h3>
+<p>数据准备 → Tokenizer 对齐 → 继续预训练（可选）→ <strong>SFT</strong> → <strong>DPO/RLHF</strong> → <strong>RLVR</strong>（可验证任务）→ 评测 → 迭代。</p>
+<p>---</p>
+<h2 id="模块三-agent-体系">模块三 · Agent 体系</h2>
+<h3 id="31-agent-的完整定义">3.1 Agent 的完整定义</h3>
+<blockquote><strong>Agent = LLM（大脑） + Harness（执行运行时/调度框架） + MCP（工具协议） + Skill（技能 SOP） + Memory（记忆）</strong></blockquote>
+<p>用户经典追问「Agent 不就是能自主决策吗，要 Harness 干嘛？」——<strong>LLM 只负责「想」，Harness 负责「做」</strong>：把 LLM 的意图变成真实世界的动作、并管理失败重试与多步状态。</p>
+<div class="mermaid">
+flowchart TD
+  U[用户任务] --> M[记忆模块检索历史]
+  M --> C[打包: 新输入 + 长期记忆 → 上下文]
+  C --> L[LLM 大脑思考]
+  L -->|结构化指令| H[Harness 调度层]
+  H -->|调用| P["MCP 工具池:<br/>rag_local / rag_web<br/>代码沙盒 / 读文件 / API"]
+  P -->|Observation| L
+  L -->|self-judge 完成?| D{任务结束?}
+  D -- 否 --> L
+  D -- 是 --> R[返回结果给 Agent/用户]
+</div>
+<h3 id="32-harness执行运行时项目经理">3.2 Harness（执行运行时）=「项目经理」</h3>
+<p>Harness 负责：任务拆解、状态跟踪、错误重试、子 Agent 调度、把 LLM 的结构化指令翻译成工具调用。类比<strong>项目经理</strong>——模型是「首席架构师」，Harness 带着团队把蓝图落地。</p>
+<ul><li><strong>从 0→1 写一个 Harness</strong> 要考虑：任务队列、上下文窗口管理、工具注册与超时、重试与回滚、子 Agent 派发、安全沙箱、可观测日志。</li><li><strong>DeepSeek-Harness vs WorkBuddy</strong>：前者是<strong>开源底盘</strong>（可自行组装、改造成自家产品）；后者是<strong>闭源成品</strong>（开箱即用的工作 Agent）。自行组装的优势：开发者/企业可深度定制、控成本、嵌私有数据，不被单一供应商锁定。</li></ul>
+<h3 id="33-mcp模型上下文协议ai-世界的-usb-c">3.3 MCP（模型上下文协议）=「AI 世界的 USB-C」</h3>
+<p>MCP 是标准化「模型 ↔ 工具/数据源」的通用接口，让任意模型都能即插即用地调用文件、数据库、API、代码沙盒。类比 USB-C：统一接口，免去为每个工具单独适配。</p>
+<ul><li>用户确认句「harness 通过 MCP 调用各类工具完成 Agent 指令，比如写代码就让写代码的 Agent 在沙箱运行」——<strong>正确</strong>。</li><li><strong>Webhook</strong> = 一种「事件到来时自动回调通知」的 HTTP 机制（如工具执行完主动推结果）；<strong>大模型路由</strong> = 把不同任务分发给不同模型/工具的调度逻辑（如简单问答走小模型、编码走 Codex）。</li></ul>
+<h3 id="34-react-循环">3.4 ReAct 循环</h3>
+<p><strong>ReAct = Reason（推理）+ Act（行动）</strong>，是 Agent 最小循环范式：</p>
+<div class="mermaid">
+flowchart LR
+  T[Thought 思考: 我该调什么工具] --> A[Action 行动: 调用工具]
+  A --> O[Observation 观察: 拿到结果]
+  O --> T
+</div>
+<ul><li>ReAct 发生在 <strong>LLM 思考→产出指令</strong>这一环；其产物（Action/Observation）直接交给 Harness 执行。</li><li>用户问「ReAct 运行结果会直接传至 Harness 吗？」——是的，LLM 输出 Action，Harness 执行并回填 Observation，再 Loop。</li><li><strong>Harness 的本质</strong>：是一段<strong>代码</strong>（调度运行时），不只是「配置」。</li></ul>
+<h3 id="35-rag检索增强生成">3.5 RAG（检索增强生成）</h3>
+<p>RAG 让模型在回答前先「查资料」，缓解幻觉、注入私有/最新知识。</p>
+<div class="mermaid">
+flowchart TD
+  subgraph 传统静态RAG
+    Q1[用户问题] --> R1[向量库检索相关片段]
+    R1 --> C1[拼进 prompt 上下文]
+    C1 --> L1[LLM 生成回答]
+  end
+  subgraph 动态RAG_as_MCP
+    Q2[用户任务] --> H[Harness]
+    H -->|MCP 调用| T["rag_local / rag_web"]
+    T -->|Observation| H
+  end
+</div>
+<ul><li><strong>本地向量库 RAG</strong>：把文档切块→向量化→存库，检索最相近片段拼进上下文。</li><li><strong>Web 联网 RAG</strong>：没有本地库时，Harness 直接通过 MCP 调 <code>rag_web</code> 去网上检索——此时 RAG 不再是「前置拼接」，而是 <strong>Agent 链路里的一个工具</strong>（动态 RAG）。</li><li><strong>RAG 与模型参数如何协作（保继刚 2022《XX 旅游》论文案例）</strong>：模型参数提供「通用学术常识与方法论」，RAG 提供「论文原文片段与具体结论」，两者在 prompt 中结合，模型据此生成有出处的回答；若问题超出参数记忆或需要最新/私有内容，RAG 补位。</li><li><strong>RAG 也会幻觉</strong>：检索到错误/无关片段、切块割裂语义、或模型过度依赖少量片段而忽略全局时，仍可能答错。所以 RAG 是「减幻觉」而非「免幻觉」。</li><li><strong>大模型如何据 RAG 拼接上下文生成</strong>：把检索片段作为证据文本放进 prompt，模型在生成时「以证据为准」组织答案（类似开卷考试）。</li><li><strong>组织答案的信息源头在 prompt 中</strong>：是的——最终答案所依据的「材料」主要来自 prompt（含 RAG 注入），模型参数是「理解/组织能力」的来源。</li></ul>
+<h3 id="36-skill-vs-plugin">3.6 Skill vs Plugin</h3>
+<ul><li><strong>Skill（技能）</strong>：以<strong>纯文本 Markdown 为主的 SOP/工作流说明</strong>，告诉 Agent「这类任务怎么做」，轻量、易读、可热插拔。Skill 不必然是代码——多数就是结构化提示词 + 步骤。</li><li><strong>Plugin（插件）</strong>：通常是<strong>封装好的功能模块/可执行程序</strong>（如一个 API 服务、一段代码），提供具体能力调用。</li><li>区别：Skill 偏「方法论/知识注入」，Plugin 偏「能力封装/程序扩展」。</li></ul>
+<h3 id="37-编排框架langchain-langgraph-autogen-react">3.7 编排框架：LangChain / LangGraph / AutoGen / ReAct</h3>
+<ul><li><strong>LangChain / LangGraph</strong>：把 LLM、工具、记忆、检索「编排」起来的开发框架，降低搭 Agent 的门槛。</li><li><strong>AutoGen</strong>：微软的多 Agent 对话协作框架。</li><li><strong>没有 LangChain 还能工作吗？</strong> 能。LangChain 只是「胶水」，本质是你自己写循环：调 LLM → 解析输出 → 调工具 → 回填 → 再调 LLM。<strong>ReAct、Plugin、Tool 不依赖 LangChain 也能组合</strong>，框架只是让工程更省事。</li></ul>
+<h3 id="38-记忆检索与上下文">3.8 记忆检索与上下文</h3>
+<ul><li><strong>记忆（Memory）</strong>：长期沉淀的用户偏好、历史任务、领域知识，按需检索。</li><li><strong>上下文（Context）</strong>：当前这次推理真正「喂给模型」的文本窗口 = 新输入 + 检索到的记忆 + 工具结果等。</li><li><strong>为什么先记忆检索再上下文？</strong> 为了<strong>把最相关的历史/知识精准塞进有限的上下文窗口</strong>，既减少无关噪声，也<strong>降低幻觉</strong>（让模型有依据）。</li><li>本质：用户任务 → 先查记忆 → 再组上下文 → 模型思考，这套前置正是为了减少模型「凭空编」。</li></ul>
+<h3 id="39-gpt-6-astra-对-react-链路的增强">3.9 GPT-6 Astra 对 ReAct 链路的增强</h3>
+<p>成熟模型（如 GPT-6 Astra）在上面的工作流里新增：</p>
+<ul><li><strong>三级记忆</strong>（短期/工作/长期）分层管理；</li><li><strong>异步工具调用</strong>：工具执行时模型可并行继续规划，不必原地等结果；</li><li><strong>熔断/边界控制</strong>：越权操作概率降到极低（对比 GPT-5.6 Sol 无防护下越权概率 ~48%，Astra ≈ 0%）。</li></ul>
+<h3 id="310-kv-cache小学生版">3.10 KV-Cache（小学生版）</h3>
+<p>大模型生成文字像「一节一节接龙」。每生成一节，都要回想前面所有节的内容。<strong>KV-Cache 就是把前面每节的「记忆卡片（K/V）」先存好</strong>，下节直接翻卡片，不用从头重读——所以生成又快又省算力。它<strong>必须放在 GPU 显存</strong>（要被极高速反复读取），这也是多轮对话越聊越占显存的原因。</p>
+<h3 id="311-其他概念速记">3.11 其他概念速记</h3>
+<ul><li><strong>OpenClaw vs ChatGPT Computer Use</strong>：都是「让模型操作电脑界面」的能力；Computer Use 是 ChatGPT 原生的屏幕操作；OpenClaw 类是开源/第三方的同类方案。</li><li><strong>Hugging Face</strong>：全球最大的开源模型/数据集/工具社区（「AI 的 GitHub」）。</li><li><strong>模型/工具/上下文/记忆/任务执行</strong> 的关系：输入文本 → 记忆检索 → 进上下文 → LLM 思考 → Harness 调工具 → 结果回上下文 → 循环。LLM 是「脑」，Harness 是「手脚」，两者是两步而非一步（脑决策、手脚执行）。</li><li><strong>ChatGPT 是 Agent 还是 LLM？</strong> 它既是 LLM（底座），也通过工具/Computer Use 构成了 Agent 能力——是「带 Agent 外壳的 LLM」。</li><li><strong>豆包答案突然 <code></strong></code> 加粗**：Markdown 加粗语法被前端渲染成富文本，属输出格式控制，与回答内容正确性无关。</li></ul>
+<p>---</p>
+<h2 id="模块四-算力与硬件">模块四 · 算力与硬件</h2>
+<h3 id="41-算力-显存-带宽-三大件">4.1 算力 / 显存 / 带宽 三大件</h3>
+<div class="mermaid">
+flowchart TD
+  C[算力 TFLOPS<br/>算得快不快] -->|决定单轮耗时/出字速度| T1[训练周期 / 推理吞吐]
+  V[显存容量 VRAM<br/>仓库够不够大] -->|不够直接跑不起来| T2[能否加载模型/上下文]
+  B[带宽<br/>仓库大门多宽] -->|搬运慢则算力空转| T3[多卡协同效率 / 数据供给]
+</div>
+<ul><li><strong>算力（TFLOPS）</strong>：每秒浮点运算次数 → 决定完成一次计算/每秒出多少 token。</li><li><strong>显存（VRAM）</strong>：存放权重、梯度、优化器状态、中间激活、<strong>KV-Cache</strong>。显存不够直接跑不起来——是大模型第一大瓶颈。</li><li><strong>带宽</strong>：显存带宽（GPU 核心↔显存）+ 多卡互联带宽（NVLink / InfiniBand / NCCL）。带宽低，GPU 空等数据，算力浪费。</li></ul>
+<h3 id="42-芯片如何训练大模型">4.2 芯片如何训练大模型</h3>
+<p>1. 文本切段送入 GPU 集群；</p>
+<p>2. <strong>前向计算</strong>：读权重算输出，对比答案得误差；</p>
+<p>3. <strong>反向传播</strong>：据误差算每个参数该调大/调小（梯度）；</p>
+<p>4. <strong>优化器更新</strong>：用梯度改几十亿/万亿参数；</p>
+<p>5. 循环亿万次缩小误差；</p>
+<p>6. <strong>分布式</strong>：模型并行（参数分片）+ 数据并行（不同 batch）+ 高速互联同步梯度。</p>
+<blockquote>训练阶段显存 ≫ 推理：还要存梯度、优化器状态、每步激活。如 175B 的 GPT-3 全套训练态需 TB 级显存，单卡放不下。</blockquote>
+<h3 id="43-为什么放显存跑能不能放内存">4.3 为什么放显存跑？能不能放内存？</h3>
+<ul><li>GPU 读<strong>显存</strong>速度是读主机<strong>内存</strong>的几十~上百倍。模型每秒反复读几十 GB 权重，放内存条会因搬运慢而暴跌几十倍。</li><li><strong>技术可行但仅适合测试</strong>：叫 offload（内存卸载），临时搬进显存，PCIe 慢、延迟高、并发易卡死，不适合线上。</li><li><strong>本质</strong>：在显存里跑 = 让计算核心能「随手取用」权重与 KV-Cache，最大化吞吐。</li></ul>
+<h3 id="44-训练到使用的硬件旅程">4.4 训练到使用的硬件旅程</h3>
+<p>数据采集/清洗（CPU+硬盘）→ 预训练（万卡 GPU 集群，吃算力+显存+互联带宽）→ 对齐（同集群）→ 部署推理（单/多 GPU，吃显存与带宽）→ 用户端（App/浏览器，消费级 GPU 或 Mac 统一内存）。</p>
+<h3 id="45-cuda-生态详细展开">4.5 CUDA 生态（详细展开）</h3>
+<p>NVIDIA 的 CUDA 是「让软件指挥 GPU 干活」的平台，关键库：</p>
+<ul><li><strong>cuBLAS</strong>：线性代数（矩阵乘法）加速库，Transformer 的核心算力来源；</li><li><strong>cuDNN</strong>：深度神经网络原语（卷积、归一化、激活）优化；</li><li><strong>NCCL</strong>（NVIDIA Collective Communications Library）：多卡/多机<strong>集合通信</strong>库，负责梯度同步、参数广播，是分布式训练的「神经网络」。</li></ul>
+<blockquote>这也是为何大模型训练高度依赖 NVIDIA：CUDA 生态成熟、库齐全，对手（AMD ROCm 等）追赶中。</blockquote>
+<h3 id="46-ollama-与本地推理">4.6 Ollama 与本地推理</h3>
+<ul><li><strong>Ollama</strong>：在本地跑开源 LLM 的工具，默认加载 <strong>GGUF</strong> 格式，提供 <code>http://localhost:11434</code> 的 API。</li><li>例：<code>ollama run qwen3.5:4b</code> 即可本地起一个 4B 多模态模型。</li></ul>
+<h3 id="47-windows-显存-vs-macos-统一内存">4.7 Windows 显存 vs macOS 统一内存</h3>
+<ul><li><strong>Windows 独显方案</strong>：独立 GPU 带自有 <strong>VRAM</strong>（如 RTX 5070Ti 16GB），模型权重放 VRAM。</li><li><strong>macOS Apple Silicon</strong>：<strong>统一内存（Unified Memory）</strong>——CPU 与 GPU 共享同一块物理内存，无「显存/内存」之分。对应关系是：Mac 的「统一内存容量」≈ Windows 的「显存 + 部分内存」。</li></ul>
+<h3 id="48-mac-单核多核p-核e-核rtx-与常见显卡">4.8 Mac 单核/多核、P 核/E 核、RTX 与常见显卡</h3>
+<ul><li><strong>单核性能</strong>：一个核心能跑多快（影响单线程/低并发）；<strong>多核</strong>：多个核心并行（影响吞吐）。</li><li><strong>P 核（性能核）</strong>：高功耗高性能，干重活；<strong>E 核（能效核）</strong>：低功耗，处理后台/轻任务。Apple Silicon 同时有 P/E 核。</li><li><strong>RTX 系列</strong>：NVIDIA 消费级游戏/创作显卡（如 RTX 4070/5070/5090），也能跑本地 LLM。</li><li><strong>常见显卡</strong>：NVIDIA RTX 40/50 系、数据中心 H100/H800/A100/A800、Apple M 系、AMD RX 系等。</li></ul>
+<h3 id="49-rtx-5070ti-5090-与-mac-对标">4.9 RTX 5070Ti / 5090 与 Mac 对标</h3>
+<ul><li><strong>RTX 5090</strong>：当前消费级旗舰，显存大（约 32GB）、算力强，适合跑大模型与训练小规模实验；<strong>价格高昂</strong>（约万元级）。</li><li><strong>RTX 5070Ti</strong>：中高端，约 16GB 显存，性价比之选，适合 7B~14B 量化模型流畅推理；<strong>价格约数千元</strong>。</li><li><strong>Mac 能否对标？</strong> MacBook/Mac Studio 用统一内存（如 M5 Max 128GB、M5 Ultra 更高），<strong>内存容量可超 RTX 显存</strong>，适合跑更大参数模型（靠容量），但<strong>绝对算力/带宽通常不及 5090</strong>（靠 GPU 设计）。即：Mac 胜在「能装下大模型」，RTX 胜在「算得快」。</li></ul>
+<h3 id="410-大厂用什么训练">4.10 大厂用什么训练？</h3>
+<p>国内互联网企业训练大模型用 <strong>Linux + A800/H800（NVIDIA 中国特供版）集群</strong>，<strong>不用 Windows、不用 Mac</strong>——需要万卡级分布式、NVLink 互联、稳定 Linux 服务器环境，消费级设备不满足。</p>
+<h3 id="411-mac-m5-32g-能跑训练吗">4.11 Mac M5 32G 能跑训练吗？</h3>
+<ul><li>跑<strong>推理/微调小模型</strong>可行；跑 0.1B 从零训练也可（小模型），但<strong>无多卡、靠 FlexAttention 替代 Triton</strong>（Apple 生态无 Triton，用 FlexAttention 写高效注意力）。</li><li>旅游管理文献改造：把 PDF/双栏文献 OCR 提取 → 外挂 SSD 存语料 → 在 Mac 上做小规模领域预训练/继续训练可行，但「工业级」训练不行。</li></ul>
+<h3 id="412-ollama-qwen354b-解析">4.12 Ollama <code>qwen3.5:4b</code> 解析</h3>
+<p>该网址指向 Ollama 上的 Qwen3.5-4B 模型卡，涉及：</p>
+<ul><li><strong>多模态</strong>：4B 级别支持图文输入；</li><li><strong>Gated DeltaNet</strong>：一种新型序列建模架构（线性注意力/状态空间类），相比纯 Transformer 在长上下文更省算力——属于前沿架构探索。</li></ul>
+<p>---</p>
+<h2 id="模块五-大模型生态">模块五 · 大模型生态</h2>
+<h3 id="51-大模型家族总览思维导图">5.1 大模型家族总览（思维导图）</h3>
+<div class="mermaid">
+mindmap
+  root((大模型<br/>生态))
+    OpenAI
+      GPT-5.5
+      GPT-5.6 Sol/Terra/Luna
+      GPT-6 Astra/Sol/Luna
+    Alibaba 阿里
+      Qwen3 系列 8B 开源
+      Qwen 最强 235B-A22B
+    ByteDance 字节
+      豆包 Seed 200B MoE
+      Muse / Qmuse / Hive
+    Google
+      Gemini 全家桶
+      Gemma 开源
+    Anthropic
+      Claude Opus/Sonnet/Haiku
+      Fable / Mythos
+    Xiaomi 小米
+      MiMo 系列
+    其他
+      DeepSeek / Kimi / Grok
+      智谱 / 元宝 / 千问
+</div>
+<h3 id="52-gpt-家族55-56-6">5.2 GPT 家族：5.5 / 5.6 / 6</h3>
+<ul><li><strong>GPT-5.5 / 5.6</strong>：5.6 已很强，但仍「文本为主、多模态外挂拼接」；5.6 内部档位 <strong>Sol（主力生产）/ Terra / Luna（高速批量）</strong>。</li><li><strong>GPT-6</strong>：换 <strong>Symphony 全新 MoE 架构</strong>，原生统一多模态，长程 Agent 与 Computer Use 大幅增强。档位 <strong>Astra（顶级旗舰）/ Sol / Luna</strong>，与 5.6 一一对应但每档全面升级。</li></ul>
+<p><strong>GPT-6 强于 5.6 的 6 个维度</strong>：</p>
+<p>1. <strong>复杂推理 &amp; 长程 Agent</strong>：几十轮连续工具调用、中途改需求不丢目标；复杂 Agent 成功率较 5.6 Sol 提升约 50%，ARC-AGI 达人类水平；支持异步工具调用。</p>
+<p>2. <strong>Computer Use</strong>：原生完整电脑操作（看屏、点击、填表、装软件、排错），越权概率≈0%（5.6 Sol 无防护 ~48%）。</p>
+<p>3. <strong>原生统一多模态</strong>：文本/图/音/视频同一向量空间，不再是「外挂看图」。</p>
+<p>4. <strong>上下文窗口</strong>：最大 <strong>200 万 token</strong>（5.6 为 100 万），长文档/整库一次性读入。</p>
+<p>5. <strong>代码与事实准确性</strong>：HumanEval+/SWE-bench 更强，幻觉大幅下降，能主动提示信息缺口。</p>
+<p>6. <strong>对齐/安全/性价比</strong>：更懂真实意图；同档价格减半；分层矩阵更清晰。</p>
+<blockquote>差距主要在<strong>长任务、多步 Agent、跨模态、复杂工程</strong>；简单问答差别不大。</blockquote>
+<h3 id="53-垂类-vs-通用模型">5.3 垂类 vs 通用模型</h3>
+<ul><li><strong>通用模型</strong>（GPT/豆包/DeepSeek）：啥都能聊，但缺行业深度与私有数据。</li><li><strong>垂类模型</strong>（如美团「问小团」、携程酒旅大模型）：= <strong>基座 + 私有知识库 + 交易 API + Agent</strong>。优势是行业精准、可直连业务（订酒店/推线路）；劣势是泛化弱、维护成本高、依赖基座能力。</li><li><strong>美团「问小团」</strong>：属<strong>垂类大模型</strong>（酒旅场景），并非通用模型。</li></ul>
+<h3 id="54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</h3>
+<p>用户原问「为什么芯片/云厂商/应用公司支持开放权重」——核心逻辑是<strong>不想让模型层独占全部利润</strong>：</p>
+<table class="tbl"><thead><tr><th>成本</th><th>封闭 API</th><th>开放权重</th></tr></thead><tbody><tr><td><strong>调用成本</strong></td><td>永远按次付费给单一供应商</td><td>可自部署，不被 API 次数绑定</td></tr><tr><td><strong>迁移成本</strong></td><td>难以改模型</td><td>可按自身环境修改</td></tr><tr><td><strong>数据治理成本</strong></td><td>敏感数据出域</td><td>数据可留本地</td></tr><tr><td><strong>竞争成本</strong></td><td>供应商垂直整合</td><td>芯片/云/应用/开发者围绕同一模型抢客户</td></tr></tbody></table>
+<blockquote>反过来，领先模型公司强调安全、质量、持续服务以维持集中部署。芯片/云/应用公司支持开放权重，是因为<strong>模型越易得，对算力、部署、微调、安全、行业应用的需求越大，价值向其他环节扩散</strong>。</blockquote>
+<h3 id="55-产业链芯片-云厂商-第三方服务商">5.5 产业链：芯片 / 云厂商 / 第三方服务商</h3>
+<ul><li><strong>芯片企业</strong>（NVIDIA/AMD/华为昇腾）：提供算力硬件，是「发动机」。</li><li><strong>云厂商</strong>（阿里云/腾讯云/火山引擎）：建好机房堆 GPU，按需出租算力——<strong>租机器的房东</strong>（还提供现成大模型 API）。叫「云」是因为算力像水电一样隔着网络按需取用。</li><li><strong>第三方服务商</strong>（vLLM/LangChain 类）：不造机器、不建机房，只做软件工具把模型改造成业务系统——<strong>装修队/家具商</strong>。</li><li><strong>三者在产业链的意义</strong>：芯片造算力 → 云厂商出租算力 → 第三方把算力变成可用 AI 产品。例：美团买火山引擎 GPU（云），用 LangChain（第三方）做酒旅 Agent。</li></ul>
+<h3 id="56-豆包的商业化">5.6 豆包的商业化</h3>
+<ul><li><strong>C 端收费前</strong>：豆包业务单元<strong>持续亏损</strong>——每次对话/生图/生视频都烧 GPU，单日算力成本可达数千万元，而当时收入仅百万级。资金来自<strong>字节集团整体现金流</strong>，<strong>抖音广告是最大现金牛、抖音电商是第二曲线</strong>，统一调配反哺 AI。注意：是「豆包板块亏损」，不等于字节公司亏损。</li><li><strong>为何开启付费</strong>：① 算力成本压力；② 用户分层（重度生产力用户增值）；③ 验证独立商业化、减依赖。模式是「基础永久免费 + 重度增值订阅」。</li><li><strong>现在盈利了吗？</strong> 豆包业务单元<strong>整体尚未盈利</strong>——订阅收入仍不足以覆盖千亿级算力/研发总开支，付费主要用来缩小收支缺口，而非立刻盈利。</li></ul>
+<h3 id="57-小米-mimo-系列">5.7 小米 MiMo 系列</h3>
+<ul><li>属<strong>通用大模型</strong>（非纯垂类），但与豆包/DeepSeek 定位、数据、对齐各有侧重。</li><li>小米自研目的：补齐 AI 底座、赋能「人车家」生态（手机/汽车/家居）、掌握核心技术不依赖外部。</li><li>在 AA Index 等榜单有亮相，体现国产通用模型竞争力。</li></ul>
+<h3 id="58-各家通用模型擅长速查">5.8 各家通用模型擅长（速查）</h3>
+<ul><li><strong>DeepSeek</strong>：推理/代码强、性价比高、开源；</li><li><strong>ChatGPT / GPT-6</strong>：通用最强、Agent/多模态/编码标杆；</li><li><strong>豆包 Seed</strong>：中文、内容创作、字节生态；</li><li><strong>Kimi</strong>：超长上下文、文档处理；</li><li><strong>Grok</strong>：实时信息（接 X）、推理；</li><li><strong>Gemini</strong>：多模态、长上下文、谷歌生态；</li><li><strong>Cursor / Codex</strong>：代码专用 Agent；</li><li><strong>千问 Qwen</strong>：开源生态、中文、多尺寸；</li><li><strong>元宝</strong>：腾讯系、社交/内容；</li><li><strong>智谱 GLM</strong>：国产通用、政务/企业。</li></ul>
+<h3 id="59-具体模型科普">5.9 具体模型科普</h3>
+<ul><li><strong>Qwen3-8B</strong>：开源（Apache 2.0）、双模式（思考/非思考）、Mac 可跑、中文友好，是目前 Qwen <strong>开源小模型代表</strong>；Qwen 最强为 <strong>235B-A22B（MoE）</strong>。</li><li><strong>豆包（用户日常对话的模型）</strong>：底层约 <strong>Seed 200B 总 / 20B 激活 MoE</strong>。</li><li><strong>Gemini 全家桶</strong>：Gemini Ultra/Pro/Flash/Nano + 开源 <strong>Gemma</strong>。</li><li><strong>Claude（Anthropic）</strong>：<strong>Opus</strong>（最强）/ <strong>Sonnet</strong>（均衡）/ <strong>Haiku</strong>（最快最省）；<strong>Fable / Mythos</strong> 是 Claude 系列中的细分定位模型。</li><li><strong>Fable</strong>：属 Anthropic 的 Claude 系列大模型之一。</li></ul>
+<p>---</p>
+<h2 id="模块六-ai-产品经理视角">模块六 · AI 产品经理视角</h2>
+<h3 id="61-ai-产品经理的-ai-知识占比">6.1 AI 产品经理的 AI 知识占比</h3>
+<p>基于全部对话内容评估：用户已掌握约 <strong>45%</strong> 的 AI 产品经理核心知识。仍需补充：</p>
+<ul><li>模型选型与成本测算（按 token/按部署）；</li><li>数据闭环与标注体系设计；</li><li>评测指标与上线监控（幻觉率、满意度）；</li><li>隐私合规与算力预算；</li><li>Agent 产品交互设计（human-in-the-loop）；</li><li>商用协议与供应链风险。</li></ul>
+<h3 id="62-ai-产品评测与标注大厂语境">6.2 AI 产品评测与标注（大厂语境）</h3>
+<ul><li><strong>评测</strong>：建基准集（功能/安全/对齐/业务指标），自动化跑分 + 人工抽检，持续回归。</li><li><strong>标注</strong>：构建「指令-偏好/事实-标注」数据，用于 SFT/RLHF；大厂有专业标注团队与质检流程，分采集、标注、审核、入库环节。</li></ul>
+<h3 id="63-muse-qmuse-hive字节系">6.3 Muse / Qmuse / Hive（字节系）</h3>
+<ul><li>字节投入的<strong>国内版 AI 创作/生产力矩阵</strong>（Muse 类生成、Qmuse 轻量、Hive 协同）。</li><li>相比 ChatGPT / WorkBuddy 的优势：深度嵌入字节内容生态（抖音/剪映/飞书），在短视频/营销/协作场景更顺手。</li></ul>
+<h3 id="64-工程与组织概念">6.4 工程与组织概念</h3>
+<ul><li><strong>轻量化模型</strong>：量化/蒸馏/小参数模型，适合端侧/低成本部署。</li><li><strong>端到端</strong>：运营、产品、研发围绕同一目标闭环，减少交接损耗。</li><li><strong>DevRel（开发者关系）</strong>：连接公司与开发者社区，推动 API/工具 adoption。</li><li><strong>Side Project</strong>：业余独立项目，是锻炼与验证想法的低成本方式。</li><li><strong>能力边界</strong>：当前通用模型在强推理、长程执行、实时事实、物理操作上仍有上限，产品需明确边界与兜底。</li></ul>
+<h3 id="65-9-家互联网公司面试素材">6.5 9 家互联网公司面试素材</h3>
+<p>基于对话整理的可用于面试的素材：腾讯（混元/微信生态）、阿里（通义/电商云）、字节（豆包/Seed/火山）、小红书（种草/多模态）、快手（短视频/推荐）、百度（文心/搜索）、滴滴（出行/调度）、美团（问小团/本地生活）、得物（潮流电商/社区）。每家可谈「其 AI 战略 + 代表模型/产品 + 与你目标的关联」。</p>
+<h3 id="66-能否应对-ai-产品面试">6.6 能否应对 AI 产品面试？</h3>
+<p>结合全部聊天内容：<strong>具备中上水平的基础知识储备</strong>，能讲清 Agent/对齐/算力/生态，但需在「成本测算、数据闭环、合规、真实项目经历」上补强，方能稳健应对。</p>
+<h3 id="67-ai-味为什么重">6.7 「AI 味」为什么重？</h3>
+<p>模型输出常被模板化（总分总、过渡词、礼貌套话、并列排比），源于训练数据风格与对齐偏好。可通过明确语气/人称/结构约束、引入真实案例与个性表达来降低。</p>
+<h3 id="68-chatgpt-如何操控软件界面爬取截图">6.8 ChatGPT 如何操控软件/界面/爬取/截图？</h3>
+<p>靠 <strong>Computer Use / 工具调用（MCP/API）</strong>：看屏幕（视觉）、调用系统/浏览器自动化、执行代码、读写文件——本质是 Agent + 工具链，而非模型凭空操作。</p>
+<h3 id="69-豆包答案的加粗引用表情如何实现">6.9 豆包答案的加粗/引用/表情如何实现？</h3>
+<p>模型据系统提示与产品规范生成 <strong>Markdown/结构化文本</strong>（加粗、引用块、emoji），前端再渲染成富文本。这与用户输入指令无必然关系，是产品层的输出规范。</p>
+<p>---</p>
+<h2 id="模块七-深度原理追问千问-9-问">模块七 · 深度原理追问（千问 9 问）</h2>
+<blockquote>千问分享页本身是一组「9 个深度问题 + AI 元评估」。以下问题与上面模块互补，这里集中作答。</blockquote>
+<p>1. <strong>如何从零训练一个 Agent？</strong> 先训/选型基座 → 写 Harness（任务拆解、工具注册、重试、沙箱）→ 接 MCP 工具池 → 设计记忆与上下文管理 → 用 RLVR/AgentRL 在对齐阶段强化执行 → 评测长程任务。</p>
+<p>2. <strong>国际主流 LLM 评测标准？</strong> 见 §2.4（MMLU / HumanEval / SWE-bench / ARC-AGI / GPQA / AA Index 等）。</p>
+<p>3. <strong>模型为何迭代快？GPT-6 Astra 比 5.6-Sol 改了啥？</strong> 迭代快因数据/算力/算法飞轮 + 竞争；Astra 改进见 §5.2（Symphony MoE、原生多模态、长程 Agent、Computer Use、200 万上下文、异步、减半价）。</p>
+<p>4. <strong>Transformer 与 Attention 关系？注意力本质？FFN 干啥？</strong> 见 §1.3（Transformer 是架构，Attention 是其核心子层；注意力=按相关性聚合上下文；FFN=逐位置非线性变换消化信息）。</p>
+<p>5. <strong>预训练 vs 推理的 Q/K/V 异同？无 KV-Cache 为何有 QKV？</strong> 见 §1.3/§1.4（都产生 QKV，因都用 Transformer 算注意力；预训练无 KV-Cache 是因整段并行算完，不需缓存历史）。</p>
+<p>6. <strong>豆包加粗/引用/表情如何实现？</strong> 见 §6.9（Markdown + 前端渲染，产品输出规范）。</p>
+<p>7. <strong>为何算 QK 相似度？权重啥意思？V 怎关预测 token？</strong> 见 §1.3（相似度=相关性权重；加权 V=融合上下文后的表示，直接送入下一层预测下一 token）。</p>
+<p>8. <strong>预训练 vs 推理过程区别？</strong> 见 §1.4（训练=并行+反向+更新产权重；推理=自回归前向生成不更新）。</p>
+<p>9. <strong>没有 LangChain 能否让 LLM/ReAct/Plugin/Tool 协作？</strong> 能。LangChain 是胶水，核心是「调 LLM→解析→调工具→回填→循环」的自写循环，见 §3.7。</p>
+<p>---</p>
+<h2 id="问题覆盖索引">📋 问题覆盖索引</h2>
+<blockquote>逐题标注答案位置，确保 78 个豆包提问 + 9 个千问提问<strong>全部覆盖、无遗漏</strong>。</blockquote>
+<h3 id="豆包ai学习荟萃24-问">豆包·AI学习荟萃（24 问）</h3>
+<table class="tbl"><thead><tr><th>#</th><th>用户提问</th><th>章节</th></tr></thead><tbody><tr><td>1</td><td>旅游减贫学术文章评析（非 AI，略）</td><td>—</td></tr><tr><td>2</td><td>大模型参数的表现形式</td><td>§1.1</td></tr><tr><td>3</td><td>美团/携程酒旅垂类 vs 通用优劣</td><td>§5.3</td></tr><tr><td>4</td><td>开放权重四成本（芯片/云/应用为何支持）</td><td>§5.4</td></tr><tr><td>5</td><td>芯片/云厂商/第三方作用；软硬件对大模型作用</td><td>§5.5, §4.1</td></tr><tr><td>6</td><td>万亿参数需万卡；算力/显存/带宽；芯片训练；iOS/Windows 类比；训练本质；训练vs推理；云厂商区别；云意义；显存跑；上下文占显存；训练到使用硬件旅程；ChatGPT 训练部署发布</td><td>§4.1–4.4, §1.4</td></tr><tr><td>7</td><td>（图片）9 家公司分析</td><td>§6.5</td></tr><tr><td>8</td><td>按图分析 9 家互联网公司</td><td>§6.5</td></tr><tr><td>9</td><td>harness 经 mcp 调工具（沙箱写代码）对否；webhook；大模型路由</td><td>§3.3, §3.1</td></tr><tr><td>10</td><td>（图片）模型区别联系</td><td>§5.1</td></tr><tr><td>11</td><td>这些模型区别联系</td><td>§5.1–5.9</td></tr><tr><td>12</td><td>GPT-6 为何强于 GPT-5，强在哪</td><td>§5.2</td></tr><tr><td>13</td><td>豆包收费前是否亏损、靠抖音养</td><td>§5.6</td></tr><tr><td>14</td><td>豆包为何付费、是否盈利</td><td>§5.6</td></tr><tr><td>15</td><td>Ollama <code>qwen3.5:4b</code> 知识点</td><td>§4.12</td></tr><tr><td>16</td><td>8B 大模型</td><td>§5.9, §1.1</td></tr><tr><td>17</td><td>Windows 显存 vs macOS 内存对应（显卡角度）</td><td>§4.7</td></tr><tr><td>18</td><td>Mac 单核/多核；RTX 是啥；常见显卡</td><td>§4.8</td></tr><tr><td>19</td><td>Ollama 是什么；Qwen 4B/9B/27B 最低显卡/统一内存；RTX5070Ti 适合啥 LLM</td><td>§4.6, §4.8–4.9</td></tr><tr><td>20</td><td>目前最强 RTX 显卡</td><td>§4.8–4.9</td></tr><tr><td>21</td><td>RTX5090/5070Ti 价格；Mac 有无组合追平</td><td>§4.9</td></tr><tr><td>22</td><td>显卡物理体积；Mac Studio 能否追上</td><td>§4.9</td></tr><tr><td>23</td><td>国内企业用 Windows 还是 Mac 训练</td><td>§4.10</td></tr><tr><td>24</td><td>详细展开（CUDA）</td><td>§4.5</td></tr></tbody></table>
+<h3 id="豆包workbuddy走红原因25-问">豆包·WorkBuddy走红原因（25 问）</h3>
+<table class="tbl"><thead><tr><th>#</th><th>用户提问</th><th>章节</th></tr></thead><tbody><tr><td>1</td><td>WorkBuddy 为何火</td><td>§3.2, §3.1</td></tr><tr><td>2</td><td>MCP/SkillHub 是什么；竞品为何没火</td><td>§3.3, §3.6</td></tr><tr><td>3</td><td>Harness 是啥</td><td>§3.2</td></tr><tr><td>4</td><td>Agent 有 Harness 吗；DeepSeek-Harness 强在哪</td><td>§3.1, §3.2</td></tr><tr><td>5</td><td>DeepSeek-Harness 自行组装算啥优势</td><td>§3.2</td></tr><tr><td>6</td><td>LangChain/AutoGen；GPT 系列差别；ReAct；预训练后训练；Agent 完整链路</td><td>§3.7, §5.2, §3.4, §2.1, §3.1</td></tr><tr><td>7</td><td>我已掌握 AI 知识占 PM 多少；还需补啥</td><td>§6.1</td></tr><tr><td>8</td><td>AI 评测标注；MiMo 垂类/通用/目的；基座「接着编」；SFT/RLHF/推理强化；AgentRL；各家擅长；AA Index</td><td>§6.2, §5.7, §2.3, §2.2, §5.8, §2.4</td></tr><tr><td>9</td><td>SFT/RLHF 记忆法；RLHF/AgentHF/ReasoningRL 同用？其他 RL？OpenClaw vs Computer Use；HuggingFace；模型/工具/上下文/记忆/任务关系；Muse/Qmuse/Hive；轻量化；端到端；DevRel；0→1 写 Harness；Side Project；能力边界；端云协同；Agent/Harness 区别；RAG 关联指标；Cowork/OpenCode/Copilot/Manus；LLM API/KV Cache/Agent Loop 等 16 概念</td><td>§2.2, §3.11, §3.2, §2.4, §1.1, §4.1, §3.4</td></tr><tr><td>10</td><td>模型/工具/上下文/记忆/任务关系再理清；豆包 <code>**</code>；KV Cache 小学生版；自建 RAG 考虑</td><td>§3.11, §3.10, §3.5</td></tr><tr><td>11</td><td>Agent 运行链路逐步讲解</td><td>§3.1</td></tr><tr><td>12</td><td>结合全部内容能否应对 AI 产品面试</td><td>§6.6</td></tr><tr><td>13</td><td>为何「AI 味」重</td><td>§6.7</td></tr><tr><td>14</td><td>ChatGPT 操控软件/界面/爬取/截图靠啥</td><td>§6.8</td></tr><tr><td>15</td><td>记忆检索与上下文负责啥</td><td>§3.8</td></tr><tr><td>16</td><td>为何先记忆检索再上下文</td><td>§3.8</td></tr><tr><td>17</td><td>Muse 相比 ChatGPT/WorkBuddy 优势；字节为何投国内版</td><td>§6.3</td></tr><tr><td>18</td><td>SFT/PPO/DPO/GRPO 区别；微调流程；Tokenizer 重要性；SFT 与 Post-training 关系；DPO/RLHF/RLAIF 解决啥；LLM 与 NLP 关系</td><td>§2.2, §2.5, §1.2, §2.1, §2.2, （NLP：LLM 是自然语言处理的主流技术，NLP 是更大学科）</td></tr><tr><td>19</td><td>先查上下文记忆是否也为减幻觉</td><td>§3.8</td></tr><tr><td>20</td><td>（图片）</td><td>—</td></tr><tr><td>21</td><td>这个是啥</td><td>—</td></tr><tr><td>22</td><td>RAG 整体思路</td><td>§3.5</td></tr><tr><td>23</td><td>在 Agent 流程中 ReAct/RAG/MCP 各在哪些环节</td><td>§3.4, §3.5, §3.3</td></tr><tr><td>24</td><td>模型如何据 RAG 拼接生成；RAG 也幻觉？ReAct 在 LLM 环节？Harness 本质是一串代码？</td><td>§3.5, §3.4, §3.2</td></tr><tr><td>25</td><td>LLM 组织答案的信息源头在 prompt 中？</td><td>§3.5</td></tr></tbody></table>
+<h3 id="豆包大模型训练全流程29-问">豆包·大模型训练全流程（29 问）</h3>
+<table class="tbl"><thead><tr><th>#</th><th>用户提问</th><th>章节</th></tr></thead><tbody><tr><td>1</td><td>0.1B 全流程任务如何完成</td><td>§1.5</td></tr><tr><td>2</td><td>MacBook Pro M5 32G 1TB 能跑吗</td><td>§4.11</td></tr><tr><td>3</td><td>需哪些软硬件；Codex/GPT5 额度与时间</td><td>§4.11, §1.5（额度≈1M token/$7–12，开发 18–24 天 + 挂机数百小时）</td></tr><tr><td>4</td><td>改在 Mac 训练旅游管理文献（南北核心+SSCI）需备啥</td><td>§4.11</td></tr><tr><td>5</td><td>训练很费时吗</td><td>§1.5（时间黑洞：预处理/训练/对齐各占大量时间）</td></tr><tr><td>6</td><td>改用旅游相关资料呢</td><td>§4.11</td></tr><tr><td>7</td><td>只耗 90 万 token？Mac 受得了吗</td><td>§4.11</td></tr><tr><td>8</td><td>字节等公司怎么训练</td><td>§4.10, §4.2</td></tr><tr><td>9</td><td>把全部知识按学习路径整理通俗讲</td><td>全文（尤其 §1.5 学习路径）</td></tr><tr><td>10</td><td>美团「问小团」属啥类型</td><td>§5.3</td></tr><tr><td>11</td><td>WSL 是什么；如何搭评测集/评测；DeepSeek Harness 商业目的</td><td>§2.4, §3.2（WSL=Windows 子系统跑 Linux，便于本地 GPU 训练）</td></tr><tr><td>12</td><td>上面答案多少来自 RAG、多少来自参数</td><td>§3.5（协作机制）</td></tr><tr><td>13</td><td>以保继刚 2022 论文为例讲 RAG 与参数协作</td><td>§3.5</td></tr><tr><td>14</td><td>无本地向量库、RAG 直接联网检索逻辑</td><td>§3.5（Web-RAG）</td></tr><tr><td>15</td><td>传统流程 Rag 在 Agent 前，联网检索是否跳过</td><td>§3.5（动态 RAG as MCP tool）</td></tr><tr><td>16</td><td>即 Rag 变成 Harness 经 MCP 调用的工具</td><td>§3.5</td></tr><tr><td>17</td><td>这些问题复杂吗</td><td>（元问题，整体属中高级）</td></tr><tr><td>18</td><td>Agent 运行流程（含 rag_local/rag_web 等工具池）</td><td>§3.1</td></tr><tr><td>19</td><td>GPT-6 Astra 在上述工作流改进</td><td>§3.9</td></tr><tr><td>20</td><td>qwen3:8b 是怎样的大模型</td><td>§5.9</td></tr><tr><td>21</td><td>它是 Qwen 开源最好吗</td><td>§5.9</td></tr><tr><td>22</td><td>日常对话的豆包基本参数是多少 B</td><td>§5.9</td></tr><tr><td>23</td><td>MIT 协议是啥</td><td>§1.7</td></tr><tr><td>24</td><td>Gemini 有哪些大模型</td><td>§5.9</td></tr><tr><td>25</td><td>Opus 是哪家的</td><td>§5.9</td></tr><tr><td>26</td><td>Claude 系列分析</td><td>§5.9</td></tr><tr><td>27</td><td>Fable 是哪家的</td><td>§5.9</td></tr><tr><td>28</td><td>Skill 和 Plugin 差别</td><td>§3.6</td></tr><tr><td>29</td><td>Skill 是代码吗</td><td>§3.6</td></tr></tbody></table>
+<h3 id="千问深度-9-问">千问·深度 9 问</h3>
+<table class="tbl"><thead><tr><th>#</th><th>用户提问</th><th>章节</th></tr></thead><tbody><tr><td>1</td><td>如何从零训练一个 Agent</td><td>§7(1)</td></tr><tr><td>2</td><td>国际主流 LLM 评测标准</td><td>§7(2), §2.4</td></tr><tr><td>3</td><td>模型为何迭代快；GPT-6 Astra 比 5.6-Sol 改进</td><td>§7(3), §5.2</td></tr><tr><td>4</td><td>Transformer 与 Attention 关系；注意力本质；FFN</td><td>§7(4), §1.3</td></tr><tr><td>5</td><td>预训练 vs 推理 QKV 异同；无 KV-Cache 为何有 QKV</td><td>§7(5), §1.3/1.4</td></tr><tr><td>6</td><td>豆包加粗/引用/表情如何实现</td><td>§7(6), §6.9</td></tr><tr><td>7</td><td>为何算 QK 相似度；权重含义；V 怎关预测 token</td><td>§7(7), §1.3</td></tr><tr><td>8</td><td>预训练 vs 推理过程区别</td><td>§7(8), §1.4</td></tr><tr><td>9</td><td>无 LangChain 能否让 LLM/ReAct/Plugin/Tool 协作</td><td>§7(9), §3.7</td></tr></tbody></table>
+<p>---</p>
+<p>*本笔记由对真实 AI 学习对话的体系化整理而成，覆盖全部 87 个原始提问。可视化（思维导图/流程图）见对应 Mermaid 代码块；HTML 与 DOCX 版本提供可交互/可打印的同内容呈现。*</p>
+<div class="foot">本页为 HTML 可视化版；同名 <code>.md</code> 与 <code>.docx</code> 为等效交付物。Mermaid 图表需联网加载（jsDelivr CDN）；若离线则显示源码。</div>
+</main>
+</div>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad:true, theme:'dark', securityLevel:'loose', flowchart:{ curve:'basis' } });
+  }
+</script>
+</body>
+</html>
