@@ -1,6 +1,6 @@
 # AI Learning Notes
 
-[Read the interactive HTML](./index.html) · [中文说明](./README_ZH.md) · [Markdown](./ai-learning-notes.md) · [Word](./ai-learning-notes.docx)
+[Read the interactive HTML](https://ai-learning-notes-psi.vercel.app/) · [中文说明](./README_ZH.md) · [Markdown](./ai-learning-notes.md) · [Word](./ai-learning-notes.docx)
 
 This repository presents a structured learning path from large-language-model fundamentals to production AI systems. The material is organized by conceptual dependency and end-to-end execution flow.
 

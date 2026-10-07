@@ -1,6 +1,6 @@
 # AI 学习笔记
 
-[在线阅读 HTML](./index.html) · [English](./README.md) · [Markdown 正文](./ai-learning-notes.md) · [Word 版](./ai-learning-notes.docx)
+[在线阅读 HTML](https://ai-learning-notes-psi.vercel.app/) · [English](./README.md) · [Markdown 正文](./ai-learning-notes.md) · [Word 版](./ai-learning-notes.docx)
 
 本仓库是一套从大语言模型基础原理延伸到生产级 AI 系统的体系化学习笔记，内容按照知识依赖关系与端到端运行流程组织。
 
