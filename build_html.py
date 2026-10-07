@@ -5,6 +5,7 @@ import re, html, sys
 
 SRC = "/Users/vinces/WorkBuddy/2026-10-07-00-05-01/ai-learning-notes/ai-learning-notes.md"
 OUT = "/Users/vinces/WorkBuddy/2026-10-07-00-05-01/ai-learning-notes/ai-learning-notes.html"
+INDEX_OUT = "/Users/vinces/WorkBuddy/2026-10-07-00-05-01/ai-learning-notes/index.html"
 
 def slug(s):
     s = re.sub(r'[^\w\u4e00-\u9fff\- ]', '', s).strip().lower()
@@ -112,6 +113,11 @@ while i < n:
     if not line.strip():
         i += 1
         continue
+    # horizontal rule
+    if re.match(r'^\s*---+\s*$', line):
+        out.append('<hr>')
+        i += 1
+        continue
     # paragraph
     out.append('<p>' + inline(line) + '</p>')
     i += 1
@@ -164,6 +170,7 @@ pre.code code {{ color:#e6edf3; padding:0; background:none; }}
 .tbl th {{ background:#1c2530; color:#fff; }}
 .tbl tbody tr:nth-child(even) {{ background:#11161d; }}
 blockquote {{ border-left:4px solid var(--accent); background:#11161d; margin:14px 0; padding:10px 16px; color:var(--muted); border-radius:0 8px 8px 0; }}
+hr {{ border:0; border-top:1px solid var(--border); margin:28px 0; }}
 .mermaid {{ background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; margin:18px 0; text-align:center; overflow:auto; }}
 .mermaid svg {{ max-width:100%; height:auto; }}
 .foot {{ margin-top:50px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }}
@@ -173,7 +180,7 @@ blockquote {{ border-left:4px solid var(--accent); background:#11161d; margin:14
 <body>
 <header>
   <h1>AI 学习笔记 全流程体系化完整版</h1>
-  <p>思维导图与流程图可视化版 · 由 4 份真实聊天导出提炼 · 109 个用户回合逐项可追溯</p>
+  <p>从大模型基础到 Agent 工程 · 思维导图与流程图可视化版</p>
 </header>
 <div class="layout">
 <nav>
@@ -193,5 +200,6 @@ blockquote {{ border-left:4px solid var(--accent); background:#11161d; margin:14
 </body>
 </html>"""
 
-open(OUT, 'w', encoding='utf-8').write(HTML)
-print("WROTE", OUT, len(HTML), "bytes")
+for path in (OUT, INDEX_OUT):
+    open(path, 'w', encoding='utf-8').write(HTML)
+    print("WROTE", path, len(HTML), "bytes")

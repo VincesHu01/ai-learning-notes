@@ -176,7 +176,7 @@ def D_overview():
          ("Agent 体系", ["Agent=LLM+Harness+MCP","Harness 项目经理","MCP 工具协议","ReAct 循环","RAG 检索增强","Skill vs Plugin","LangChain 编排"]),
          ("算力与硬件", ["算力/显存/带宽","分布式训练","CUDA 生态","Ollama 本地","GPU vs Mac 内存","RTX / Mac Studio"]),
          ("大模型生态", ["GPT 家族 5.5/6","Qwen / 豆包 Seed","Gemini / Claude","MiMo","垂类 vs 通用","开放权重四成本","商业化"]),
-         ("AI 产品经理", ["能力矩阵与补课路径","评测与标注","上下文工程","端到端/DevRel","9家面试素材"])],
+         ("AI 产品与工程", ["评测与标注","系统产品化","上下文工程","Computer Use","富文本渲染"])],
         "图1 · 知识体系总览（思维导图）",
         os.path.join(DIG, "d1_overview.png"), w=1180, h=900)
 
@@ -373,7 +373,7 @@ doc.core_properties.subject = '大模型 训练 对齐 Agent RAG 缓存 算力�
 # Title
 h = doc.add_paragraph(style='Title')
 h.add_run('AI 学习笔记 全流程体系化完整版')
-sub = doc.add_paragraph('由 4 份真实聊天导出的 109 个用户回合提炼  含思维导图与流程图  每个回合均可追溯')
+sub = doc.add_paragraph('从大模型基础到 Agent 工程  含思维导图与流程图')
 sub.runs[0].italic = True
 sub.runs[0].font.color.rgb = RGBColor(0x55,0x55,0x55)
 
