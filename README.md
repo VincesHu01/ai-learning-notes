@@ -1,122 +1,98 @@
-# AI 学习笔记 · 体系化整理（AI Learning Notes）
+# AI 学习笔记 全流程体系化完整版
 
-> 从 **87 个真实 AI 学习提问**（豆包 78 问 + 千问 9 问）中提炼的体系化学习笔记。通俗讲解 + 保留专业术语，配 **10 张思维导图/流程图**，逐题标注答案位置、**覆盖无遗漏**。
+从 4 份真实聊天导出的 **109 个用户回合**中整理而成。许多回合一次包含十余个子问题，因此本项目不按聊天顺序堆叠答案，而是重组为一条完整认知链：
 
-[English README](./README_EN.md) | 📄 [Markdown 笔记](./ai-learning-notes.md) | 🌐 [HTML 可视化版](./ai-learning-notes.html) | 📝 [Word 版](./ai-learning-notes.docx)
+```text
+自然语言输入
+  → Tokenizer 与 Embedding
+  → Transformer 与 Attention
+  → 预训练 后训练 微调 对齐
+  → KV Cache Prompt Cache 与推理成本
+  → RAG Memory Context
+  → LLM Harness ReAct MCP Skill Plugin Tool
+  → 评测 安全 部署与 AI 产品
+```
 
----
+[English README](./README_EN.md) · [Markdown 正文](./ai-learning-notes.md) · [HTML 可视化版](./ai-learning-notes.html) · [Word 版](./ai-learning-notes.docx)
 
-## 📖 这是什么
+## 本次完整版改进
 
-这是一份「从真实对话里长出来」的 AI 学习笔记。原始素材是本人在豆包（Doubao）与千问（Qianwen）上学习 AI 的完整对话记录——不是教程抄写，而是把一个学习者在真实追问中踩过的每个知识点，重新按逻辑体系组织成一份可以系统性复习、也可以按题索引的笔记。
+- 将原先遗漏的《AI术语认知》前 22 个回合补回，覆盖从术语分类、AI 产品经理能力，到缓存计费、LoRA、上下文工程和工程控制。
+- 按 4 个源文件建立 **109 回合覆盖索引**，每个回合都映射到正文章节；图片回合不虚构无法从导出文件恢复的视觉细节。
+- 纠正几个关键混淆：KV Cache ≠ Prompt Cache；token embedding ≠ RAG embedding；LLM ≠ Agent；RLHF ≠ PPO；微调 ≠ 对齐。
+- 增补残差连接、归一化、因果掩码、FFN、多头注意力、LoRA 两矩阵、RM、PPO/DPO/ORPO/KTO/GRPO、AdamW、混合精度、ZeRO 与多卡并行。
+- 增加离线训练线、在线推理线、Agent 执行线三条端到端流程图。
+- 将未经官方材料支持的参数量、价格、盈利状态和代际性能数字改为核验框架，避免把推测写成事实。
 
-**三个特点：**
+## 内容结构
 
-1. **体系化** —— 87 个散装提问被重组为 7 大模块：基础 → 训练 → Agent → 硬件 → 生态 → 产品 → 深度原理，符合「从模型是什么 → 怎么造 → 怎么用 → 怎么落地」的认知链路。
-2. **可视化** —— 内含 10 张图表（Mermaid 渲染）：知识体系总览思维导图、0.1B 训练全流程图、Agent 运行链路图、ReAct 循环、RAG 双模式、注意力机制、对齐算法谱系、算力三要素、大模型生态地图等。
-3. **可索引** —— 文末附「📋 问题覆盖索引」，把全部 87 个原始提问逐题映射到对应章节，方便自查「这个问题在哪讲的」。
-
----
-
-## 🗂 内容结构
-
-| 模块 | 覆盖内容 |
+| 模块 | 核心内容 |
 |---|---|
-| **一 · 大模型基础** | 参数与文件格式（GGUF/Safetensors/量化）、Tokenizer 与 BPE、Transformer 与 Attention（Q/K/V）、预训练 vs 推理、0.1B 从零训练全流程、MoE 稀疏模型、开源协议（MIT/Apache/GPL） |
-| **二 · 训练与对齐** | 预训练 vs 后训练、SFT/RLHF/DPO/GRPO/RLVR/RLAIF/ORPO/AgentRL 谱系、Scaling Law、评测体系（lm-eval-harness、MMLU、SWE-bench、AA Index）、微调流程 |
-| **三 · Agent 体系** | Agent = LLM + Harness + MCP + Skill + Memory、Harness（项目经理）、MCP（USB-C 类比）、ReAct 循环、RAG 三种形态（本地/联网/作为 MCP 工具）、Skill vs Plugin、LangChain/AutoGen、记忆与上下文、KV-Cache 小学生版 |
-| **四 · 算力与硬件** | 算力/显存/带宽三大件、芯片如何训练大模型、CUDA 生态（cuBLAS/cuDNN/NCCL）、Ollama 本地推理、Windows 显存 vs macOS 统一内存、RTX 显卡与 Mac Studio 对标、大厂训练环境（Linux + A800/H800） |
-| **五 · 大模型生态** | GPT 家族（5.5/5.6 → 6 Astra 的 6 大提升）、Qwen/豆包 Seed/Gemini/Claude/MiMo 全家桶、垂类 vs 通用（美团问小团）、开放权重四成本、芯片/云厂商/第三方服务商产业链、豆包商业化盈亏 |
-| **六 · AI 产品经理视角** | AI 知识占比评估（45%）与补课清单、评测与标注、Muse/Qmuse/Hive、端到端/DevRel/Side Project、9 家互联网公司面试素材、「AI 味」为何重、Computer Use 原理 |
-| **七 · 深度原理追问** | 千问 9 问：从零训 Agent、国际评测标准、模型迭代逻辑、注意力本质、QKV 在预训练/推理的异同、产品渲染原理、无 LangChain 的编排 |
+| 0 知识体系总览 | 全局思维导图与学习顺序 |
+| 1 大模型基础 | 参数文件、Tokenizer、Embedding、Transformer、Q/K/V、FFN、残差、归一化、因果掩码、BERT、多模态 |
+| 2 训练与对齐 | 预训练/后训练/微调/对齐、SFT、RLHF、PPO、DPO、ORPO、KTO、GRPO、RLVR、LoRA/PEFT、优化器与多卡 |
+| 3 Agent 体系 | LLM、Harness、MCP、Skill、Plugin、Tool、ReAct、RAG、Memory、Context、KV Cache、Prompt Cache、WorkBuddy 案例 |
+| 4 算力与硬件 | 算力、显存、带宽、GPU、CUDA、NCCL、Ollama、Apple 统一内存、多卡训练 |
+| 5 模型生态 | 通用/垂类、开放权重、云与芯片产业链、Qwen、Gemini、Claude、豆包与时效核验 |
+| 6 AI 产品经理 | 评测、标注、能力矩阵、面试补课、Computer Use、文本风格与富文本渲染 |
+| 7 集中九问 | 从零构建 Agent、评测、模型迭代、Attention/QKV 与无框架编排速查 |
+| 8 完整链路 | 离线训练、在线问答、Agent 执行、0.1B 实验和 Mac 的现实边界 |
+| 9 工程与安全 | Markdown/JSON/Schema、状态机、异常、死锁、红队、上下文工程与时效信息核验 |
 
----
+## 文件说明
 
-## 📁 文件说明
-
-```
+```text
 .
-├── README.md                  # 本文件（中文）
-├── README_EN.md               # 英文版 README
-├── ai-learning-notes.md       # 笔记正文（Markdown，内嵌 Mermaid 源码，GitHub 直接渲染）
-├── ai-learning-notes.html     # 可视化交互版（深色主题、目录导航、Mermaid 实时渲染）
-├── ai-learning-notes.docx     # Word 版（10 张图表已渲染为图片嵌入，可直接打印）
-└── diagrams/                  # 10 张独立高清图表 PNG
-    ├── d1_overview.png        # 知识体系总览（思维导图）
-    ├── d2_tokenizer.png       # Tokenizer / BPE 流程
-    ├── d3_transformer.png     # Transformer 与注意力
-    ├── d4_pipeline.png        # 0.1B 从零训练全流程
-    ├── d5_align.png           # 对齐算法谱系
-    ├── d6_agent.png           # Agent 运行链路（ReAct 循环）
-    ├── d7_react.png           # ReAct 最小循环
-    ├── d8_rag.png             # RAG：静态 vs 动态 MCP 工具
-    ├── d9_hw.png              # 算力/显存/带宽三大件
-    └── d10_eco.png            # 大模型生态地图
+├── README.md
+├── README_EN.md
+├── ai-learning-notes.md
+├── ai-learning-notes.html
+├── ai-learning-notes.docx
+├── build_html.py
+├── build_docx.py
+├── fonts/                     # Word 中文字体与 OFL 许可证
+└── diagrams/
 ```
 
-**三种格式怎么选：**
+- `ai-learning-notes.md`：内容源文件，含 Mermaid 图与 109 回合覆盖索引。
+- `ai-learning-notes.html`：适合浏览器阅读，带目录导航和 Mermaid 渲染。
+- `ai-learning-notes.docx`：适合离线阅读、打印和批注，图表以图片嵌入。
+- `build_html.py` / `build_docx.py`：可重复生成交付格式的脚本。
+- `fonts/`：用于跨平台 Word 渲染的 Noto Sans SC 可变字体及 SIL Open Font License。
+- `diagrams/`：Word 版使用的高清图表。
 
-- **日常阅读 / GitHub 浏览** → `ai-learning-notes.md`（Mermaid 图直接渲染）
-- **系统复习 / 演示** → `ai-learning-notes.html`（深色主题 + 侧边目录导航 + 可视化图表）
-- **打印 / 批注 / 存档** → `ai-learning-notes.docx`（图表以图片嵌入，离线可看）
+## 推荐阅读路径
 
----
+第一次阅读按模块 1 → 2 → 3 → 8；理解“模型怎么工作、怎么训练、怎么变成 Agent”。随后读模块 4 → 5 → 6 → 9，补齐硬件、行业、产品和工程治理。遇到具体术语时可直接搜索正文，或从末尾覆盖索引反查原问题。
 
-## 🚀 快速开始
+## 五个最重要的纠偏
 
-```bash
-git clone https://github.com/VincesHu01/ai-learning-notes.git
-cd ai-learning-notes
+1. **输入向量化不是 RAG 向量化**：LLM 输入是一串 token embedding；RAG 还会把文档 chunk 编成检索向量。
+2. **Q/K/V 不是用户问题、知识库键和值**：它们是每层隐藏状态经 `Wq/Wk/Wv` 投影得到的张量。
+3. **KV Cache 不等于跨请求缓存计费**：前者服务自回归解码，后者是服务商的 Prompt/Prefix Cache 产品机制。
+4. **RLHF 不等于 PPO**：RLHF 是反馈来源和流程，PPO 是可选优化算法；DPO 可绕过独立 RM/PPO。
+5. **Agent 不等于 LLM**：Agent 还需要 Harness、状态、工具、权限、验证和失败恢复。
 
-# 直接打开 HTML 版（浏览器）
-open ai-learning-notes.html
+## 覆盖度
 
-# 或用 VS Code / Typora 阅读 Markdown 版（Mermaid 插件渲染图表）
-```
+| 原始文件 | 用户回合 |
+|---|---:|
+| AI学习荟萃.txt | 24 |
+| AI术语认知.txt | 31 |
+| WorkBuddy走红原因.txt | 25 |
+| 大模型训练全流程任务完成指南.txt | 29 |
+| **合计** | **109** |
 
-> HTML 版的 Mermaid 图表通过 jsDelivr CDN 加载，需联网；离线时显示图表源码。
-> Word 版完全离线可用。
+第一份文件的第 1 回合是旅游减贫论文评析，不属于 AI 学习主题，但仍在覆盖索引中保留并标注范围；三个图片 JSON 回合也保留来源位置，不根据缺失像素臆造内容。
 
----
+## 时效与准确性
 
-## 📊 覆盖度
+模型名称、参数量、上下文长度、价格、许可证、显卡售价和产品能力都会变化。正文把稳定原理和时效事实分开；后者优先引用官方模型页、技术报告、API 文档和模型卡。项目校订日期为 **2026-10-07**。
 
-- **豆包 3 段对话 · 78 个提问** → 全部覆盖（含 1 问非 AI 学术内容已标注跳过）
-- **千问分享页 · 9 个深度提问** → 全部覆盖
-- 每个提问在文末「问题覆盖索引」中都有对应章节号，**可逐题验证无遗漏**
+## 使用与构建
 
----
+直接下载三种交付格式即可阅读。若要重新生成 HTML 与 DOCX，请先查看脚本中的依赖与路径设置；Word 交付物应在生成后重新渲染并逐页检查。
 
-## 🧭 推荐学习路径
+## License
 
-如果你也是 AI 学习者，建议按笔记的模块顺序阅读：
-
-```
-大模型基础（它是什么）
-   → 训练与对齐（它怎么被造出来）
-      → Agent 体系（它怎么被用起来）
-         → 算力与硬件（它跑在什么上面）
-            → 大模型生态（行业里都有谁）
-               → AI 产品经理视角（怎么变成产品）
-                  → 深度原理追问（回到本质）
-```
-
----
-
-## 📌 一些高频考点速记（节选自笔记）
-
-- **Agent = LLM（脑）+ Harness（手脚）+ MCP（接口）+ Skill（方法）+ Memory（记忆）**
-- **训练 = 反复刷题改笔记；推理 = 拿着笔记做题不再改**
-- **SFT 照抄示范；RLHF 请老师打分；DPO 直接告诉 A 比 B 好；RLVR 做有标准答案的题**
-- **算力决定快不快，显存决定能不能跑，带宽决定多卡协同时浪费多少算力**
-- **RAG 不是免幻觉，是减幻觉；它也可以只是 Agent 工具池里的一个 MCP 工具**
-
----
-
-## 📄 License
-
-本笔记内容采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 授权：可自由转载、修改，需署名。
-
----
-
-*整理自真实 AI 学习对话 · 2026-10*
+笔记正文采用 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)；引用的第三方名称、文档与商标归各自权利人所有。
