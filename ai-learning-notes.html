@@ -15,6 +15,7 @@ body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-syste
 header { padding:28px 32px; background:linear-gradient(135deg,#161b22,#0d1117); border-bottom:1px solid var(--border); }
 header h1 { margin:0 0 6px; font-size:26px; color:#fff; }
 header p { margin:0; color:var(--muted); font-size:14px; }
+.author { margin-top:5px; color:#c9d1d9; font-weight:600; }
 .layout { display:flex; min-height:calc(100vh - 110px); }
 nav { width:280px; flex:none; border-right:1px solid var(--border); background:var(--bg2); padding:18px 14px; position:sticky; top:0; align-self:flex-start; max-height:100vh; overflow:auto; }
 nav h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin:4px 8px 10px; }
@@ -41,6 +42,10 @@ blockquote { border-left:4px solid var(--accent); background:#11161d; margin:14p
 hr { border:0; border-top:1px solid var(--border); margin:28px 0; }
 .mermaid { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; margin:18px 0; text-align:center; overflow:auto; }
 .mermaid svg { max-width:100%; height:auto; }
+details { margin:16px 0 22px; padding:12px 16px; border:1px solid #284967; border-radius:10px; background:#101820; }
+summary { cursor:pointer; color:#79c0ff; font-weight:700; line-height:1.5; }
+details[open] summary { margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.deep-links { margin:10px 0 18px; }
 .foot { margin-top:50px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
 @media (max-width:820px) { nav { display:none; } main { padding:20px; } }
 </style>
@@ -49,17 +54,21 @@ hr { border:0; border-top:1px solid var(--border); margin:28px 0; }
 <header>
   <h1>AI 学习笔记 全流程体系化完整版</h1>
   <p>从大模型基础到 Agent 工程 · 思维导图与流程图可视化版</p>
+  <p class="author">本笔记由 VincesHu 胡中岳整理</p>
 </header>
 <div class="layout">
 <nav>
   <h3>目录导航</h3>
   <ul><li class="lvl1"><a href="#ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</a></li>
 <li class="lvl2"><a href="#目录">目录</a></li>
+<li class="lvl3"><a href="#高频难点直达">高频难点直达</a></li>
 <li class="lvl2"><a href="#0-知识体系总览">0. 知识体系总览</a></li>
 <li class="lvl2"><a href="#模块一-大模型基础">模块一 · 大模型基础</a></li>
 <li class="lvl3"><a href="#11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</a></li>
 <li class="lvl3"><a href="#12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</a></li>
 <li class="lvl3"><a href="#13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</a></li>
+<li class="lvl3"><a href="#131-为什么要有多层和多头">1.3.1 为什么要有多层和多头</a></li>
+<li class="lvl3"><a href="#132-长上下文为什么会出现中间遗忘">1.3.2 长上下文为什么会出现中间遗忘</a></li>
 <li class="lvl3"><a href="#14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</a></li>
 <li class="lvl3"><a href="#15-从零训一个-01b-模型的完整流程">1.5 从零训一个 0.1B 模型的完整流程</a></li>
 <li class="lvl3"><a href="#16-moe-稀疏模型总参数-vs-激活参数">1.6 MoE 稀疏模型（总参数 vs 激活参数）</a></li>
@@ -67,6 +76,7 @@ hr { border:0; border-top:1px solid var(--border); margin:28px 0; }
 <li class="lvl3"><a href="#18-一个-transformer-block-里还发生了什么">1.8 一个 Transformer Block 里还发生了什么</a></li>
 <li class="lvl3"><a href="#19-embedding-向量化-切块与-rag-向量不是一回事">1.9 Embedding 向量化 切块与 RAG 向量不是一回事</a></li>
 <li class="lvl3"><a href="#110-bert-llm-nlp-与多模态编码器">1.10 BERT LLM NLP 与多模态编码器</a></li>
+<li class="lvl3"><a href="#111-位置编码rope滑动窗口与-flashattention">1.11 位置编码、RoPE、滑动窗口与 FlashAttention</a></li>
 <li class="lvl2"><a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></li>
 <li class="lvl3"><a href="#21-预训练-vs-后训练">2.1 预训练 vs 后训练</a></li>
 <li class="lvl3"><a href="#22-对齐算法谱系">2.2 对齐算法谱系</a></li>
@@ -137,23 +147,26 @@ hr { border:0; border-top:1px solid var(--border); margin:28px 0; }
 <li class="lvl3"><a href="#93-agent-评测不是只用-rlhf-或-rlaif">9.3 Agent 评测不是只用 RLHF 或 RLAIF</a></li>
 <li class="lvl3"><a href="#94-computer-use-外链访问与高风险行为">9.4 Computer Use 外链访问与高风险行为</a></li>
 <li class="lvl3"><a href="#95-时效信息的核验规则">9.5 时效信息的核验规则</a></li>
+<li class="lvl2"><a href="#模块十-推理服务-性能优化-隐私与多-agent">模块十 · 推理服务 性能优化 隐私与多 Agent</a></li>
+<li class="lvl3"><a href="#101-从模型文件到可调用-api推理引擎在什么位置">10.1 从模型文件到可调用 API：推理引擎在什么位置</a></li>
+<li class="lvl3"><a href="#102-api-网关流量控制与可观测指标">10.2 API 网关、流量控制与可观测指标</a></li>
+<li class="lvl3"><a href="#103-webhook-与模型路由一个负责通知一个负责分发">10.3 Webhook 与模型路由：一个负责“通知”，一个负责“分发”</a></li>
+<li class="lvl3"><a href="#104-多-agent何时值得拆成多个角色">10.4 多 Agent：何时值得拆成多个角色</a></li>
+<li class="lvl3"><a href="#105-安全与隐私从-prompt-到工具动作的分层防线">10.5 安全与隐私：从 Prompt 到工具动作的分层防线</a></li>
+<li class="lvl3"><a href="#106-一次-agent-请求的完整运行链路">10.6 一次 Agent 请求的完整运行链路</a></li>
 </ul>
 </nav>
 <main>
 <h1 id="ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</h1>
 <blockquote>一份按概念依赖关系组织的体系化 AI 学习笔记，覆盖 <strong>大模型基础、Transformer、训练与对齐、Agent 与 RAG、缓存与推理、算力硬件、模型生态、产品工程和安全治理</strong>。  内容从“模型如何表示输入”开始，逐步讲到“模型如何训练、如何调用工具、如何部署和评测”。说明尽量通俗，同时保留必要的专业术语、流程图和工程边界。</blockquote>
+<p><strong>整理者：VincesHu 胡中岳</strong></p>
+<p>这份笔记采用两层阅读结构：正文先讲主线，复杂概念提供可点击的深入解释。第一次阅读可以只看每节开头的“大白话结论”和流程图；需要弄清原理时，再展开对应的深挖内容。</p>
+<blockquote><strong>重点说明</strong>：凡是在原始对话中反复追问、要求“大白话解释”或明确表示没有理解的内容，本文都会同时回答四件事：它是什么、为什么需要它、它在完整链路的什么位置、最容易和什么概念混淆。</blockquote>
 <hr>
 <h2 id="目录">目录</h2>
-<p>1. <a href="#0-知识体系总览">知识体系总览（思维导图）</a></p>
-<p>2. <a href="#模块一-大模型基础">模块一 · 大模型基础</a></p>
-<p>3. <a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></p>
-<p>4. <a href="#模块三-agent-体系">模块三 · Agent 体系</a></p>
-<p>5. <a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></p>
-<p>6. <a href="#模块五-大模型生态">模块五 · 大模型生态</a></p>
-<p>7. <a href="#模块六-ai-产品与交互工程">模块六 · AI 产品与交互工程</a></p>
-<p>8. <a href="#模块七-关键原理速查">模块七 · 关键原理速查</a></p>
-<p>9. <a href="#模块八-从自然语言到-agent-交付的完整链路">模块八 · 从自然语言到 Agent 交付的完整链路</a></p>
-<p>10. <a href="#模块九-数据格式-工程控制-安全与上下文工程">模块九 · 数据格式 工程控制 安全与上下文工程</a></p>
+<ol><li><a href="#0-知识体系总览">知识体系总览（思维导图）</a></li><li><a href="#模块一-大模型基础">模块一 · 大模型基础</a></li><li><a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></li><li><a href="#模块三-agent-体系">模块三 · Agent 体系</a></li><li><a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></li><li><a href="#模块五-大模型生态">模块五 · 大模型生态</a></li><li><a href="#模块六-ai-产品与交互工程">模块六 · AI 产品与交互工程</a></li><li><a href="#模块七-关键原理速查">模块七 · 关键原理速查</a></li><li><a href="#模块八-从自然语言到-agent-交付的完整链路">模块八 · 从自然语言到 Agent 交付的完整链路</a></li><li><a href="#模块九-数据格式-工程控制-安全与上下文工程">模块九 · 数据格式 工程控制 安全与上下文工程</a></li><li><a href="#模块十-推理服务-性能优化-隐私与多-agent">模块十 · 推理服务 性能优化 隐私与多 Agent</a></li></ol>
+<h3 id="高频难点直达">高频难点直达</h3>
+<ul><li><a href="#deep-qkv">Q K V 到底是什么，为什么能预测下一个 token</a></li><li><a href="#deep-prefill-decode">Prefill Decode 与 KV Cache 的完整生命周期</a></li><li><a href="#deep-prompt-cache">Prompt Cache 与 KV Cache 为什么不是一回事</a></li><li><a href="#deep-rag">RAG 从建库到回答的完整过程</a></li><li><a href="#deep-rag-position">前置 RAG 与工具化 RAG 的区别</a></li><li><a href="#deep-agent-components">LLM Harness MCP Skill Plugin Tool 的边界</a></li><li><a href="#deep-training-order">预训练 后训练 微调 对齐的先后关系</a></li><li><a href="#deep-alignment">SFT PPO DPO GRPO RLHF RLAIF 的区别</a></li><li><a href="#deep-lora">LoRA 两个小矩阵为什么能改造大模型</a></li><li><a href="#deep-context-engineering">上下文工程怎样真正落地</a></li><li><a href="#deep-inference-engine">Continuous Batching Paged KV 与推测解码</a></li><li><a href="#deep-serving-metrics">TTFT TPS RPM TPM 分别衡量什么</a></li></ul>
 <hr>
 <h2 id="0-知识体系总览">0. 知识体系总览</h2>
 <div class="mermaid">
@@ -228,6 +241,16 @@ flowchart LR
   E --> F[BPE 词表 + 编码表]
   F --> G[文本 ↔ token id 互转]
 </div>
+<details>
+<summary><strong>深入解释：BPE 怎样从字符一步步学出词表</strong></summary>
+<p>假设训练语料里反复出现“人工智能”“人工客服”“智能系统”。最开始，Tokenizer 可以把它们拆成单个字符或字节。随后统计相邻单元出现频率，发现“人+工”和“智+能”经常连在一起，就把它们合并成新 token“人工”“智能”。重复统计与合并，直到达到目标词表大小。</p>
+<p>训练好的 Tokenizer 至少包含三部分：</p>
+<ol><li><strong>词表</strong>：token 与整数 ID 的对应关系</li><li><strong>合并规则</strong>：BPE 按什么顺序把小单元合成大单元</li><li><strong>特殊 token</strong>：文档结束、填充、对话角色或未知字符等控制标记</li></ol>
+<p>编码时，文本先做 Unicode 与空白规范化，再根据合并规则变成 token ID。解码时，把 ID 查回 token 并拼成文本。测试时必须检查 <code>decode(encode(text))</code> 能否还原文本，还要统计不同语种、专业术语和代码的平均 token 数。</p>
+<p>Tokenizer 为什么会影响理解和成本？一个旅游专业词如果被切成许多罕见碎片，模型需要跨多个位置重新组合它，既占上下文，也可能更难学到稳定含义。同样一段话，切成 100 个 token 与 160 个 token，API 费用、Prefill 计算量和 KV Cache 占用都会不同。</p>
+<p><strong>边界</strong>：普通 LLM 输入只需要做 token 化，不等于先做 RAG 的文档切块。文档 chunk 是检索单位，token 是模型计算单位，两者层级不同。</p>
+</details>
+<hr>
 <h3 id="13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</h3>
 <p>Transformer 是现代大模型的<strong>统一架构</strong>，预训练和推理都基于它（但计算方式不同：训练并行处理整段；推理自回归逐 token 生成）。</p>
 <ul><li><strong>Attention（注意力）本质</strong>：让每个 token 在理解自己时，「抬头看一眼」上下文里和它最相关的其他 token。</li><li><strong>Q / K / V</strong>：</li><li><strong>Q（Query 查询）</strong>：「我在找什么信息」</li><li><strong>K（Key 键）</strong>：「我这里有什么信息标签」</li><li><strong>V（Value 值）</strong>：「我这里的具体信息内容」</li><li>计算 <strong>Q 与 K 的相似度</strong>（点积 + softmax 得到权重），用权重<strong>加权求和 V</strong>，得到融合了全局上下文的新表示。这个加权后的 V 直接用于<strong>预测下一个 token</strong>。</li><li><strong>前馈神经网络（FFN）</strong>：Attention 之后对每个位置独立做的两层全连接变换，负责「消化」注意力聚合来的信息、增加非线性表达力。神经网络（含 FFN）整体负责把输入映射到输出、拟合复杂函数。</li></ul>
@@ -242,6 +265,30 @@ flowchart TD
   N2 --> O[输出表示 → 预测下一 token]
 </div>
 <blockquote><strong>预训练 vs 推理中的 Q/K/V</strong>：两者都会产生 Q/K/V，因为都是把文本送进同一套 Transformer 算注意力。区别是预训练<strong>没有 KV-Cache</strong>（一次性并行算完整个序列），而推理为了生成第 N 个 token，会把前面所有 token 的 K/V 缓存下来（KV-Cache），避免每次重新计算历史。</blockquote>
+<a id="deep-qkv"></a>
+<details>
+<summary><strong>深入解释：Q K V 为什么能帮助模型预测下一个 token</strong></summary>
+<p>先用大白话理解。假设一句话是“我把苹果放进冰箱，因为它容易坏”。模型读到“它”时，需要判断“它”指苹果还是冰箱。</p>
+<ul><li>Q 是当前位置提出的问题：这里的“它”在寻找谁？</li><li>K 是每个历史 token 提供的索引标签：“苹果”可能是物品，“冰箱”可能是容器</li><li>Q 与 K 的相似度决定该看谁更多</li><li>V 是每个位置真正携带、可被取回的信息</li></ul>
+<p>模型不是拿用户的 Q 去匹配“模型参数里预先存好的 K”。正确过程是：每一层都把当前隐藏向量分别乘以三个可学习矩阵 <code>Wq</code>、<code>Wk</code>、<code>Wv</code>，现场算出 Q、K、V。</p>
+<pre class="code"><code>Q = X × Wq
+K = X × Wk
+V = X × Wv
+注意力输出 = softmax(Q × Kᵀ / √d) × V</code></pre>
+<p>其中 <code>X</code> 是这一层收到的隐藏状态。<code>Q × Kᵀ</code> 得到的是相关性分数；除以 <code>√d</code> 是为了避免维度高时数值过大；<code>softmax</code> 把分数变成总和为 1 的权重；最后按权重混合 V。</p>
+<p>为什么混合后的 V 能参与预测下一个 token？因为它不是最终答案，而是“吸收了相关上下文后的新隐藏表示”。这个表示继续经过 FFN、残差连接和更多 Transformer 层，最后由 LM Head 映射成整个词表的 logits。softmax 再把 logits 变成概率，解码器才从中选择下一个 token。</p>
+<p>预训练时没人告诉模型某个注意力头应该关注什么。<code>Wq/Wk/Wv</code> 从随机数开始，模型预测错了就产生交叉熵损失，反向传播再调整这些矩阵。经过大量文本后，有些头会学到指代、位置、语法或长距离依赖，但“一颗头只负责一种语法关系”只是便于理解的近似。</p>
+<p><strong>最容易混淆的地方</strong>：</p>
+<ol><li>Q/K/V 是每次前向计算产生的中间向量，<code>Wq/Wk/Wv</code> 才是长期保存在模型权重中的参数</li><li>预训练和推理都计算 Q/K/V；只有推理为了避免重复计算历史 K/V，才使用 KV Cache</li><li>Attention 负责从上下文取信息，FFN 负责对取回的信息做逐位置加工，两者共同形成下一层表示</li></ol>
+</details>
+<hr>
+<h3 id="131-为什么要有多层和多头">1.3.1 为什么要有多层和多头</h3>
+<p>一层 Transformer 只能完成一次“查找相关信息并加工”的过程。多层堆叠后，信息可以逐步抽象：底层更容易学习字词和局部结构，中层组合句法与语义，高层再整合任务意图和答案方向。这个分工不是人工规定，而是训练中自然形成的倾向。</p>
+<p>多头注意力则让模型在同一层里拥有多组不同的 <code>Wq/Wk/Wv</code>。同一个 token 可以同时从多个角度观察上下文。例如，一组头可能更关注附近词语，另一组头关注远处指代，还有一组头关注格式或代码括号。所有头的结果拼接后再投影回统一维度。</p>
+<h3 id="132-长上下文为什么会出现中间遗忘">1.3.2 长上下文为什么会出现中间遗忘</h3>
+<p>上下文窗口很长，不代表模型能同等可靠地利用窗口中的每个位置。长文档中间的信息可能因为位置偏置、训练数据分布、注意力竞争和信息密度而被弱化，出现“开头和结尾较容易被利用，中间容易漏掉”的现象。</p>
+<p>工程上通常结合以下方法缓解：</p>
+<ul><li>把最重要的规则与当前问题放在靠前或靠后的位置</li><li>用标题、编号和结构化格式提高信息可定位性</li><li>用 RAG 只召回与问题最相关的片段，不把整库资料全部塞入</li><li>对旧对话做摘要，对工具日志做裁剪</li><li>对召回片段重排，让最相关证据靠近问题</li></ul>
 <h3 id="14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</h3>
 <ul><li><strong>训练的本质</strong>：调整海量浮点参数，使「给定前文，预测下一个字」的错误尽可能小。不是把书本背下来，而是统计学习人类语言的模式、事实与逻辑，最终产出一堆权重文件。</li><li><strong>训练（造模型）</strong>：输入海量文本 → 反复前向 + 反向传播 + 梯度更新 → 成本极高，需成千上万 GPU → 产出权重。</li><li><strong>推理（用模型）</strong>：加载训练好的权重 → 只做前向计算生成回答 → <strong>不改动任何参数</strong> → 可单卡 / 手机 / 本地。</li><li><strong>联系</strong>：训练产出权重，推理消费权重；推理效果上限由训练质量决定。</li><li><strong>类比</strong>：训练＝反复刷题并不断修改笔记；推理＝拿着写完的笔记做题，笔记不再修改。</li></ul>
 <blockquote><strong>iOS vs Windows 类比芯片</strong>：Windows 工作站 = GPU 训练集群（可插多卡、吃巨量显存、做分布式重型计算）；iOS 手机 = 终端（NPU 只能跑轻量模型推理，完全做不了万亿级训练，内存/算力/带宽全不够）。</blockquote>
@@ -284,6 +331,11 @@ flowchart TD
 <p>因此，输入 LLM 时不是必须先做 RAG 式“文档切块”，也不是把一句话只变成一个向量。普通文本会先变成一串 token id，再查 embedding 表得到一串向量。RAG 则是在模型外部，把长文档分块并建立可检索索引。</p>
 <h3 id="110-bert-llm-nlp-与多模态编码器">1.10 BERT LLM NLP 与多模态编码器</h3>
 <ul><li><strong>NLP（自然语言处理）</strong>是学科与任务集合；LLM 是当代 NLP 的一类核心技术，但 NLP 还包括传统分词、规则系统、统计模型、信息抽取等。</li><li><strong>BERT</strong>是双向编码器模型，擅长理解、分类、检索和抽取；它能同时看左右文。GPT 类通常是因果解码器，擅长自回归生成，只看当前位置之前的 token。</li><li><strong>多模态编码器</strong>把图片、音频、视频等转换成模型可消费的向量。视觉里常把图片切成 patch；音频里常按帧或谱图编码。随后通过投影层、交叉注意力或统一 token 空间与语言模型连接。</li><li><strong>OCR</strong>负责从图像中识别文字；视觉语言模型还能理解布局、图表与画面关系。OCR 是能力模块，不等于完整多模态理解。</li></ul>
+<h3 id="111-位置编码rope滑动窗口与-flashattention">1.11 位置编码、RoPE、滑动窗口与 FlashAttention</h3>
+<p>Attention 只看 token 向量之间的关系，本身不知道谁在前、谁在后。因此模型还要加入<strong>位置信息</strong>。早期 Transformer 可用固定或可学习的绝对位置向量；现代 LLM 常使用 <strong>RoPE（Rotary Position Embedding，旋转位置编码）</strong>，把位置信息编码进 Q/K 的几何旋转，使注意力分数能够感知相对距离。<strong>ALiBi</strong>则直接根据距离给注意力分数加线性偏置，越远通常惩罚越大。</p>
+<p>位置编码决定模型如何理解顺序，却不能单独保证无限外推。把训练窗口从 8K 硬改成 128K，模型未必就会正确利用远处信息；通常还需要位置缩放、长上下文训练数据、注意力结构和评测共同配合。</p>
+<ul><li><strong>全局注意力</strong>：每个 token 都能关注窗口内所有位置，联系最完整，但序列越长，注意力矩阵的时间和显存开销增长很快。</li><li><strong>滑动窗口注意力（SWA）</strong>：每个 token 只关注附近固定窗口，像只翻当前页的前后几页，长序列成本更低，却可能丢失远距离关系。</li><li><strong>局部 + 少量全局层</strong>：多数层处理近邻信息，少数层跨全局传递，折中速度与远程依赖。</li><li><strong>FlashAttention</strong>：通过分块和减少 GPU 高带宽内存读写，精确地计算标准 Attention。它主要优化计算与内存访问，不是近似注意力，也不会改变模型语义目标。</li></ul>
+<p>这几项不要混在一起：RoPE/ALiBi 解决“怎样表示位置”，滑动窗口解决“允许看多远”，FlashAttention 解决“同样的注意力怎样算得更高效”。</p>
 <hr>
 <h2 id="模块二-训练与对齐">模块二 · 训练与对齐</h2>
 <h3 id="21-预训练-vs-后训练">2.1 预训练 vs 后训练</h3>
@@ -308,10 +360,7 @@ flowchart TD
 <p>预训练底座只是「续写机器」，你问它问题，它可能<strong>顺着问题继续编下去</strong>（幻觉/不跟随指令）。这正是对齐（SFT/RLHF/推理强化）要解决的：把「续写」改造成「听懂指令、基于事实作答」。</p>
 <h3 id="24-scaling-law-与评测">2.4 Scaling Law 与评测</h3>
 <ul><li><strong>Scaling Law</strong>：模型性能随参数量、数据量、算力平滑提升的经验律。可先在小火上做实验拟合曲线，再外推大模型该投多少资源。</li><li><strong>评测（如何搭评测集 / 怎么评）</strong>：</li></ul>
-<p>  1. 选基准（见下）；</p>
-<p>  2. 构造并清洗题目集（含领域专属任务）；</p>
-<p>  3. 用 <strong>lm-eval-harness</strong> 跑分，对比不同对齐策略；</p>
-<p>  4. 关注「能力边界」而非单点分数。</p>
+<ol><li>选基准（见下）；</li><li>构造并清洗题目集（含领域专属任务）；</li><li>用 <strong>lm-eval-harness</strong> 跑分，对比不同对齐策略；</li><li>关注「能力边界」而非单点分数。</li></ol>
 <ul><li><strong>国际主流 LLM 评测标准</strong>：MMLU（知识）、HumanEval / MBPP（代码）、SWE-bench（真实工程修复）、ARC-AGI（抽象推理）、GPQA（研究生级科学），以及第三方综合榜单。分数受版本、提示、采样、工具和污染影响，不能脱离测试设置横比。</li></ul>
 <h3 id="25-微调一个大模型的流程">2.5 微调一个大模型的流程</h3>
 <p>数据准备 → Tokenizer 对齐 → 继续预训练（可选）→ <strong>SFT</strong> → <strong>DPO/RLHF</strong> → <strong>RLVR</strong>（可验证任务）→ 评测 → 迭代。</p>
@@ -321,14 +370,47 @@ flowchart TD
 <p>常见但并非唯一的顺序是：</p>
 <pre class="code"><code>数据治理 → 预训练 → 继续预训练 可选 → SFT → 偏好或安全对齐 → 推理或工具强化 → 评测与部署</code></pre>
 <p>没有规定“必须先 RM 再所有微调”。只有采用典型 RLHF 管线时，才需要先收集偏好数据、训练 Reward Model，再用 PPO 一类算法优化策略模型。DPO、ORPO、KTO 等路线可以不训练独立 RM。</p>
+<a id="deep-training-order"></a>
+<details>
+<summary><strong>深入解释：预训练 后训练 微调 对齐到底怎么排</strong></summary>
+<p>可以把模型开发想成培养一名新员工。</p>
+<ol><li><strong>预训练</strong>像长期通识教育。模型阅读海量文本，通过预测下一个 token 学会语言、知识、代码与一般模式，得到基座模型</li><li><strong>继续预训练</strong>是可选的领域补课。仍然做下一个 token 预测，但语料换成旅游、法律或代码等领域材料</li><li><strong>SFT</strong>像拿标准示范教工作方法。数据是“指令 + 理想回答”，让模型学会回答问题、遵循格式和调用工具</li><li><strong>偏好或安全对齐</strong>像告诉它哪些答案更好、更安全。可选 RLHF、DPO、ORPO、KTO 等路线</li><li><strong>推理或工具强化</strong>是专项训练。对数学、代码、Agent 轨迹使用可验证奖励，强化长链推理与工具执行</li><li><strong>评测、红队、量化与部署</strong>决定模型能否真正上线</li></ol>
+<p>“微调”是更新模型全部或部分权重的技术动作，“对齐”是让行为符合人类意图、偏好、安全规则或任务目标。SFT 既是微调，也可以服务于对齐；LoRA 是一种参数高效的微调方式，却不自动等于安全对齐。</p>
+<p>流程不是固定流水线。典型 RLHF 需要 <code>SFT → 偏好标注 → RM → PPO</code>；DPO 可以走 <code>SFT → 偏好对 → DPO</code>；代码和数学任务还可以在 SFT 后接 RLVR 或 GRPO。采用哪条路线取决于数据形式、奖励是否可验证、训练成本与目标能力。</p>
+</details>
+<hr>
 <h3 id="27-ppo-dpo-orpo-kto-grpo-到底差在哪">2.7 PPO DPO ORPO KTO GRPO 到底差在哪</h3>
 <table class="tbl"><thead><tr><th>方法</th><th>训练信号</th><th>是否通常需要独立 RM</th><th>核心用途与直觉</th></tr></thead><tbody><tr><td><strong>PPO</strong></td><td>奖励值 + 策略梯度</td><td>不一定；RLHF 中通常需要</td><td>在限制模型别偏离太远的同时，提高期望奖励</td></tr><tr><td><strong>RLHF</strong></td><td>人类偏好</td><td>是，经典路线需要</td><td>完整流程，不是一个单独优化器；PPO 只是其中常见一环</td></tr><tr><td><strong>DPO</strong></td><td>chosen/rejected 偏好对</td><td>否</td><td>直接提高优选回答相对劣选回答的概率</td></tr><tr><td><strong>ORPO</strong></td><td>SFT 数据 + 偏好对</td><td>否</td><td>把监督学习与偏好约束合并到一个目标中</td></tr><tr><td><strong>KTO</strong></td><td>单条回答的好/坏标签</td><td>否</td><td>不要求严格成对偏好，更适合只有二元反馈的数据</td></tr><tr><td><strong>GRPO</strong></td><td>同一问题多份答案的组内相对奖励</td><td>通常不需要单独 critic</td><td>用组内基线降低成本，常用于可验证推理训练</td></tr><tr><td><strong>RLVR</strong></td><td>规则、执行器或标准答案给出的可验证奖励</td><td>否</td><td>数学、代码、游戏或工具任务中“答案可判定”</td></tr></tbody></table>
 <p>缩写“PO”容易混淆：它可能只是 Preference Optimization（偏好优化）的泛称，也可能是某篇方法名的缩写；没有上下文时不要把它当成与 PPO/DPO 同等明确的标准算法。</p>
 <p><strong>会不会同时用？</strong> 会，但通常是分阶段而不是同一批次全部叠加。例如 SFT 打底，DPO 调偏好，再对可验证推理做 GRPO/RLVR；是否值得叠加要靠消融实验决定。</p>
+<a id="deep-alignment"></a>
+<details>
+<summary><strong>深入解释：SFT PPO DPO GRPO RLHF RLAIF 用同一道题理解</strong></summary>
+<p>假设要训练一个旅游行程助手回答“广州两日游怎么安排”。</p>
+<ul><li><strong>SFT</strong>：直接给出高质量示范答案，让模型模仿答案的结构、语气与约束。它回答“正确答案长什么样”</li><li><strong>RLHF</strong>：模型先生成多份方案，由人类排序；奖励模型学习这种偏好，再由 PPO 提高高分方案的概率。它回答“人更喜欢哪一种”</li><li><strong>DPO</strong>：直接用“优选方案/劣选方案”训练，不单独训练 RM，也不跑复杂的在线 PPO。它以更直接的损失函数把模型推向优选答案</li><li><strong>GRPO</strong>：同一个问题采样一组答案，以组内相对分数作为训练信号，常用于答案可验证或可评分的推理任务</li><li><strong>RLVR</strong>：奖励来自规则、单元测试、数学验证器或标准答案，而不是主观偏好。例如代码能否通过测试</li><li><strong>RLAIF</strong>：让更强的 AI 代替或辅助人类进行排序与评价，减少人工成本，但可能继承评审模型的偏见</li></ul>
+<p>PPO 只是强化学习优化算法，RLHF 是一整套利用人类反馈的训练流程。说“RLHF 就是 PPO”不准确；更接近的说法是，经典 RLHF 常用 PPO 来优化策略模型。</p>
+<p>Reward Model 的工作是把“提示词 + 候选回答”映射为分数。它既可以学习人工排序，也可以利用规则、专家评分、AI 评审或执行结果。RM 放在 SFT 与 PPO 之间，是因为它先把人类偏好变成可计算奖励，PPO 才知道应该把策略往哪里推。</p>
+<p><strong>记忆口诀</strong>：SFT 看示范；RLHF 请人排序再强化；DPO 直接学 A 比 B 好；GRPO 在同组答案里比高低；RLVR 用可验证结果给奖励；RLAIF 让 AI 帮忙评价。</p>
+</details>
+<hr>
 <h3 id="28-reward-model-监督学习与强化学习">2.8 Reward Model 监督学习与强化学习</h3>
 <ul><li><strong>监督学习</strong>有“目标答案或标签”，直接比较预测和标签，计算 loss 后反向传播。SFT 属于监督学习。</li><li><strong>强化学习</strong>面对状态、动作、奖励，优化长期累计奖励。模型不一定收到唯一标准答案，而是收到结果好坏。</li><li><strong>奖励模型 RM</strong>把“提示词 + 回答”映射成一个分数。经典训练数据是人类排序，但也可以来自规则、AI 评审、专家评分、用户反馈或可验证执行结果。</li><li><strong>RLAIF</strong>用 AI 反馈替代或补充人工偏好；它降低成本，但可能把评审模型的偏见放大，因此仍需人工校验。</li><li><strong>RLHF 不是 PPO</strong>。RLHF 描述“反馈来源和训练流程”；PPO 是可用于优化策略的算法。可以近似记成“经典 RLHF = 偏好数据 + RM + PPO + KL 约束”，但这不是唯一实现。</li></ul>
 <h3 id="29-全参数微调-lora-peft-与模型蒸馏">2.9 全参数微调 LoRA PEFT 与模型蒸馏</h3>
 <ul><li><strong>全参数微调</strong>：更新模型全部权重，容量最大，但显存、训练时间和每任务存储成本高。</li><li><strong>PEFT（Parameter-Efficient Fine-Tuning）</strong>：参数高效微调的总称，只训练很小一部分参数。LoRA、Adapter、Prompt Tuning 都属于 PEFT。</li><li><strong>LoRA</strong>：冻结原权重 <code>W</code>，只学习一个低秩增量 <code>ΔW = B × A</code>。如果原矩阵是 <code>d×k</code>，可让 <code>A</code> 为 <code>r×k</code>、<code>B</code> 为 <code>d×r</code>，且 <code>r</code> 很小，于是训练参数从 <code>d×k</code> 降为 <code>r×(d+k)</code>。</li><li><strong>为什么小矩阵能起作用</strong>：领域适配需要的权重变化往往集中在低维方向；LoRA 不需要重写整张“大地图”，只学习一组关键修正。是否足够仍取决于任务、数据、rank 和目标层，需要评测。</li><li><strong>可插拔/可合并</strong>：同一基座可加载不同 LoRA adapter；推理时也可把 <code>ΔW</code> 合并进 <code>W</code>。小文件保存的是“变化量”，不是完整模型，所以单独拿 LoRA 文件无法运行。</li><li><strong>QLoRA</strong>：把基座量化以省显存，同时训练 LoRA；它适合资源受限的微调，不等于把最终模型质量自动提高。</li><li><strong>模型蒸馏</strong>：让学生模型学习教师模型输出、概率分布或推理轨迹。合法性与质量取决于数据授权、服务条款、输出许可和是否侵犯商业秘密；“国内模型都在蒸馏国外模型”是无法一概而论的推断。</li></ul>
+<a id="deep-lora"></a>
+<details>
+<summary><strong>深入解释：LoRA 的 A B 两个矩阵到底在做什么</strong></summary>
+<p>假设基座模型里有一个很大的权重矩阵 <code>W</code>。全参数微调会直接修改 <code>W</code> 里的大量数字，显存还要保存这些参数对应的梯度和优化器状态，成本很高。</p>
+<p>LoRA 冻结 <code>W</code>，另加一条较窄的旁路：先用矩阵 <code>A</code> 把高维输入压到很小的秩 <code>r</code>，再用矩阵 <code>B</code> 把它投影回原来的输出维度。两者相乘形成对原权重的修正量：</p>
+<pre class="code"><code>原输出 = W × x
+LoRA 输出 = W × x + B × A × x
+权重修正 = ΔW = B × A</code></pre>
+<p>如果 <code>W</code> 是 <code>4096 × 4096</code>，直接训练它需要更新约 1678 万个参数。若 rank <code>r=8</code>，<code>A</code> 与 <code>B</code> 合计只需约 6.5 万个参数，数量会小很多。</p>
+<p>为什么这可能有效？许多领域适配不需要把模型所有能力重写一遍，只需要沿少数关键方向调整表达方式、术语映射或行为倾向。低秩矩阵试图用一个低维子空间表示这些变化。这个假设不是永远成立：任务变化太大、数据复杂或 rank 太低时，LoRA 可能不如全参数微调。</p>
+<p>常见初始化是 <code>A</code> 用小随机值、<code>B</code> 从零开始，使训练开始时 <code>ΔW</code> 约等于零，不会突然破坏基座输出。训练结束后可以保留独立 adapter，按任务切换；也可以把 <code>ΔW</code> 合并进 <code>W</code>，减少推理时的额外计算。</p>
+<p>QLoRA 进一步把冻结的基座权重量化，以降低显存占用，同时训练 LoRA 参数。量化主要解决资源问题，不保证效果自动提升。</p>
+</details>
+<hr>
 <h3 id="210-loss-优化器与训练稳定性">2.10 Loss 优化器与训练稳定性</h3>
 <ul><li><strong>损失函数（Loss）</strong>：把预测错误压成一个可优化的数。因果语言模型常用交叉熵；loss 越低表示对训练分布中的下一个 token 预测越准，但不等于真实世界表现一定更好。</li><li><strong>反向传播</strong>：用微积分链式法则求每个参数对 loss 的梯度。</li><li><strong>AdamW</strong>：按参数历史梯度自适应调整步长，并把权重衰减与梯度更新解耦，是 Transformer 训练常用优化器。</li><li><strong>Warmup</strong>：开局逐渐增大学习率，避免随机初始化或新训练阶段被大步更新打崩。</li><li><strong>Decay / Cooldown</strong>：中后期逐步降低学习率，让模型更细致收敛。</li><li><strong>梯度裁剪</strong>：当梯度过大时限制其范数，降低训练突然发散的风险。</li><li><strong>FP16 / BF16 混合精度</strong>：用低精度加速矩阵计算、节省显存，并在关键环节保留较高精度。BF16 动态范围更大，通常更稳；硬件需支持。</li></ul>
 <h3 id="211-多卡并行与显存优化">2.11 多卡并行与显存优化</h3>
@@ -354,6 +436,15 @@ flowchart TD
 <h3 id="32-harness执行运行时项目经理">3.2 Harness（执行运行时）=「项目经理」</h3>
 <p>Harness 负责：任务拆解、状态跟踪、错误重试、子 Agent 调度、把 LLM 的结构化指令翻译成工具调用。类比<strong>项目经理</strong>——模型是「首席架构师」，Harness 带着团队把蓝图落地。</p>
 <ul><li><strong>从 0→1 写一个 Harness</strong> 要考虑：任务队列、上下文窗口管理、工具注册与超时、重试与回滚、子 Agent 派发、安全沙箱、可观测日志。</li><li><strong>DeepSeek-Harness vs WorkBuddy</strong>：前者是<strong>开源底盘</strong>（可自行组装、改造成自家产品）；后者是<strong>闭源成品</strong>（开箱即用的工作 Agent）。自行组装的优势：开发者/企业可深度定制、控成本、嵌私有数据，不被单一供应商锁定。</li></ul>
+<a id="deep-agent-components"></a>
+<details>
+<summary><strong>深入解释：LLM Harness MCP Skill Plugin Tool 为什么不能混成一件事</strong></summary>
+<p>把一个办公 Agent 想成真正做项目的团队：</p>
+<table class="tbl"><thead><tr><th>组件</th><th>大白话角色</th><th>实际职责</th><th>不负责什么</th></tr></thead><tbody><tr><td>LLM</td><td>会思考和表达的大脑</td><td>理解上下文、规划下一步、生成工具调用或最终答案</td><td>不直接点击界面、读硬盘或执行代码</td></tr><tr><td>Harness</td><td>项目经理和运行控制器</td><td>保存状态、调用模型、执行工具、重试、超时、审计、终止循环</td><td>不代替模型做语言推理</td></tr><tr><td>MCP</td><td>统一插座和通信规范</td><td>规定工具、资源怎样被发现和调用，参数与结果怎样传递</td><td>不自动提供智能，也不是长期记忆本身</td></tr><tr><td>Tool</td><td>一个具体动作</td><td>搜索、读文件、运行代码、查询数据库</td><td>不理解完整业务目标</td></tr><tr><td>Skill</td><td>工作方法或 SOP</td><td>规定任务步骤、模板、检查项、允许使用的工具</td><td>不一定包含可执行代码</td></tr><tr><td>Plugin</td><td>可安装扩展包</td><td>打包 Skill、Tool、连接器、MCP Server 或界面能力</td><td>不等于所有平台都采用同一结构</td></tr><tr><td>Memory</td><td>跨步骤或跨会话保存的信息</td><td>保存用户偏好、任务进度、历史事实，按需检索</td><td>不等于 KV Cache，也不应被误写成 MCP</td></tr><tr><td>Context</td><td>这一次真正交给模型看的内容</td><td>系统规则、用户输入、记忆、RAG 证据、工具结果</td><td>不会自动永久保存</td></tr></tbody></table>
+<p>为什么 LLM 与 Harness 是两步？LLM 输出的是“意图”，例如 <code>search_docs(query=&quot;KV Cache&quot;)</code>。Harness 必须先校验工具是否存在、参数是否合法、用户是否授权，再真正执行。工具返回 Observation 后，Harness 把结果加入上下文，LLM 才进行下一轮判断。把两者合成一个黑盒，会很难做权限控制、失败重试和日志审计。</p>
+<p>ChatGPT、WorkBuddy 等成品在产品层面可以是 Agent；它们内部使用某个 LLM 作为基础模型。问“ChatGPT 是 Agent 还是 LLM”时，要区分品牌产品和底层模型：底层是 LLM，带上工具、记忆、运行时和权限系统后形成 Agent 产品能力。</p>
+</details>
+<hr>
 <h3 id="33-mcp模型上下文协议ai-世界的-usb-c">3.3 MCP（模型上下文协议）=「AI 世界的 USB-C」</h3>
 <p>MCP 是标准化「模型 ↔ 工具/数据源」的通用接口，让任意模型都能即插即用地调用文件、数据库、API、代码沙盒。类比 USB-C：统一接口，免去为每个工具单独适配。</p>
 <ul><li>Harness 可以通过 MCP 调用各类工具完成 Agent 指令，例如把代码执行交给受控沙箱。</li><li><strong>Webhook</strong> = 一种「事件到来时自动回调通知」的 HTTP 机制（如工具执行完主动推结果）；<strong>大模型路由</strong> = 把不同任务分发给不同模型/工具的调度逻辑（如简单问答走小模型、编码走 Codex）。</li></ul>
@@ -382,20 +473,50 @@ flowchart TD
   end
 </div>
 <ul><li><strong>本地向量库 RAG</strong>：把文档切块→向量化→存库，检索最相近片段拼进上下文。</li><li><strong>Web 联网 RAG</strong>：没有本地库时，Harness 直接通过 MCP 调 <code>rag_web</code> 去网上检索——此时 RAG 不再是「前置拼接」，而是 <strong>Agent 链路里的一个工具</strong>（动态 RAG）。</li><li><strong>RAG 与模型参数如何协作</strong>：模型参数提供通用知识、语言理解与组织能力，RAG 提供授权资料中的原文片段和具体事实；两者在 prompt 中结合，模型据此生成有出处的回答。若问题超出参数记忆，或需要最新、专有内容，RAG 负责补位。</li><li><strong>RAG 也会幻觉</strong>：检索到错误/无关片段、切块割裂语义、或模型过度依赖少量片段而忽略全局时，仍可能答错。所以 RAG 是「减幻觉」而非「免幻觉」。</li><li><strong>大模型如何据 RAG 拼接上下文生成</strong>：把检索片段作为证据文本放进 prompt，模型在生成时「以证据为准」组织答案（类似开卷考试）。</li><li><strong>组织答案的信息源头在 prompt 中</strong>：是的——最终答案所依据的「材料」主要来自 prompt（含 RAG 注入），模型参数是「理解/组织能力」的来源。</li></ul>
+<a id="deep-rag"></a>
+<details>
+<summary><strong>深入解释：RAG 从建库到回答完整走一遍</strong></summary>
+<p>RAG 分成离线建库和在线问答两条链路。</p>
+<p><strong>离线建库</strong>通常执行以下步骤：</p>
+<ol><li>读取 PDF、Word、网页或内部文档</li><li>去掉页眉页脚、乱码、重复段落和无意义导航</li><li>按标题、段落或固定长度切成 chunk，并保留文档名、页码、时间等元数据</li><li>用 Embedding 模型把每个 chunk 变成语义向量</li><li>把“向量 + 原文 + 元数据”写入向量数据库</li></ol>
+<p><strong>在线问答</strong>则是：</p>
+<ol><li>把用户问题用同一个 Embedding 模型转成查询向量</li><li>在向量库召回 Top K 个相似 chunk</li><li>用 Reranker 重新排序，过滤看似相关但实际答非所问的片段</li><li>去重、压缩并控制总 token 数</li><li>把证据、出处、用户问题和回答规则组装进上下文</li><li>LLM 阅读这些片段，生成带引用的答案</li></ol>
+<p>Embedding 检索解决的是“哪些材料可能相关”，生成模型解决的是“怎样理解材料并组织成答案”。向量数据库不会替模型写答案，LLM 也看不到整个数据库，只能看见被召回并放进上下文的片段。</p>
+<p>chunk 太大会把多个主题混在一起，降低检索精度；chunk 太小会割裂定义、条件和结论。工业系统通常同时保留标题层级、相邻段落或父文档信息，让召回片段既精确又保有必要上下文。</p>
+<p>RAG 的幻觉可分为三段：检索阶段可能没找到正确材料；上下文阶段可能混入冲突或低质量内容；生成阶段可能曲解证据或做错推理。对应措施是提高数据质量、混合检索、重排、引用定位、要求资料不足时明确说不知道，以及用外部验证器复核关键结论。</p>
+</details>
+<hr>
+<a id="deep-rag-position"></a>
+<details>
+<summary><strong>深入解释：前置 RAG 和 Agent 工具化 RAG 放在哪里</strong></summary>
+<p><strong>前置 RAG</strong>在第一次调用 LLM 前运行一次：用户问题先检索，片段直接放进初始上下文。它结构简单、延迟可控，适合固定资料的一问一答；缺点是第一次召回不完整时，模型无法主动换关键词继续查。</p>
+<p><strong>工具化 RAG</strong>把 <code>rag_local</code> 或 <code>rag_web</code> 注册为工具。LLM 在 ReAct 循环中判断何时检索，Harness 经 MCP 或普通 API 调用工具。Observation 返回后，模型检查证据是否足够；不够就再次检索或切换数据源。这种方式适合长任务和 self-judge，但步骤更多、成本更高，也更需要终止条件。</p>
+<div class="mermaid">
+flowchart TD
+  user_task[用户任务] --> context[组装初始上下文]
+  context --> llm_thought[LLM 判断信息是否足够]
+  llm_thought --> enough{证据足够吗}
+  enough -- 是 --> final_answer[生成答案]
+  enough -- 否 --> harness[Harness 校验调用]
+  harness --> rag_tool[RAG 工具检索]
+  rag_tool --> observation[返回证据与出处]
+  observation --> context
+</div>
+<p>本地 RAG 与 Web RAG 的差异只是资料来源和索引生命周期。Web RAG 通常先搜索网页，再抓取正文、切块和重排；本地 RAG 提前建库，速度更稳定，也更适合有授权的私有资料。两者都不会修改模型参数。</p>
+</details>
+<hr>
 <h3 id="36-skill-vs-plugin">3.6 Skill vs Plugin</h3>
 <ul><li><strong>Skill（技能）</strong>：在许多 Agent 产品里表示一套可复用的任务方法、提示、检查清单、模板和脚本；有的以 Markdown 为入口，有的由平台以其他格式定义。它不必然是代码，也不保证跨平台通用。</li><li><strong>Plugin（插件）</strong>：可安装的扩展包，可能包含技能说明、可执行工具、连接器、UI 或权限声明。</li><li><strong>Tool（工具）</strong>：一次可调用的具体能力，如搜索、读文件、运行代码或发请求。</li><li><strong>MCP Server</strong>：通过 MCP 暴露工具、资源或提示模板的服务端。一个插件可以打包 MCP Server，也可以完全不用 MCP。</li><li>因此没有全行业唯一公式；使用某个平台时应以该平台定义为准。</li></ul>
 <h3 id="37-编排框架langchain-langgraph-autogen-react">3.7 编排框架：LangChain / LangGraph / AutoGen / ReAct</h3>
 <ul><li><strong>LangChain / LangGraph</strong>：把 LLM、工具、记忆、检索「编排」起来的开发框架，降低搭 Agent 的门槛。</li><li><strong>AutoGen</strong>：微软的多 Agent 对话协作框架。</li><li><strong>没有 LangChain 还能工作吗？</strong> 能。LangChain 只是「胶水」，本质是你自己写循环：调 LLM → 解析输出 → 调工具 → 回填 → 再调 LLM。<strong>ReAct、Plugin、Tool 不依赖 LangChain 也能组合</strong>，框架只是让工程更省事。</li></ul>
+<p>这些词并不都在同一层：LangChain 提供模型、Prompt、Retriever、Tool 等组件和调用链；LangGraph 更偏向带状态、分支、循环、断点恢复和人工审批的图运行时；AutoGen 强调多个 Agent 通过消息协作；ReAct 则是一种“根据观察决定下一步动作”的控制思路，不是必须安装的软件。</p>
+<p>其他常见 Agent 范式：</p>
+<ul><li><strong>Plan-and-Solve</strong>：先形成计划，再按步骤执行，适合依赖关系清晰的长任务；计划错误时要允许重规划。</li><li><strong>Reflexion</strong>：失败后生成反思或经验，下一轮把经验加入上下文；反思只是候选解释，仍需外部验证，不能把“自我评价”当真相。</li><li><strong>Toolformer 思路</strong>：让模型从数据中学习何时插入工具调用以及如何使用返回结果。它更接近工具使用训练方法，不等于一个通用 Agent 框架。</li><li><strong>Multi-Agent</strong>：多个角色分工、投票或辩论，详见 §10.4；只有能并行或交叉验证时才值得增加复杂度。</li></ul>
 <h3 id="38-记忆检索与上下文">3.8 记忆检索与上下文</h3>
 <ul><li><strong>记忆（Memory）</strong>：长期沉淀的用户偏好、历史任务、领域知识，按需检索。</li><li><strong>上下文（Context）</strong>：当前这次推理真正「喂给模型」的文本窗口 = 新输入 + 检索到的记忆 + 工具结果等。</li><li><strong>为什么先记忆检索再上下文？</strong> 为了<strong>把最相关的历史/知识精准塞进有限的上下文窗口</strong>，既减少无关噪声，也<strong>降低幻觉</strong>（让模型有依据）。</li><li>本质：用户任务 → 先查记忆 → 再组上下文 → 模型思考，这套前置正是为了减少模型「凭空编」。</li></ul>
 <h3 id="39-新一代模型会怎样改进-agent-链路">3.9 新一代模型会怎样改进 Agent 链路</h3>
 <p>比较不同代际模型时，具体型号、内部架构、上下文长度、价格和安全指标都属于时效信息；如果官方没有发布技术报告，就不能把营销名或推测写成事实。更稳妥的比较框架是：</p>
-<p>1. <strong>基座能力</strong>：推理、编码、多模态、长上下文是否提升；</p>
-<p>2. <strong>工具能力</strong>：函数调用参数是否更准，能否并行调用，失败后能否修正；</p>
-<p>3. <strong>长程可靠性</strong>：多步任务的完成率、状态保持、恢复能力；</p>
-<p>4. <strong>效率</strong>：首 token 延迟、每秒 token、价格、上下文缓存；</p>
-<p>5. <strong>安全与控制</strong>：权限边界、提示注入防护、审计日志、人类确认；</p>
-<p>6. <strong>评测证据</strong>：公开基准、真实业务回归集和可复现实验，而非只看发布会结论。</p>
+<ol><li><strong>基座能力</strong>：推理、编码、多模态、长上下文是否提升；</li><li><strong>工具能力</strong>：函数调用参数是否更准，能否并行调用，失败后能否修正；</li><li><strong>长程可靠性</strong>：多步任务的完成率、状态保持、恢复能力；</li><li><strong>效率</strong>：首 token 延迟、每秒 token、价格、上下文缓存；</li><li><strong>安全与控制</strong>：权限边界、提示注入防护、审计日志、人类确认；</li><li><strong>评测证据</strong>：公开基准、真实业务回归集和可复现实验，而非只看发布会结论。</li></ol>
 <p>模型迭代快，通常来自数据治理、训练配方、合成数据、推理时计算、蒸馏、基础设施优化和产品反馈共同形成的飞轮，不意味着每次都从零训练。</p>
 <h3 id="310-kv-cache小学生版">3.10 KV-Cache（小学生版）</h3>
 <p>大模型生成文字像“一节一节接龙”。如果没有缓存，每生成一个新 token，都要重新计算全部历史 token 的 K/V。<strong>KV Cache 把每一层、每个历史 token 的 K 和 V 张量存起来</strong>；生成下一个 token 时只计算新 token 的 Q/K/V，再让新 Q 读取历史 K/V。</p>
@@ -406,29 +527,39 @@ flowchart TD
 <p>“跨 API 请求复用”就是：第一次请求包含一大段固定系统提示或相同文档，服务商计算后暂存；第二次独立 HTTP 请求仍以完全相同前缀开头，就可以从缓存继续，而不必重算这段前缀。是否自动启用、最小长度、保留时间和价格由服务商规则决定。</p>
 <p><strong>缓存命中不只发生在不同聊天轮次</strong>：只要 API 的前缀缓存机制允许，两个独立请求也可能命中；同一请求内逐 token 生成则是 KV Cache，不应叫“缓存输入计费命中”。</p>
 <p><strong>为什么输出 token 通常更贵？</strong> 输入 prompt 的 prefill 可以把许多 token 并行处理；输出必须自回归，一个 token 接一个 token 地执行完整模型，并占用服务时间和 KV Cache。它不是因为“每次把历史文字重新读一遍”——KV Cache 正是在避免重算历史 K/V——而是因为每个新 token 仍要经过所有层、读取不断增长的缓存并完成一次解码。API 账单里的 cached input、uncached input 和 output 通常是不同计费项，输出不会因为读取 KV Cache 自动变成“缓存输入价”。</p>
+<a id="deep-prompt-cache"></a>
+<a id="deep-prefill-decode"></a>
+<details>
+<summary><strong>深入解释：Prefill Decode KV Cache 与缓存计费完整生命周期</strong></summary>
+<p>一次请求抵达推理引擎后，先把完整输入切成 token。Prefill 阶段可以同时处理整段输入，在每一层计算这些 token 的 Q/K/V，并把 K/V 写入 KV Cache。这个阶段擅长大规模并行，主要影响 TTFT。</p>
+<p>进入 Decode 后，模型每轮只生成一个新 token：</p>
+<ol><li>读取已经保存的历史 K/V</li><li>计算当前新位置的 Q/K/V</li><li>用新 Q 对历史 K 做注意力，再聚合历史 V</li><li>经过后续层与 LM Head，选择下一个 token</li><li>把新 token 的 K/V 追加到缓存尾部</li><li>重复直到生成结束符或达到长度上限</li></ol>
+<p>因此 KV Cache 会随输入长度、输出长度、层数、KV 头数和并发量增长。它是短期计算状态，通常随会话结束、TTL 到期或内存压力被回收，不是长期记忆。</p>
+<p>Prompt/Prefix Cache 关注跨请求的固定前缀。例如多次请求都以同一份系统提示和长文档开头，服务商可以复用这部分 Prefill 的中间结果。计费折扣是否存在，属于 API 产品规则；技术上使用 KV Cache，不代表账单一定按“缓存命中价”计算。</p>
+<p>输出不能像固定输入前缀那样直接复用，因为模型每次的生成路径受当前请求、采样和历史输出影响。输出贵的根本原因是自回归串行执行和较低的并行效率，而不是模型完全重算全部历史文本。</p>
+</details>
+<hr>
 <h3 id="312-上下文工程">3.12 上下文工程</h3>
 <p>Prompt Engineering 关注“这一条提示怎么写”；<strong>Context Engineering</strong> 关注“模型在这一时刻应该看见哪些信息、按什么顺序、以什么格式、何时更新”。实现通常包括：</p>
-<p>1. 系统规则和角色边界；</p>
-<p>2. 当前用户任务与结构化状态；</p>
-<p>3. 从长期记忆检索出的少量相关信息；</p>
-<p>4. RAG 证据及其来源；</p>
-<p>5. 工具定义、参数 schema 和权限；</p>
-<p>6. 最近的工具 Observation；</p>
-<p>7. 示例、输出格式和停止条件；</p>
-<p>8. 压缩、摘要、去重、截断和 token 预算。</p>
+<ol><li>系统规则和角色边界；</li><li>当前用户任务与结构化状态；</li><li>从长期记忆检索出的少量相关信息；</li><li>RAG 证据及其来源；</li><li>工具定义、参数 schema 和权限；</li><li>最近的工具 Observation；</li><li>示例、输出格式和停止条件；</li><li>压缩、摘要、去重、截断和 token 预算。</li></ol>
 <p>关键指标包括任务成功率、证据利用率、上下文相关率、提示注入抵抗力、token 成本和延迟。上下文越长不必然越好：无关信息会稀释注意力，头尾位置效应可能让中间内容被忽略。</p>
+<a id="deep-context-engineering"></a>
+<details>
+<summary><strong>深入解释：上下文工程怎样在系统里实现</strong></summary>
+<p>上下文工程不是把所有资料拼得越长越好，而是在有限窗口中安排“模型此刻必须看到什么”。一个可执行系统通常维护以下来源：</p>
+<ol><li><strong>系统规则</strong>：角色、边界、允许动作、输出格式和失败处理规则</li><li><strong>当前任务</strong>：用户目标、文件、限制条件和完成判据</li><li><strong>短期历史</strong>：最近几轮对话与当前步骤状态</li><li><strong>长期记忆</strong>：从数据库或向量库按需召回的用户偏好和历史事实</li><li><strong>RAG 证据</strong>：与问题相关的文档片段、来源和时间</li><li><strong>工具说明</strong>：工具名、JSON Schema、权限与调用示例</li><li><strong>工具轨迹</strong>：最近的 Action、Observation、错误与重试记录</li></ol>
+<p>Harness 在每次调用模型前统计 token 预算。固定系统规则优先保留；当前问题与最新 Observation 通常不能丢；旧对话可压缩成摘要；无关或重复片段要删除；长文档只保留重排后的高相关证据。</p>
+<p>推荐拼接顺序是：不可覆盖的系统规则 → 任务规则与可用工具 → 精选记忆和 RAG 证据 → 必要历史 → 最新 Observation → 当前用户请求。系统还要标清每段内容的来源，避免把网页或工具返回里的恶意文字误当成系统指令。</p>
+<p>评估上下文工程不能只看回答是否流畅，应测任务成功率、证据引用正确率、检索片段实际使用率、无关上下文比例、提示注入成功率、token 成本与延迟。失败时要判断问题来自检索、排序、拼接、模型理解还是工具执行，而不是一律归因于模型“不聪明”。</p>
+</details>
+<hr>
 <h3 id="313-tree-of-thought-与-self-judge">3.13 Tree of Thought 与 self judge</h3>
 <ul><li><strong>Chain of Thought</strong>：沿一条候选推理路径前进。</li><li><strong>Tree of Thought</strong>：生成多个候选分支，评估后保留更有希望的路径；更像搜索算法，成本也更高。</li><li><strong>self-judge / self-reflection</strong>：模型或独立评审器根据验收标准检查结果，必要时重试。它不保证正确，因为“生成者”和“评审者”可能共享盲点。</li><li><strong>可验证环境</strong>：优先用单元测试、编译器、数学验证器、规则引擎、网页状态或业务断言判定结果；能用外部验证时，不应只靠模型自评。</li></ul>
 <h3 id="314-其他概念速记">3.14 其他概念速记</h3>
 <ul><li><strong>OpenClaw vs ChatGPT Computer Use</strong>：都是「让模型操作电脑界面」的能力；Computer Use 是 ChatGPT 原生的屏幕操作；OpenClaw 类是开源/第三方的同类方案。</li><li><strong>Hugging Face</strong>：全球最大的开源模型/数据集/工具社区（「AI 的 GitHub」）。</li><li><strong>模型/工具/上下文/记忆/任务执行</strong> 的关系：输入文本 → 记忆检索 → 进上下文 → LLM 思考 → Harness 调工具 → 结果回上下文 → 循环。LLM 是「脑」，Harness 是「手脚」，两者是两步而非一步（脑决策、手脚执行）。</li><li><strong>ChatGPT 是 Agent 还是 LLM？</strong> 它既是 LLM（底座），也通过工具/Computer Use 构成了 Agent 能力——是「带 Agent 外壳的 LLM」。</li><li><strong>豆包答案突然 <code></strong></code> 加粗**：Markdown 加粗语法被前端渲染成富文本，属输出格式控制，与回答内容正确性无关。</li></ul>
 <h3 id="315-workbuddy-走红的产品机制">3.15 WorkBuddy 走红的产品机制</h3>
 <p>WorkBuddy 的产品定位可以概括为“从文字建议走向可验证交付”。其走红通常是以下几层共同作用：</p>
-<p>1. <strong>任务价值</strong>：用户得到文件、表格、报告或执行结果，而不只是文字建议；</p>
-<p>2. <strong>门槛</strong>：桌面端、模板/技能市场和自然语言入口降低了搭 Agent 的配置成本；</p>
-<p>3. <strong>运行时</strong>：Harness 把模型、文件、浏览器、代码和重试串成可持续多步任务；</p>
-<p>4. <strong>分发与时机</strong>：AI 办公需求、竞品教育和真实案例传播形成窗口；</p>
-<p>5. <strong>生态</strong>：办公软件、IM、云服务或企业权限集成决定能否进入日常流程；</p>
-<p>6. <strong>信任</strong>：本地文件权限、沙箱、确认机制、可撤销性和日志决定用户是否敢让它做事。</p>
+<ol><li><strong>任务价值</strong>：用户得到文件、表格、报告或执行结果，而不只是文字建议；</li><li><strong>门槛</strong>：桌面端、模板/技能市场和自然语言入口降低了搭 Agent 的配置成本；</li><li><strong>运行时</strong>：Harness 把模型、文件、浏览器、代码和重试串成可持续多步任务；</li><li><strong>分发与时机</strong>：AI 办公需求、竞品教育和真实案例传播形成窗口；</li><li><strong>生态</strong>：办公软件、IM、云服务或企业权限集成决定能否进入日常流程；</li><li><strong>信任</strong>：本地文件权限、沙箱、确认机制、可撤销性和日志决定用户是否敢让它做事。</li></ol>
 <p>“别的 Agent 没火”不能只归因于技术弱。产品成熟度、渠道、品牌、定价、场景聚焦、稳定性和发布时间都可能更关键。SkillHub 的数量也不直接等于质量，应看模板成功率、维护状态、权限透明度和用户复用率。</p>
 <hr>
 <h2 id="模块四-算力与硬件">模块四 · 算力与硬件</h2>
@@ -441,12 +572,7 @@ flowchart TD
 </div>
 <ul><li><strong>算力（TFLOPS）</strong>：每秒浮点运算次数 → 决定完成一次计算/每秒出多少 token。</li><li><strong>显存（VRAM）</strong>：存放权重、梯度、优化器状态、中间激活、<strong>KV-Cache</strong>。显存不够直接跑不起来——是大模型第一大瓶颈。</li><li><strong>带宽</strong>：显存带宽（GPU 核心↔显存）+ 多卡互联带宽（NVLink / InfiniBand / NCCL）。带宽低，GPU 空等数据，算力浪费。</li></ul>
 <h3 id="42-芯片如何训练大模型">4.2 芯片如何训练大模型</h3>
-<p>1. 文本切段送入 GPU 集群；</p>
-<p>2. <strong>前向计算</strong>：读权重算输出，对比答案得误差；</p>
-<p>3. <strong>反向传播</strong>：据误差算每个参数该调大/调小（梯度）；</p>
-<p>4. <strong>优化器更新</strong>：用梯度改几十亿/万亿参数；</p>
-<p>5. 循环亿万次缩小误差；</p>
-<p>6. <strong>分布式</strong>：模型并行（参数分片）+ 数据并行（不同 batch）+ 高速互联同步梯度。</p>
+<ol><li>文本切段送入 GPU 集群；</li><li><strong>前向计算</strong>：读权重算输出，对比答案得误差；</li><li><strong>反向传播</strong>：据误差算每个参数该调大/调小（梯度）；</li><li><strong>优化器更新</strong>：用梯度改几十亿/万亿参数；</li><li>循环亿万次缩小误差；</li><li><strong>分布式</strong>：模型并行（参数分片）+ 数据并行（不同 batch）+ 高速互联同步梯度。</li></ol>
 <blockquote>训练阶段显存 ≫ 推理：还要存梯度、优化器状态、每步激活。如 175B 的 GPT-3 全套训练态需 TB 级显存，单卡放不下。</blockquote>
 <h3 id="43-为什么放显存跑能不能放内存">4.3 为什么放显存跑？能不能放内存？</h3>
 <ul><li>GPU 读<strong>显存</strong>速度是读主机<strong>内存</strong>的几十~上百倍。模型每秒反复读几十 GB 权重，放内存条会因搬运慢而暴跌几十倍。</li><li><strong>技术可行但仅适合测试</strong>：叫 offload（内存卸载），临时搬进显存，PCIe 慢、延迟高、并发易卡死，不适合线上。</li><li><strong>本质</strong>：在显存里跑 = 让计算核心能「随手取用」权重与 KV-Cache，最大化吞吐。</li></ul>
@@ -502,12 +628,7 @@ mindmap
 <h3 id="52-gpt-家族55-56-6">5.2 GPT 家族：5.5 / 5.6 / 6</h3>
 <p>模型名称可能来自特定产品入口，并不自动等于公开 API 型号；任何架构名、固定上下文长度、能力提升百分比或价格变化，若无官方技术报告与产品文档支持，都不应当作确定事实。</p>
 <p>正确比较两个代际，应固定同一任务集、系统提示、工具、温度、预算与运行次数，至少观察：</p>
-<p>1. <strong>准确性</strong>：事实、数学、代码、指令遵循；</p>
-<p>2. <strong>Agent 能力</strong>：工具选择、参数正确率、长程完成率、失败恢复；</p>
-<p>3. <strong>多模态</strong>：图片、音频、视频和文档理解；</p>
-<p>4. <strong>效率</strong>：首 token 延迟、吞吐、输入/缓存/输出价格；</p>
-<p>5. <strong>上下文</strong>：标称长度之外，还要测长文定位和中间信息利用；</p>
-<p>6. <strong>安全性</strong>：越权、提示注入、数据泄漏和人类确认机制。</p>
+<ol><li><strong>准确性</strong>：事实、数学、代码、指令遵循；</li><li><strong>Agent 能力</strong>：工具选择、参数正确率、长程完成率、失败恢复；</li><li><strong>多模态</strong>：图片、音频、视频和文档理解；</li><li><strong>效率</strong>：首 token 延迟、吞吐、输入/缓存/输出价格；</li><li><strong>上下文</strong>：标称长度之外，还要测长文定位和中间信息利用；</li><li><strong>安全性</strong>：越权、提示注入、数据泄漏和人类确认机制。</li></ol>
 <h3 id="53-垂类-vs-通用模型">5.3 垂类 vs 通用模型</h3>
 <ul><li><strong>通用模型</strong>（GPT/豆包/DeepSeek）：啥都能聊，但缺行业深度与私有数据。</li><li><strong>垂类模型</strong>（如美团「问小团」、携程酒旅大模型）：= <strong>基座 + 私有知识库 + 交易 API + Agent</strong>。优势是行业精准、可直连业务（订酒店/推线路）；劣势是泛化弱、维护成本高、依赖基座能力。</li><li><strong>美团「问小团」</strong>：属<strong>垂类大模型</strong>（酒旅场景），并非通用模型。</li></ul>
 <h3 id="54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</h3>
@@ -528,6 +649,10 @@ mindmap
 <h2 id="模块六-ai-产品与交互工程">模块六 · AI 产品与交互工程</h2>
 <h3 id="61-ai-产品评测与标注">6.1 AI 产品评测与标注</h3>
 <ul><li><strong>评测</strong>：建基准集（功能/安全/对齐/业务指标），自动化跑分 + 人工抽检，持续回归。</li><li><strong>标注</strong>：构建「指令-偏好/事实-标注」数据，用于 SFT/RLHF；大厂有专业标注团队与质检流程，分采集、标注、审核、入库环节。</li></ul>
+<p>一套可落地的评测不能只看“回答像不像人”，而要把问题拆成几层：</p>
+<table class="tbl"><thead><tr><th>层级</th><th>要回答的问题</th><th>常见指标或方法</th></tr></thead><tbody><tr><td>基础模型</td><td>知识、推理、代码能力是否够用</td><td>MMLU、GPQA、HumanEval 等公开基准，外加业务自建题集</td></tr><tr><td>生成质量</td><td>答案是否正确、相关、完整、可读</td><td>精确匹配、事实核验、人工评分、LLM-as-a-judge</td></tr><tr><td>RAG</td><td>是否找对资料、答案是否忠于资料</td><td>Recall@K、MRR、nDCG、引用正确率、忠实度</td></tr><tr><td>Agent</td><td>是否真的完成任务，而非只说完成了</td><td>最终状态断言、工具参数正确率、步骤数、恢复率</td></tr><tr><td>工程体验</td><td>是否足够快、稳、便宜</td><td>TTFT、TPS、错误率、P95/P99 延迟、单任务成本</td></tr><tr><td>安全</td><td>是否泄密、越权或被提示注入劫持</td><td>红队通过率、越权率、敏感信息泄漏率</td></tr></tbody></table>
+<p>标注流程通常不是“一人随手打分”，而是：先写清标注规范与正反例，再让标注员独立判断；对分歧样本做复审或仲裁；抽样计算一致性；最后把低质量、重复、泄露答案或边界不清的样本剔除。偏好数据常让标注员在两个候选回答中选更好者，并说明判断维度，这些数据可用于奖励模型、DPO 或产品评测。</p>
+<p><strong>离线评测</strong>适合上线前重复跑同一题集，便于比较模型和 Prompt 版本；<strong>在线评测</strong>观察真实用户的完成率、重试、点踩、人工接管和留存。线上结果更真实，却受用户群、流量分配和产品界面影响，因此不能替代可复现的离线回归集。公开榜单也不能代替业务评测：排行榜分数高，只说明它在那套题和评分规则下表现好。</p>
 <h3 id="62-ai-系统产品工程">6.2 AI 系统产品工程</h3>
 <ul><li><strong>轻量化模型</strong>：量化/蒸馏/小参数模型，适合端侧/低成本部署。</li><li><strong>端到端 AI 系统</strong>：从输入、检索、模型、工具、验证到交付形成可观测闭环，减少中间状态丢失。</li><li><strong>Human in the loop</strong>：在高风险、低置信度或不可逆操作前由人确认，系统记录决定和后续结果。</li><li><strong>成本与延迟预算</strong>：同时管理输入 token、输出 token、缓存、模型路由、并发和工具调用成本。</li><li><strong>能力边界</strong>：当前通用模型在强推理、长程执行、实时事实、物理操作上仍有上限，产品需明确边界与兜底。</li></ul>
 <h3 id="63-ai-味为什么重">6.3 「AI 味」为什么重</h3>
@@ -539,15 +664,7 @@ mindmap
 <hr>
 <h2 id="模块七-关键原理速查">模块七 · 关键原理速查</h2>
 <p>本章将分散在前文的关键原理压缩为九个入口，便于复习和交叉查找。</p>
-<p>1. <strong>如何从零训练一个 Agent？</strong> 先训/选型基座 → 写 Harness（任务拆解、工具注册、重试、沙箱）→ 接 MCP 工具池 → 设计记忆与上下文管理 → 用 RLVR/AgentRL 在对齐阶段强化执行 → 评测长程任务。</p>
-<p>2. <strong>国际主流 LLM 评测标准？</strong> 见 §2.4（MMLU / HumanEval / SWE-bench / ARC-AGI / GPQA / AA Index 等）。</p>
-<p>3. <strong>模型为何迭代快？新一代模型比上一代改了什么？</strong> 迭代快来自数据、训练配方、合成数据、推理时计算、基础设施和产品反馈的飞轮；具体型号应按官方技术报告与业务回归集比较，见 §3.9、§9.5。</p>
-<p>4. <strong>Transformer 与 Attention 关系？注意力本质？FFN 干啥？</strong> 见 §1.3（Transformer 是架构，Attention 是其核心子层；注意力=按相关性聚合上下文；FFN=逐位置非线性变换消化信息）。</p>
-<p>5. <strong>预训练 vs 推理的 Q/K/V 异同？无 KV-Cache 为何有 QKV？</strong> 见 §1.3/§1.4（都产生 QKV，因都用 Transformer 算注意力；预训练无 KV-Cache 是因整段并行算完，不需缓存历史）。</p>
-<p>6. <strong>AI 产品中的加粗、引用和表情如何实现？</strong> 见 §6.5（Markdown + 前端渲染，产品输出规范）。</p>
-<p>7. <strong>为何算 QK 相似度？权重啥意思？V 怎关预测 token？</strong> 见 §1.3（相似度=相关性权重；加权 V=融合上下文后的表示，直接送入下一层预测下一 token）。</p>
-<p>8. <strong>预训练 vs 推理过程区别？</strong> 见 §1.4（训练=并行+反向+更新产权重；推理=自回归前向生成不更新）。</p>
-<p>9. <strong>没有 LangChain 能否让 LLM/ReAct/Plugin/Tool 协作？</strong> 能。LangChain 是胶水，核心是「调 LLM→解析→调工具→回填→循环」的自写循环，见 §3.7。</p>
+<ol><li><strong>如何从零训练一个 Agent？</strong> 先训/选型基座 → 写 Harness（任务拆解、工具注册、重试、沙箱）→ 接 MCP 工具池 → 设计记忆与上下文管理 → 用 RLVR/AgentRL 在对齐阶段强化执行 → 评测长程任务。</li><li><strong>国际主流 LLM 评测标准？</strong> 见 §2.4（MMLU / HumanEval / SWE-bench / ARC-AGI / GPQA / AA Index 等）。</li><li><strong>模型为何迭代快？新一代模型比上一代改了什么？</strong> 迭代快来自数据、训练配方、合成数据、推理时计算、基础设施和产品反馈的飞轮；具体型号应按官方技术报告与业务回归集比较，见 §3.9、§9.5。</li><li><strong>Transformer 与 Attention 关系？注意力本质？FFN 干啥？</strong> 见 §1.3（Transformer 是架构，Attention 是其核心子层；注意力=按相关性聚合上下文；FFN=逐位置非线性变换消化信息）。</li><li><strong>预训练 vs 推理的 Q/K/V 异同？无 KV-Cache 为何有 QKV？</strong> 见 §1.3/§1.4（都产生 QKV，因都用 Transformer 算注意力；预训练无 KV-Cache 是因整段并行算完，不需缓存历史）。</li><li><strong>AI 产品中的加粗、引用和表情如何实现？</strong> 见 §6.5（Markdown + 前端渲染，产品输出规范）。</li><li><strong>为何算 QK 相似度？权重啥意思？V 怎关预测 token？</strong> 见 §1.3（相似度=相关性权重；加权 V=融合上下文后的表示，直接送入下一层预测下一 token）。</li><li><strong>预训练 vs 推理过程区别？</strong> 见 §1.4（训练=并行+反向+更新产权重；推理=自回归前向生成不更新）。</li><li><strong>没有 LangChain 能否让 LLM/ReAct/Plugin/Tool 协作？</strong> 能。LangChain 是胶水，核心是「调 LLM→解析→调工具→回填→循环」的自写循环，见 §3.7。</li></ol>
 <hr>
 <h2 id="模块八-从自然语言到-agent-交付的完整链路">模块八 · 从自然语言到 Agent 交付的完整链路</h2>
 <p>这一章把前文的 Tokenizer、Embedding、Transformer、KV Cache、RAG、ReAct、Harness、MCP、Skill、Plugin、Memory、训练与对齐放回同一张地图。先区分两条时间线：<strong>离线训练线</strong>负责“造出和改进模型”，<strong>在线推理线</strong>负责“处理这一次用户任务”。</p>
@@ -566,12 +683,7 @@ flowchart LR
   J --> K[能力 安全 业务评测]
   K --> L[量化 蒸馏 部署]
 </div>
-<p>1. <strong>数据治理</strong>：明确许可，去除重复、乱码、隐私和有害内容，做好领域配比和数据血缘。</p>
-<p>2. <strong>Tokenizer</strong>：把文本稳定映射成 token id；训练数据和推理必须使用兼容词表。</p>
-<p>3. <strong>预训练</strong>：因果掩码下预测下一个 token，计算交叉熵，反向传播并更新参数。</p>
-<p>4. <strong>后训练</strong>：让续写模型学会遵循指令、偏好、安全规范、推理和工具调用。</p>
-<p>5. <strong>评测</strong>：同时看通用能力、领域任务、安全、鲁棒性、成本、延迟和真实完成率。</p>
-<p>6. <strong>部署</strong>：选择精度、量化、并行、批处理、KV Cache 管理和服务路由。</p>
+<ol><li><strong>数据治理</strong>：明确许可，去除重复、乱码、隐私和有害内容，做好领域配比和数据血缘。</li><li><strong>Tokenizer</strong>：把文本稳定映射成 token id；训练数据和推理必须使用兼容词表。</li><li><strong>预训练</strong>：因果掩码下预测下一个 token，计算交叉熵，反向传播并更新参数。</li><li><strong>后训练</strong>：让续写模型学会遵循指令、偏好、安全规范、推理和工具调用。</li><li><strong>评测</strong>：同时看通用能力、领域任务、安全、鲁棒性、成本、延迟和真实完成率。</li><li><strong>部署</strong>：选择精度、量化、并行、批处理、KV Cache 管理和服务路由。</li></ol>
 <h3 id="82-在线单次问答线">8.2 在线单次问答线</h3>
 <div class="mermaid">
 flowchart TD
@@ -613,16 +725,7 @@ flowchart TD
 <ul><li><strong>LLM</strong>决定“下一步做什么”和“如何表达”；</li><li><strong>Harness</strong>保存状态、执行循环、处理错误与权限；</li><li><strong>ReAct</strong>是一种“思考—行动—观察”的控制模式；</li><li><strong>Skill</strong>是任务方法与规范，通常是文本，也可引用脚本和模板；</li><li><strong>Plugin</strong>是可安装的能力包，可能包含 Skill、工具和连接器；</li><li><strong>MCP</strong>是连接工具/资源的协议，不负责替模型思考；</li><li><strong>RAG</strong>既可在调用模型前检索，也可作为 Agent 在需要时调用的工具；</li><li><strong>Memory</strong>在多次任务之间持久化信息；<strong>Context</strong>是这一次真正送入模型的内容；</li><li><strong>KV Cache</strong>是模型计算缓存，既不是 Memory，也不是 RAG 数据库。</li></ul>
 <h3 id="84-从零训练或构建-agent-的可执行路线">8.4 从零训练或构建 Agent 的可执行路线</h3>
 <p>严格说，多数团队不是“从零训练 Agent 基座”，而是选择现成 LLM，构建 Agent 系统；只有数据和算力充足时才做 SFT/AgentRL。</p>
-<p>1. 写清目标、允许动作、禁止动作和完成判据；</p>
-<p>2. 选模型并固定版本，定义成本与延迟预算；</p>
-<p>3. 用 JSON Schema 定义工具，接入最少必要权限；</p>
-<p>4. 实现 Harness 状态机、步数上限、超时、重试和幂等；</p>
-<p>5. 增加 RAG、记忆、上下文压缩与引用；</p>
-<p>6. 建可验证环境与回放日志；</p>
-<p>7. 构造任务集：正常、边界、故障、恶意提示注入；</p>
-<p>8. 先做 prompt/context 优化，再判断是否值得 SFT；</p>
-<p>9. 有高质量执行轨迹时做 SFT，有可靠奖励时再做 RLVR/AgentRL；</p>
-<p>10. 灰度发布，监控完成率、错误恢复、越权、成本和人工接管率。</p>
+<ol><li>写清目标、允许动作、禁止动作和完成判据；</li><li>选模型并固定版本，定义成本与延迟预算；</li><li>用 JSON Schema 定义工具，接入最少必要权限；</li><li>实现 Harness 状态机、步数上限、超时、重试和幂等；</li><li>增加 RAG、记忆、上下文压缩与引用；</li><li>建可验证环境与回放日志；</li><li>构造任务集：正常、边界、故障、恶意提示注入；</li><li>先做 prompt/context 优化，再判断是否值得 SFT；</li><li>有高质量执行轨迹时做 SFT，有可靠奖励时再做 RLVR/AgentRL；</li><li>灰度发布，监控完成率、错误恢复、越权、成本和人工接管率。</li></ol>
 <h3 id="85-01b-实验与-mac-的现实边界">8.5 0.1B 实验与 Mac 的现实边界</h3>
 <p>0.1B 教学模型适合学习 Tokenizer、Transformer、loss、训练循环和对齐，但不应期待达到商用聊天模型能力。Apple Silicon 可以用统一内存和 MPS/MLX 做小模型实验；Triton/CUDA kernel、多 NVIDIA GPU/NCCL 扩展测试则需要 NVIDIA 环境。MacBook Pro 32 GB 更适合：</p>
 <ul><li>训练很小的教学模型或短序列实验；</li><li>对 1B～数 B 模型做量化推理、LoRA/QLoRA 小规模实验；</li><li>开发和验证数据管线、Harness、RAG 与评测代码；</li><li>把大规模训练、多卡吞吐实验放到 Linux GPU 云或集群。</li></ul>
@@ -653,7 +756,119 @@ flowchart TD
 <h3 id="95-时效信息的核验规则">9.5 时效信息的核验规则</h3>
 <p>模型名称、参数量、价格、上下文长度、许可证、显卡售价和产品能力都会变化。阅读本笔记中的生态章节时，应按以下顺序核验：官方模型页/技术报告 → 官方 API 文档与价格页 → 官方仓库模型卡 → 可信第三方实测。第三方排行榜是参考，不等同于业务效果；未公开参数量时不要用估算冒充官方数字。</p>
 <p>参考资料包括：<a href="https://qwenlm.github.io/blog/qwen3/">Qwen3 发布说明</a>、<a href="https://ollama.com/library/qwen3.5">Ollama Qwen3.5 模型页</a>、<a href="https://ai.google.dev/gemini-api/docs/models">Google Gemini 模型目录</a>、<a href="https://docs.anthropic.com/en/docs/about-claude/model-deprecations">Anthropic 模型生命周期</a>、<a href="https://huggingface.co/docs/peft/en/package_reference/lora">Hugging Face PEFT LoRA 文档</a>、<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/">NVIDIA CUDA 编程指南</a>与 <a href="https://docs.nvidia.com/deeplearning/nccl/">NCCL 文档</a>。</p>
-<div class="foot">本页为 HTML 可视化版；同名 <code>.md</code> 与 <code>.docx</code> 为等效交付物。Mermaid 图表需联网加载（jsDelivr CDN）；若离线则显示源码。</div>
+<hr>
+<h2 id="模块十-推理服务-性能优化-隐私与多-agent">模块十 · 推理服务 性能优化 隐私与多 Agent</h2>
+<h3 id="101-从模型文件到可调用-api推理引擎在什么位置">10.1 从模型文件到可调用 API：推理引擎在什么位置</h3>
+<p>模型权重只是大量参数文件，本身不会排队、计费或向用户流式输出。真正让模型成为在线服务的是一整套运行栈：</p>
+<div class="mermaid">
+flowchart LR
+  U[用户或 Agent 请求] --> G[API 网关]
+  G --> R[模型路由与负载均衡]
+  R --> Q[请求队列与调度器]
+  Q --> I[推理引擎]
+  I --> T[Tokenizer]
+  T --> P[Prefill]
+  P --> K[KV Cache]
+  K --> D[Decode 与采样]
+  D --> S[流式返回 token]
+  G -.-> O[日志 指标 计费 链路追踪]
+  I -.-> O
+</div>
+<ul><li><strong>API 网关</strong>管理身份、额度、安全检查和统一入口；</li><li><strong>路由器</strong>决定把请求交给哪个模型、版本或 GPU 集群；</li><li><strong>推理引擎</strong>负责加载权重、运行 Tokenizer、Prefill、Decode、采样和 KV Cache；</li><li><strong>调度器</strong>把不同用户的请求高效拼到 GPU 上；</li><li><strong>可观测系统</strong>记录延迟、token、错误、成本与整条调用链。</li></ul>
+<a id="deep-inference-engine"></a>
+<details>
+<summary><strong>深入解释：Continuous Batching、Paged KV、显存调度与推测解码</strong></summary>
+<h4 id="1-为什么普通静态批处理不适合聊天服务">1. 为什么普通静态批处理不适合聊天服务</h4>
+<p>假设同时来了三名用户，分别要生成 20、100、500 个 token。静态批处理把三人绑成一批，短请求生成完也要等最长请求，GPU 中间会出现空位。<strong>Continuous Batching（连续批处理或动态批处理）</strong>则允许已完成的请求立刻退出，并把排队的新请求插进空位。它像不断上下客的地铁，而不是必须所有乘客同站下车的包车。</p>
+<p>连续批处理提高的是整台服务的利用率和吞吐，但并非请求越多越快。并发过高时，每个请求分到的计算时间和显存变少，排队与单请求延迟仍会升高，所以调度器还要控制批大小、优先级和最大序列长度。</p>
+<h4 id="2-请求排队gpu-负载调度与显存分片">2. 请求排队、GPU 负载调度与显存分片</h4>
+<ul><li><strong>请求排队</strong>：GPU 达到并发或显存上限后，请求进入先进先出或带优先级的队列。队列太长时应超时、拒绝或降级，而不是无限积压。</li><li><strong>GPU 负载调度</strong>：在多个实例之间选择当前更空闲、拥有所需模型、显存足够的 GPU；还要考虑会话粘性，因为某个会话的 KV Cache 可能已经在特定实例上。</li><li><strong>显存分片</strong>：把显存按逻辑块管理，分别容纳权重、激活值、临时工作区和各请求的 KV Cache。这里的“分片”既可能指单卡内存块管理，也可能指模型或张量跨多张卡切分，不能混为一谈。</li></ul>
+<h4 id="3-paged-kv-pagedattention-为什么像操作系统分页">3. Paged KV / PagedAttention 为什么像操作系统分页</h4>
+<p>传统方式给每个请求预留一整块连续 KV Cache，但输出究竟多长事先不知道，容易产生大量空洞和碎片。Paged KV 把 KV Cache 切成固定大小的块，用映射表把逻辑上连续的 token 对应到物理上不连续的显存页。请求增长时再领新页，结束后立即归还。</p>
+<p>它解决的主要是<strong>显存利用率和并发容量</strong>，不会让模型数学能力变强。PagedAttention 是在这种分页布局上高效读取 K/V 的注意力实现；它与跨请求复用固定前缀的 Prompt Cache 也不是同一个概念。</p>
+<h4 id="4-推测解码为什么可以一次猜多个-token">4. 推测解码为什么可以一次“猜”多个 token</h4>
+<p>标准自回归模型一次前向通常只确定一个新 token，串行依赖很强。<strong>Speculative Decoding（推测解码）</strong>先让更便宜的草稿模型连续猜若干 token，再由主模型一次并行检查；猜对的整段可以一起接受，猜错的位置由主模型纠正。只要验证规则正确，输出分布可以保持与主模型一致。</p>
+<p><strong>Medusa</strong>不一定另配完整草稿模型，而是在主模型后增加多个预测头，同时提出未来若干 token 的候选树，再由主模型验证。<strong>EAGLE</strong>进一步利用主模型内部的 hidden state 来预测后续特征和 token，目标是提高候选接受率并减少草稿开销。三者共同目标都是减少昂贵主模型的串行 Decode 次数。</p>
+<p>容易混淆的一点：这些技术主要缩短<strong>输出阶段</strong>，一般更直接改善每 token 生成速度和总完成时间；TTFT 往往更受排队、输入长度与 Prefill 影响，不能笼统地说所有推测解码都会显著降低 TTFT。</p>
+<h4 id="5-mtp-与推测解码的关系">5. MTP 与推测解码的关系</h4>
+<p><strong>MTP（Multi-Token Prediction，多 token 预测）</strong>让模型在训练或附加预测头中同时预测多个未来位置。用于推理时，可以先提出多个候选，再统一验证，因此能成为推测解码的一部分。它不是“跳过验证后随便输出多个 token”，否则错误会沿序列放大。</p>
+</details>
+<hr>
+<h3 id="102-api-网关流量控制与可观测指标">10.2 API 网关、流量控制与可观测指标</h3>
+<a id="deep-serving-metrics"></a>
+<details>
+<summary><strong>深入解释：RPM、TPM、并发、路由、TTFT、TPS 与链路追踪</strong></summary>
+<h4 id="流量控制四件套">流量控制四件套</h4>
+<table class="tbl"><thead><tr><th>概念</th><th>大白话</th><th>它限制或决定什么</th></tr></thead><tbody><tr><td><strong>RPM</strong></td><td>一分钟最多敲多少次门</td><td>Requests Per Minute，每分钟请求数</td></tr><tr><td><strong>TPM</strong></td><td>一分钟最多搬多少字</td><td>Tokens Per Minute，输入与输出 token 总量额度</td></tr><tr><td><strong>并发限制</strong></td><td>同一时刻最多多少件事正在办</td><td>同时执行中的请求或任务数</td></tr><tr><td><strong>负载均衡</strong></td><td>把人分到不同窗口</td><td>在多个相同或相近实例之间分流</td></tr><tr><td><strong>路由分发</strong></td><td>判断应该去哪个部门</td><td>按任务、模型版本、地区、成本或权限选择不同后端</td></tr></tbody></table>
+<p>RPM 低不代表负载一定低：一分钟 10 个超长文档请求，可能比 100 个短问答更耗算力。因此网关通常同时看 RPM、TPM、并发数和最大上下文长度。超限时可返回限流错误、排队、降级到小模型，或让客户端按退避策略重试。</p>
+<p><strong>负载均衡与路由的区别</strong>：负载均衡主要在“能做同一件事的多个实例”之间摊流量；路由则先判断“应该由哪类模型或 Agent 做”。例如代码任务路由到代码模型，随后再由负载均衡选该集群里最合适的一台实例。</p>
+<h4 id="性能与稳定性指标">性能与稳定性指标</h4>
+<table class="tbl"><thead><tr><th>指标</th><th>正确定义</th><th>诊断价值</th></tr></thead><tbody><tr><td><strong>TTFT</strong></td><td>从请求发出到收到第一个输出 token 的时间</td><td>受排队、网络、输入长度、Prefill 和缓存命中影响</td></tr><tr><td><strong>ITL / TPOT</strong></td><td>相邻输出 token 的间隔 / 每输出 token 时间</td><td>反映 Decode 阶段是否流畅</td></tr><tr><td><strong>TPS</strong></td><td>每秒处理或生成的 token 数；必须注明按单请求还是整机统计</td><td>衡量生成速度或系统吞吐</td></tr><tr><td><strong>E2E Latency</strong></td><td>从请求到完整回答结束的总时间</td><td>同时包含排队、Prefill、Decode 与工具时间</td></tr><tr><td><strong>错误率</strong></td><td>超时、服务错误、参数错误等失败请求占比</td><td>判断服务稳定性；应按错误类型拆分</td></tr><tr><td><strong>缓存命中率</strong></td><td>可复用前缀或其他缓存被命中的比例</td><td>解释 TTFT 和输入计算成本变化</td></tr><tr><td><strong>token 长度分布</strong></td><td>输入、输出长度的均值及 P50/P95/P99</td><td>发现极长请求和成本异常</td></tr></tbody></table>
+<p>“TPS”这个缩写在不同系统中也可能指 Transactions Per Second，因此文档和仪表盘必须写清口径。只报平均延迟也容易掩盖长尾，线上服务通常更关注 P95/P99。</p>
+<h4 id="日志埋点与链路追踪">日志埋点与链路追踪</h4>
+<p><strong>日志埋点</strong>是在关键事件记录结构化数据，例如请求到达、路由结果、Prompt 版本、模型版本、输入输出 token、工具开始/结束、错误码和耗时。日志不是把所有敏感 Prompt 无条件永久保存；应做脱敏、权限控制和保留期管理。</p>
+<p><strong>链路追踪</strong>给一次用户任务分配唯一 <code>trace_id</code>。它经过网关、推理引擎、Harness、RAG、工具服务时继续携带，并为每一步生成 <code>span</code>。当用户说“刚才为什么等了 40 秒”，可以沿同一 trace 看出是排队 3 秒、Prefill 2 秒、网页工具 31 秒，还是模型 Decode 4 秒。</p>
+</details>
+<hr>
+<h3 id="103-webhook-与模型路由一个负责通知一个负责分发">10.3 Webhook 与模型路由：一个负责“通知”，一个负责“分发”</h3>
+<ul><li><strong>Webhook</strong>是事件发生后的主动回调。例如支付成功、文件上传完成或 GitHub 推送后，外部系统向预先登记的 URL 发送 HTTP 请求，触发 Agent 继续工作。它回答的是“发生了什么，通知谁”。</li><li><strong>模型路由（Model Router）</strong>接到 AI 请求后，根据任务类型、模型能力、价格、延迟、地区、用户等级和当前负载，选择模型或 Agent。它回答的是“这件事交给谁处理”。</li></ul>
+<p>Webhook 可以把事件送进统一网关，网关再用路由器选择处理者。二者可以串联，却不是同一组件。Webhook 接口还要校验签名、防重放并保证幂等，因为外部系统可能重复投递同一事件。</p>
+<h3 id="104-多-agent何时值得拆成多个角色">10.4 多 Agent：何时值得拆成多个角色</h3>
+<p>多 Agent 系统让多个拥有独立上下文、角色或工具权限的 Agent 协作。常见方式包括：</p>
+<ul><li><strong>角色分工</strong>：规划者拆任务，执行者写代码或查资料，验证者运行测试；</li><li><strong>并行探索</strong>：多个 Agent 独立提出方案，再由汇总者比较；</li><li><strong>投票</strong>：对可枚举答案独立判断，以多数票或加权票选择；</li><li><strong>辩论</strong>：不同 Agent 互相指出证据与漏洞，由裁判 Agent 或规则决定；</li><li><strong>任务图</strong>：按照依赖关系并行执行，失败节点可重试或交给人工。</li></ul>
+<div class="mermaid">
+flowchart TD
+  O[Orchestrator 主调度 Agent] --> P[规划 Agent]
+  P --> A[资料 Agent]
+  P --> B[执行 Agent]
+  P --> C[验证 Agent]
+  A --> S[(共享状态或制品库)]
+  B --> S
+  C --> S
+  S --> J{完成标准通过吗}
+  J -- 否 --> P
+  J -- 是 --> F[汇总并交付]
+</div>
+<p>多 Agent 不天然比单 Agent 聪明。它会增加 token、延迟、通信歧义和状态冲突；如果任务无法并行、没有独立验证器，拆角色可能只是让多个模型互相复述。值得采用的条件通常是：子任务边界清楚、能并行、各角色工具或权限不同，而且最终结果可合并、可验证。</p>
+<p><strong>通信协议</strong>规定消息结构、任务 ID、输入输出 Schema、超时和错误语义；<strong>共享状态</strong>存放已完成步骤与制品。角色 Prompt 只定义“你负责什么”，Harness 才负责真正的并发、状态锁、失败恢复和终止条件。</p>
+<h3 id="105-安全与隐私从-prompt-到工具动作的分层防线">10.5 安全与隐私：从 Prompt 到工具动作的分层防线</h3>
+<table class="tbl"><thead><tr><th>风险</th><th>发生方式</th><th>主要防线</th></tr></thead><tbody><tr><td>Prompt Injection</td><td>网页或文档把恶意文字伪装成系统指令</td><td>区分指令与不可信数据、工具白名单、输出校验</td></tr><tr><td>越狱</td><td>用户诱导模型绕开内容或权限规则</td><td>分层策略、输入输出检测、红队与持续回归</td></tr><tr><td>工具越权</td><td>Agent 调用本不该用的文件、支付或删除能力</td><td>最小权限、短期凭证、参数校验、人类确认</td></tr><tr><td>数据泄露</td><td>Prompt、日志、RAG 或记忆暴露敏感信息</td><td>脱敏、访问控制、租户隔离、保留期和审计</td></tr><tr><td>沙箱逃逸</td><td>生成代码访问宿主机或网络敏感资源</td><td>进程/容器隔离、网络与文件白名单、资源配额</td></tr></tbody></table>
+<h4 id="差分隐私是什么">差分隐私是什么</h4>
+<p><strong>差分隐私（Differential Privacy, DP）</strong>通过裁剪单个样本的影响并加入校准噪声，使外部观察者难以判断某个人的数据是否参与了统计或训练。隐私预算通常用 ε（epsilon）描述：在其他条件相同的情况下，ε 越小保护越强，但噪声更大、可用性可能下降。DP 不是简单“给数据随便加噪声”，必须定义邻接数据集、查询灵敏度和预算累计。</p>
+<h4 id="联邦学习与联邦推理是什么">联邦学习与“联邦推理”是什么</h4>
+<p><strong>联邦学习</strong>让数据尽量留在终端或机构本地，各方上传模型更新或经过保护的统计量，再由服务器聚合；它减少原始数据集中汇总，却仍需防范更新泄露、恶意参与方和通信攻击。</p>
+<p>“<strong>联邦推理</strong>”不是像联邦学习一样高度统一的单一标准术语，通常泛指把一次推理拆到多个数据域或设备，各方只交换必要的中间结果、加密结果或聚合值。例如医院不上传原始病历，只在本地计算特征后参与联合判断。它仍可能泄露中间表示，往往要配合安全多方计算、同态加密、可信执行环境或差分隐私；代价是延迟与工程复杂度上升。</p>
+<p><strong>水印</strong>尝试在模型输出中嵌入可检测统计模式，用于来源识别；它可能被改写、翻译或截断削弱，不能当作唯一追责手段。<strong>同态加密</strong>允许对密文执行部分计算，但计算与通信开销很大，也不是所有模型算子都能高效支持。</p>
+<h3 id="106-一次-agent-请求的完整运行链路">10.6 一次 Agent 请求的完整运行链路</h3>
+<p>下面把分散的概念放回同一条时间线。不是每个产品都包含全部步骤，但各组件的前后关系基本如此：</p>
+<ol><li>用户提交目标、附件和约束；客户端生成会话与请求 ID。</li><li>API 网关鉴权，检查 RPM、TPM、并发、文件大小与安全策略。</li><li>Harness 读取允许使用的 Skill、工具、记忆和当前任务状态。</li><li>若任务需要外部知识，系统先做 RAG，或把检索作为可按需调用的工具；检索结果被标记为不可信资料而非系统指令。</li><li>Context Engineering 按优先级拼接系统规则、用户目标、历史摘要、检索片段和工具 Schema，并控制 token 预算。</li><li>模型路由选择合适模型，负载均衡选择具体推理实例；若排队过长可降级、超时或拒绝。</li><li>Tokenizer 把输入变成 token ID；推理引擎执行 Prefill，建立本次请求的 KV Cache。固定前缀若命中 Prompt Cache，可跳过部分重复计算。</li><li>Decode 逐步采样输出 token；推测解码可并行提出并验证候选。模型若输出工具调用，Harness 校验 JSON Schema、权限与参数。</li><li>MCP/API/Plugin 对应的工具执行动作，返回 Observation。Harness 把必要结果写回 Context，继续下一轮“模型—工具—观察”循环。</li><li>验证器检查真实文件、测试、数据库或网页状态。未通过时在预算内重试；高风险动作或权限不足时暂停并请求人类确认。</li><li>任务完成后流式或一次性返回结果；系统记录 TTFT、总延迟、token、工具耗时、成本、错误与 <code>trace_id</code>。</li><li>请求结束后，KV Cache 按 TTL 或资源压力释放。只有经过筛选的信息才写入长期 Memory；KV Cache 不会自动变成 Agent 记忆。</li></ol>
+<div class="mermaid">
+sequenceDiagram
+  participant U as 用户
+  participant G as API网关
+  participant H as Harness
+  participant M as LLM推理引擎
+  participant T as 工具/RAG
+  participant V as 验证器
+  U->>G: 目标 附件 约束
+  G->>G: 鉴权 限流 路由 Trace
+  G->>H: 合法请求
+  H->>H: 组装 Context Skill Memory
+  H->>M: Prompt与工具Schema
+  M->>M: Tokenize Prefill KV Decode
+  M-->>H: 文本或工具调用
+  alt 需要工具
+    H->>T: 校验后执行
+    T-->>H: Observation
+    H->>M: 回填必要结果
+  end
+  H->>V: 检查真实结果
+  V-->>H: 通过或失败原因
+  H-->>G: 最终答案与指标
+  G-->>U: 流式或完整响应
+</div>
+<p>这条链路中最容易混淆的边界是：<strong>模型负责生成决策候选，Harness 负责控制循环，工具负责改变外部世界，验证器负责确认结果，网关负责管理流量，推理引擎负责高效算 token。</strong>把这些职责分开，才知道性能慢在哪里、错误由谁兜底、权限应该加在哪一层。</p>
+<div class="foot">本笔记由 VincesHu 胡中岳整理 · Markdown 与 HTML 双版本。Mermaid 图表需联网加载（jsDelivr CDN）；若离线则显示源码。</div>
 </main>
 </div>
 <script>
