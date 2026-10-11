@@ -17,10 +17,7 @@ DOCUMENTS = (
         "title": "AI 学习笔记：全流程体系化完整版",
         "subtitle": "从大模型基础到智能体工程 · 思维导图与流程图可视化版",
         "description": "系统理解人工智能底层原理、训练、智能体、推理服务与产品工程。",
-        "actions": (
-            ("AI 产品经理手册", "ai-product-manager-playbook.html", "primary"),
-            ("查看 Markdown", "ai-learning-notes.md", "secondary"),
-        ),
+        "active_section": "principles",
     },
     {
         "source": ROOT / "ai-product-manager-playbook.md",
@@ -28,10 +25,7 @@ DOCUMENTS = (
         "title": "AI 产品经理系统化知识与求职实战手册",
         "subtitle": "从技术原理到产品指标、评测、优化、商业化与面试表达",
         "description": "把人工智能底层知识翻译为产品决策、指标体系、优化动作和求职证据。",
-        "actions": (
-            ("返回 AI 学习笔记", "index.html", "primary"),
-            ("查看 Markdown", "ai-product-manager-playbook.md", "secondary"),
-        ),
+        "active_section": "product",
     },
 )
 
@@ -229,10 +223,20 @@ def build_document(config: dict[str, object]) -> str:
         f'<li class="level-{level}"><a href="#{section_id}">{html.escape(text)}</a></li>'
         for level, section_id, text in toc
     )
-    actions_html = "\n".join(
-        f'<a class="action {kind}" href="{href}">{html.escape(label)}</a>'
-        for label, href, kind in config["actions"]
+    active_section = str(config["active_section"])
+    section_links = (
+        ("principles", "AI 原理", "index.html"),
+        ("product", "AI 产品", "ai-product-manager-playbook.html"),
     )
+    section_switcher_parts: list[str] = []
+    for key, label, href in section_links:
+        active_class = " is-active" if key == active_section else ""
+        current_page = ' aria-current="page"' if key == active_section else ""
+        section_switcher_parts.append(
+            f'<a class="section-tab{active_class}" href="{href}"{current_page}>'
+            f'{html.escape(label)}</a>'
+        )
+    section_switcher = "\n".join(section_switcher_parts)
     title = html.escape(str(config["title"]))
     subtitle = html.escape(str(config["subtitle"]))
     description = html.escape(str(config["description"]), quote=True)
@@ -246,32 +250,33 @@ def build_document(config: dict[str, object]) -> str:
 <title>{title}</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
-:root {{ color-scheme:dark; --bg:#0b1017; --panel:#121923; --text:#e6edf3; --muted:#9aa8b7; --accent:#62a8ff; --border:#2b394a; --code:#1d2836; --max:1040px; }}
+:root {{ color-scheme:dark; --bg:#091019; --panel:#101923; --panel-soft:#141f2c; --text:#e8eef5; --muted:#9eacbb; --accent:#67adff; --accent-strong:#3f93f3; --border:#27384b; --code:#1a2736; --max:1160px; --sidebar:316px; }}
 * {{ box-sizing:border-box; }}
 html {{ scroll-behavior:smooth; }}
-body {{ margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; }}
+body {{ margin:0; background:linear-gradient(180deg,#0b121b 0,#091019 340px); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; }}
 .skip-link {{ position:absolute; left:-9999px; top:8px; }}
 .skip-link:focus {{ left:12px; z-index:20; padding:8px 12px; background:#fff; color:#000; border-radius:6px; }}
-header {{ padding:34px clamp(20px,5vw,64px); background:radial-gradient(circle at 80% 10%,#173151 0,transparent 34%),linear-gradient(135deg,#151f2d,#0b1017); border-bottom:1px solid var(--border); }}
-.hero {{ max-width:1280px; margin:auto; }}
-header h1 {{ margin:0 0 8px; color:#fff; font-size:clamp(26px,4vw,42px); letter-spacing:-.02em; }}
-header p {{ margin:0; color:var(--muted); font-size:15px; }}
+header {{ padding:24px clamp(22px,4vw,56px); background:radial-gradient(circle at 84% -20%,#1d4875 0,transparent 36%),linear-gradient(135deg,#142131,#0c141f); border-bottom:1px solid var(--border); }}
+.hero {{ width:100%; max-width:1480px; margin:auto; display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,320px); align-items:center; gap:28px; }}
+.hero-copy {{ min-width:0; }}
+header h1 {{ margin:0 0 6px; color:#fff; font-size:clamp(25px,3.2vw,38px); letter-spacing:-.025em; }}
+header p {{ margin:0; color:var(--muted); font-size:14px; }}
 .author {{ margin-top:6px; color:#c9d1d9; font-weight:600; }}
-.actions {{ display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }}
-.action {{ display:inline-flex; align-items:center; min-height:42px; padding:9px 15px; border-radius:9px; font-weight:700; text-decoration:none; border:1px solid var(--border); }}
-.action.primary {{ color:#07111f; background:var(--accent); border-color:var(--accent); }}
-.action.secondary {{ color:var(--text); background:#182231; }}
-.action:hover {{ filter:brightness(1.08); transform:translateY(-1px); }}
-.layout {{ display:grid; grid-template-columns:300px minmax(0,1fr); min-height:calc(100vh - 170px); }}
-nav {{ position:sticky; top:0; align-self:start; max-height:100vh; overflow:auto; padding:20px 14px 40px; background:var(--panel); border-right:1px solid var(--border); }}
+.section-switcher {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; padding:6px; border:1px solid #31465e; border-radius:14px; background:rgba(8,15,24,.72); box-shadow:0 12px 30px rgba(0,0,0,.18); }}
+.section-tab {{ display:flex; align-items:center; justify-content:center; min-height:46px; padding:9px 18px; border:1px solid transparent; border-radius:9px; color:#c5d0dc; font-weight:750; letter-spacing:.02em; text-decoration:none; transition:background .18s ease,color .18s ease,transform .18s ease; }}
+.section-tab:hover {{ color:#fff; background:#1b2b3d; transform:translateY(-1px); }}
+.section-tab.is-active {{ color:#07111f; background:linear-gradient(135deg,#79bcff,#4c9cf5); box-shadow:0 5px 16px rgba(63,147,243,.28); }}
+.section-tab:focus-visible {{ outline:3px solid rgba(121,192,255,.55); outline-offset:3px; }}
+.layout {{ display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); min-height:calc(100vh - 136px); }}
+nav {{ position:sticky; top:0; align-self:start; max-height:100vh; overflow:auto; padding:24px 18px 48px; background:linear-gradient(180deg,#111b27,#0e1721); border-right:1px solid var(--border); scrollbar-width:thin; scrollbar-color:#536274 transparent; }}
 nav h2 {{ margin:0 10px 12px; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; border:0; padding:0; }}
 nav ul {{ margin:0; padding:0; list-style:none; }}
-nav a {{ display:block; padding:6px 10px; color:var(--text); border-radius:7px; text-decoration:none; font-size:13px; line-height:1.45; }}
+nav a {{ display:block; padding:6px 10px; color:var(--text); border-radius:7px; text-decoration:none; font-size:13px; line-height:1.5; }}
 nav a:hover {{ color:var(--accent); background:#1b2a3a; }}
 nav .level-1 a {{ font-weight:800; }}
 nav .level-2 a {{ font-weight:650; }}
 nav .level-3 a {{ padding-left:23px; color:var(--muted); font-size:12px; }}
-main {{ width:100%; max-width:var(--max); padding:34px clamp(20px,5vw,64px) 90px; overflow:hidden; }}
+main {{ width:100%; max-width:var(--max); padding:42px clamp(30px,5vw,72px) 96px; overflow:hidden; }}
 h1,h2,h3,h4 {{ color:#fff; line-height:1.35; scroll-margin-top:18px; }}
 main h1 {{ font-size:30px; margin-top:0; }}
 main h2 {{ margin-top:44px; padding-bottom:9px; border-bottom:2px solid var(--accent); font-size:23px; }}
@@ -299,20 +304,32 @@ summary {{ cursor:pointer; color:#79c0ff; font-weight:700; }}
 .footnotes h2 {{ font-size:21px; }}
 .footnote-back {{ text-decoration:none; }}
 .page-foot {{ margin-top:60px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }}
-@media (max-width:900px) {{ .layout {{ display:block; }} nav {{ position:relative; max-height:360px; border-right:0; border-bottom:1px solid var(--border); }} main {{ margin:auto; }} }}
+@media (min-width:1760px) {{ :root {{ --sidebar:336px; --max:1240px; }} }}
+@media (max-width:900px) {{
+  header {{ padding:22px 20px; }}
+  .hero {{ grid-template-columns:1fr; gap:18px; }}
+  .section-switcher {{ width:100%; max-width:380px; }}
+  .layout {{ display:block; }}
+  nav {{ position:relative; max-height:300px; padding:18px 14px 28px; border-right:0; border-bottom:1px solid var(--border); }}
+  main {{ margin:auto; padding:30px 20px 72px; }}
+  main h1 {{ font-size:26px; }}
+}}
+@media (max-width:420px) {{ .section-tab {{ min-height:44px; padding-inline:10px; }} }}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#content">跳到正文</a>
 <header><div class="hero">
-  <h1>{title}</h1>
-  <p>{subtitle}</p>
-  <p class="author">本笔记由 VincesHu 胡中岳整理</p>
-  <div class="actions">{actions_html}</div>
+  <div class="hero-copy">
+    <h1>{title}</h1>
+    <p>{subtitle}</p>
+    <p class="author">本笔记由 VincesHu 胡中岳整理</p>
+  </div>
+  <div class="section-switcher" role="navigation" aria-label="知识库内容切换">{section_switcher}</div>
 </div></header>
 <div class="layout">
   <nav aria-label="文章目录"><h2>目录导航</h2><ul>{toc_html}</ul></nav>
-  <main id="content">{body}<div class="page-foot">Markdown 是内容源文件；本页由仓库内 <code>build_html.py</code> 生成。流程图由 Mermaid 在浏览器中渲染。</div></main>
+  <main id="content">{body}<div class="page-foot">本页由仓库内构建脚本自动生成，流程图由 Mermaid 在浏览器中渲染。</div></main>
 </div>
 <script>
 if (window.mermaid) {{ mermaid.initialize({{ startOnLoad:true, theme:"dark", securityLevel:"loose", flowchart:{{ curve:"basis" }} }}); }}
