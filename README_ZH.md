@@ -1,8 +1,10 @@
 # AI 学习笔记
 
-[在线阅读 HTML](https://ai-learning-notes-psi.vercel.app/) · [English](./README.md) · [Markdown 正文](./ai-learning-notes.md) · [Word 版](./ai-learning-notes.docx)
+[在线阅读 AI 学习笔记](https://ai-learning-notes-psi.vercel.app/) · [在线阅读 AI 产品经理手册](https://ai-learning-notes-psi.vercel.app/ai-product-manager-playbook.html) · [English](./README.md)
 
 本仓库是一套从大语言模型基础原理延伸到生产级 AI 系统的体系化学习笔记，内容按照知识依赖关系与端到端运行流程组织。
+
+仓库同时提供《AI 产品经理系统化知识与求职实战手册》，将底层技术继续翻译为产品现象、指标口径、优化动作、关键权衡、评测方案、商业化判断、作品集证据与面试表达。网站首页可通过“AI 产品经理手册”按钮进入。
 
 ```text
 自然语言输入
@@ -42,3 +44,6 @@
 - `ai-learning-notes.md`：包含 Mermaid 图表的正文源文件。
 - `index.html` / `ai-learning-notes.html`：带目录导航和渲染图表的浏览器版本。
 - `ai-learning-notes.docx`：内嵌图表、适合离线阅读与打印的版本。
+- `ai-product-manager-playbook.md`：AI 产品经理手册的 Markdown 内容源文件。
+- `ai-product-manager-playbook.html`：AI 产品经理手册的交互式浏览器版本。
+- `build_html.py`：两个 HTML 版本共用的无第三方依赖构建脚本；修改任一 Markdown 后运行 `python3 build_html.py`。

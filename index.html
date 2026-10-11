@@ -3,162 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 学习笔记 全流程体系化完整版</title>
+<meta name="description" content="系统理解人工智能底层原理、训练、智能体、推理服务与产品工程。">
+<title>AI 学习笔记：全流程体系化完整版</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
-:root {
-  --bg:#0d1117; --bg2:#161b22; --fg:#e6edf3; --muted:#8b949e; --accent:#58a6ff;
-  --green:#3fb950; --border:#30363d; --code:#1f2937;
-}
+:root { color-scheme:dark; --bg:#0b1017; --panel:#121923; --text:#e6edf3; --muted:#9aa8b7; --accent:#62a8ff; --border:#2b394a; --code:#1d2836; --max:1040px; }
 * { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; }
-header { padding:28px 32px; background:linear-gradient(135deg,#161b22,#0d1117); border-bottom:1px solid var(--border); }
-header h1 { margin:0 0 6px; font-size:26px; color:#fff; }
-header p { margin:0; color:var(--muted); font-size:14px; }
-.author { margin-top:5px; color:#c9d1d9; font-weight:600; }
-.layout { display:flex; min-height:calc(100vh - 110px); }
-nav { width:280px; flex:none; border-right:1px solid var(--border); background:var(--bg2); padding:18px 14px; position:sticky; top:0; align-self:flex-start; max-height:100vh; overflow:auto; }
-nav h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin:4px 8px 10px; }
-nav ul { list-style:none; margin:0; padding:0; }
-nav li a { display:block; padding:5px 10px; color:var(--fg); text-decoration:none; border-radius:6px; font-size:13.5px; }
-nav li.lvl2 a { padding-left:10px; font-weight:600; }
-nav li.lvl3 a { padding-left:22px; font-size:12.5px; color:var(--muted); }
-nav li a:hover { background:#21323f; color:var(--accent); }
-main { flex:1; padding:28px 40px 80px; max-width:980px; }
-h1,h2,h3,h4 { color:#fff; line-height:1.35; scroll-margin-top:16px; }
-h2 { font-size:22px; margin-top:38px; padding-bottom:8px; border-bottom:2px solid var(--accent); }
-h3 { font-size:18px; margin-top:26px; color:#cdd9e5; }
-h4 { font-size:15px; color:var(--accent); }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; line-height:1.75; }
+.skip-link { position:absolute; left:-9999px; top:8px; }
+.skip-link:focus { left:12px; z-index:20; padding:8px 12px; background:#fff; color:#000; border-radius:6px; }
+header { padding:34px clamp(20px,5vw,64px); background:radial-gradient(circle at 80% 10%,#173151 0,transparent 34%),linear-gradient(135deg,#151f2d,#0b1017); border-bottom:1px solid var(--border); }
+.hero { max-width:1280px; margin:auto; }
+header h1 { margin:0 0 8px; color:#fff; font-size:clamp(26px,4vw,42px); letter-spacing:-.02em; }
+header p { margin:0; color:var(--muted); font-size:15px; }
+.author { margin-top:6px; color:#c9d1d9; font-weight:600; }
+.actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+.action { display:inline-flex; align-items:center; min-height:42px; padding:9px 15px; border-radius:9px; font-weight:700; text-decoration:none; border:1px solid var(--border); }
+.action.primary { color:#07111f; background:var(--accent); border-color:var(--accent); }
+.action.secondary { color:var(--text); background:#182231; }
+.action:hover { filter:brightness(1.08); transform:translateY(-1px); }
+.layout { display:grid; grid-template-columns:300px minmax(0,1fr); min-height:calc(100vh - 170px); }
+nav { position:sticky; top:0; align-self:start; max-height:100vh; overflow:auto; padding:20px 14px 40px; background:var(--panel); border-right:1px solid var(--border); }
+nav h2 { margin:0 10px 12px; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; border:0; padding:0; }
+nav ul { margin:0; padding:0; list-style:none; }
+nav a { display:block; padding:6px 10px; color:var(--text); border-radius:7px; text-decoration:none; font-size:13px; line-height:1.45; }
+nav a:hover { color:var(--accent); background:#1b2a3a; }
+nav .level-1 a { font-weight:800; }
+nav .level-2 a { font-weight:650; }
+nav .level-3 a { padding-left:23px; color:var(--muted); font-size:12px; }
+main { width:100%; max-width:var(--max); padding:34px clamp(20px,5vw,64px) 90px; overflow:hidden; }
+h1,h2,h3,h4 { color:#fff; line-height:1.35; scroll-margin-top:18px; }
+main h1 { font-size:30px; margin-top:0; }
+main h2 { margin-top:44px; padding-bottom:9px; border-bottom:2px solid var(--accent); font-size:23px; }
+main h3 { margin-top:30px; color:#d5e4f3; font-size:19px; }
+main h4 { margin-top:24px; color:var(--accent); font-size:16px; }
 p { margin:12px 0; }
 a { color:var(--accent); }
-code { background:var(--code); padding:2px 6px; border-radius:4px; font-family:"SFMono-Regular",Consolas,monospace; font-size:13px; color:#ffa657; }
-pre.code { background:var(--code); padding:14px 16px; border-radius:8px; overflow:auto; border:1px solid var(--border); }
-pre.code code { color:#e6edf3; padding:0; background:none; }
-.tbl { border-collapse:collapse; width:100%; margin:16px 0; font-size:14px; }
-.tbl th,.tbl td { border:1px solid var(--border); padding:8px 11px; text-align:left; vertical-align:top; }
-.tbl th { background:#1c2530; color:#fff; }
-.tbl tbody tr:nth-child(even) { background:#11161d; }
-blockquote { border-left:4px solid var(--accent); background:#11161d; margin:14px 0; padding:10px 16px; color:var(--muted); border-radius:0 8px 8px 0; }
-hr { border:0; border-top:1px solid var(--border); margin:28px 0; }
-.mermaid { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; margin:18px 0; text-align:center; overflow:auto; }
+strong { color:#fff; }
+code { padding:2px 6px; border-radius:5px; background:var(--code); color:#ffad66; font-family:"SFMono-Regular",Consolas,monospace; font-size:.9em; }
+pre { overflow:auto; padding:16px; border:1px solid var(--border); border-radius:10px; background:var(--code); }
+pre code { padding:0; color:var(--text); background:none; }
+.table-wrap { width:100%; overflow-x:auto; margin:18px 0; }
+table { width:100%; border-collapse:collapse; min-width:620px; font-size:14px; }
+th,td { padding:9px 11px; border:1px solid var(--border); text-align:left; vertical-align:top; }
+th { color:#fff; background:#1c2938; }
+tbody tr:nth-child(even) { background:#101720; }
+blockquote { margin:16px 0; padding:11px 17px; border-left:4px solid var(--accent); border-radius:0 9px 9px 0; color:#c1cad5; background:#111a24; }
+hr { margin:32px 0; border:0; border-top:1px solid var(--border); }
+li { margin:5px 0; }
+.mermaid { margin:20px 0; padding:20px; overflow:auto; border:1px solid var(--border); border-radius:12px; background:var(--panel); text-align:center; }
 .mermaid svg { max-width:100%; height:auto; }
 details { margin:16px 0 22px; padding:12px 16px; border:1px solid #284967; border-radius:10px; background:#101820; }
-summary { cursor:pointer; color:#79c0ff; font-weight:700; line-height:1.5; }
-details[open] summary { margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--border); }
-.deep-links { margin:10px 0 18px; }
-.foot { margin-top:50px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
-@media (max-width:820px) { nav { display:none; } main { padding:20px; } }
+summary { cursor:pointer; color:#79c0ff; font-weight:700; }
+.footnotes { margin-top:60px; color:#bac5d1; font-size:14px; }
+.footnotes h2 { font-size:21px; }
+.footnote-back { text-decoration:none; }
+.page-foot { margin-top:60px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
+@media (max-width:900px) { .layout { display:block; } nav { position:relative; max-height:360px; border-right:0; border-bottom:1px solid var(--border); } main { margin:auto; } }
 </style>
 </head>
 <body>
-<header>
-  <h1>AI 学习笔记 全流程体系化完整版</h1>
-  <p>从大模型基础到 Agent 工程 · 思维导图与流程图可视化版</p>
+<a class="skip-link" href="#content">跳到正文</a>
+<header><div class="hero">
+  <h1>AI 学习笔记：全流程体系化完整版</h1>
+  <p>从大模型基础到智能体工程 · 思维导图与流程图可视化版</p>
   <p class="author">本笔记由 VincesHu 胡中岳整理</p>
-</header>
+  <div class="actions"><a class="action primary" href="ai-product-manager-playbook.html">AI 产品经理手册</a>
+<a class="action secondary" href="ai-learning-notes.md">查看 Markdown</a></div>
+</div></header>
 <div class="layout">
-<nav>
-  <h3>目录导航</h3>
-  <ul><li class="lvl1"><a href="#ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</a></li>
-<li class="lvl2"><a href="#目录">目录</a></li>
-<li class="lvl3"><a href="#高频难点直达">高频难点直达</a></li>
-<li class="lvl2"><a href="#0-知识体系总览">0. 知识体系总览</a></li>
-<li class="lvl2"><a href="#模块一-大模型基础">模块一 · 大模型基础</a></li>
-<li class="lvl3"><a href="#11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</a></li>
-<li class="lvl3"><a href="#12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</a></li>
-<li class="lvl3"><a href="#13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</a></li>
-<li class="lvl3"><a href="#131-为什么要有多层和多头">1.3.1 为什么要有多层和多头</a></li>
-<li class="lvl3"><a href="#132-长上下文为什么会出现中间遗忘">1.3.2 长上下文为什么会出现中间遗忘</a></li>
-<li class="lvl3"><a href="#14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</a></li>
-<li class="lvl3"><a href="#15-从零训一个-01b-模型的完整流程">1.5 从零训一个 0.1B 模型的完整流程</a></li>
-<li class="lvl3"><a href="#16-moe-稀疏模型总参数-vs-激活参数">1.6 MoE 稀疏模型（总参数 vs 激活参数）</a></li>
-<li class="lvl3"><a href="#17-开源协议mit-apache-20-gpl">1.7 开源协议：MIT / Apache 2.0 / GPL</a></li>
-<li class="lvl3"><a href="#18-一个-transformer-block-里还发生了什么">1.8 一个 Transformer Block 里还发生了什么</a></li>
-<li class="lvl3"><a href="#19-embedding-向量化-切块与-rag-向量不是一回事">1.9 Embedding 向量化 切块与 RAG 向量不是一回事</a></li>
-<li class="lvl3"><a href="#110-bert-llm-nlp-与多模态编码器">1.10 BERT LLM NLP 与多模态编码器</a></li>
-<li class="lvl3"><a href="#111-位置编码rope滑动窗口与-flashattention">1.11 位置编码、RoPE、滑动窗口与 FlashAttention</a></li>
-<li class="lvl2"><a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></li>
-<li class="lvl3"><a href="#21-预训练-vs-后训练">2.1 预训练 vs 后训练</a></li>
-<li class="lvl3"><a href="#22-对齐算法谱系">2.2 对齐算法谱系</a></li>
-<li class="lvl3"><a href="#23-基座模型接着编的问题">2.3 基座模型「接着编」的问题</a></li>
-<li class="lvl3"><a href="#24-scaling-law-与评测">2.4 Scaling Law 与评测</a></li>
-<li class="lvl3"><a href="#25-微调一个大模型的流程">2.5 微调一个大模型的流程</a></li>
-<li class="lvl3"><a href="#26-预训练-后训练-微调与对齐的边界">2.6 预训练 后训练 微调与对齐的边界</a></li>
-<li class="lvl3"><a href="#27-ppo-dpo-orpo-kto-grpo-到底差在哪">2.7 PPO DPO ORPO KTO GRPO 到底差在哪</a></li>
-<li class="lvl3"><a href="#28-reward-model-监督学习与强化学习">2.8 Reward Model 监督学习与强化学习</a></li>
-<li class="lvl3"><a href="#29-全参数微调-lora-peft-与模型蒸馏">2.9 全参数微调 LoRA PEFT 与模型蒸馏</a></li>
-<li class="lvl3"><a href="#210-loss-优化器与训练稳定性">2.10 Loss 优化器与训练稳定性</a></li>
-<li class="lvl3"><a href="#211-多卡并行与显存优化">2.11 多卡并行与显存优化</a></li>
-<li class="lvl2"><a href="#模块三-agent-体系">模块三 · Agent 体系</a></li>
-<li class="lvl3"><a href="#31-agent-的完整定义">3.1 Agent 的完整定义</a></li>
-<li class="lvl3"><a href="#32-harness执行运行时项目经理">3.2 Harness（执行运行时）=「项目经理」</a></li>
-<li class="lvl3"><a href="#33-mcp模型上下文协议ai-世界的-usb-c">3.3 MCP（模型上下文协议）=「AI 世界的 USB-C」</a></li>
-<li class="lvl3"><a href="#34-react-循环">3.4 ReAct 循环</a></li>
-<li class="lvl3"><a href="#35-rag检索增强生成">3.5 RAG（检索增强生成）</a></li>
-<li class="lvl3"><a href="#36-skill-vs-plugin">3.6 Skill vs Plugin</a></li>
-<li class="lvl3"><a href="#37-编排框架langchain-langgraph-autogen-react">3.7 编排框架：LangChain / LangGraph / AutoGen / ReAct</a></li>
-<li class="lvl3"><a href="#38-记忆检索与上下文">3.8 记忆检索与上下文</a></li>
-<li class="lvl3"><a href="#39-新一代模型会怎样改进-agent-链路">3.9 新一代模型会怎样改进 Agent 链路</a></li>
-<li class="lvl3"><a href="#310-kv-cache小学生版">3.10 KV-Cache（小学生版）</a></li>
-<li class="lvl3"><a href="#311-prompt-cache-与-kv-cache-必须分开">3.11 Prompt Cache 与 KV Cache 必须分开</a></li>
-<li class="lvl3"><a href="#312-上下文工程">3.12 上下文工程</a></li>
-<li class="lvl3"><a href="#313-tree-of-thought-与-self-judge">3.13 Tree of Thought 与 self judge</a></li>
-<li class="lvl3"><a href="#314-其他概念速记">3.14 其他概念速记</a></li>
-<li class="lvl3"><a href="#315-workbuddy-走红的产品机制">3.15 WorkBuddy 走红的产品机制</a></li>
-<li class="lvl2"><a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></li>
-<li class="lvl3"><a href="#41-算力-显存-带宽-三大件">4.1 算力 / 显存 / 带宽 三大件</a></li>
-<li class="lvl3"><a href="#42-芯片如何训练大模型">4.2 芯片如何训练大模型</a></li>
-<li class="lvl3"><a href="#43-为什么放显存跑能不能放内存">4.3 为什么放显存跑？能不能放内存？</a></li>
-<li class="lvl3"><a href="#44-训练到使用的硬件旅程">4.4 训练到使用的硬件旅程</a></li>
-<li class="lvl3"><a href="#45-cuda-生态详细展开">4.5 CUDA 生态（详细展开）</a></li>
-<li class="lvl3"><a href="#46-ollama-与本地推理">4.6 Ollama 与本地推理</a></li>
-<li class="lvl3"><a href="#47-windows-显存-vs-macos-统一内存">4.7 Windows 显存 vs macOS 统一内存</a></li>
-<li class="lvl3"><a href="#48-mac-单核多核p-核e-核rtx-与常见显卡">4.8 Mac 单核/多核、P 核/E 核、RTX 与常见显卡</a></li>
-<li class="lvl3"><a href="#49-rtx-5070ti-5090-与-mac-对标">4.9 RTX 5070Ti / 5090 与 Mac 对标</a></li>
-<li class="lvl3"><a href="#410-大厂用什么训练">4.10 大厂用什么训练？</a></li>
-<li class="lvl3"><a href="#411-32-gb-统一内存的-mac-能跑训练吗">4.11 32 GB 统一内存的 Mac 能跑训练吗？</a></li>
-<li class="lvl3"><a href="#412-ollama-qwen354b-解析">4.12 Ollama `qwen3.5:4b` 解析</a></li>
-<li class="lvl2"><a href="#模块五-大模型生态">模块五 · 大模型生态</a></li>
-<li class="lvl3"><a href="#51-大模型家族总览思维导图">5.1 大模型家族总览（思维导图）</a></li>
-<li class="lvl3"><a href="#52-gpt-家族55-56-6">5.2 GPT 家族：5.5 / 5.6 / 6</a></li>
-<li class="lvl3"><a href="#53-垂类-vs-通用模型">5.3 垂类 vs 通用模型</a></li>
-<li class="lvl3"><a href="#54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</a></li>
-<li class="lvl3"><a href="#55-产业链芯片-云厂商-第三方服务商">5.5 产业链：芯片 / 云厂商 / 第三方服务商</a></li>
-<li class="lvl3"><a href="#56-豆包的商业化">5.6 豆包的商业化</a></li>
-<li class="lvl3"><a href="#57-小米-mimo-系列">5.7 小米 MiMo 系列</a></li>
-<li class="lvl3"><a href="#58-各家通用模型擅长速查">5.8 各家通用模型擅长（速查）</a></li>
-<li class="lvl3"><a href="#59-具体模型科普">5.9 具体模型科普</a></li>
-<li class="lvl2"><a href="#模块六-ai-产品与交互工程">模块六 · AI 产品与交互工程</a></li>
-<li class="lvl3"><a href="#61-ai-产品评测与标注">6.1 AI 产品评测与标注</a></li>
-<li class="lvl3"><a href="#62-ai-系统产品工程">6.2 AI 系统产品工程</a></li>
-<li class="lvl3"><a href="#63-ai-味为什么重">6.3 「AI 味」为什么重</a></li>
-<li class="lvl3"><a href="#64-computer-use-如何操控软件与界面">6.4 Computer Use 如何操控软件与界面</a></li>
-<li class="lvl3"><a href="#65-ai-输出的加粗-引用和表情如何实现">6.5 AI 输出的加粗 引用和表情如何实现</a></li>
-<li class="lvl2"><a href="#模块七-关键原理速查">模块七 · 关键原理速查</a></li>
-<li class="lvl2"><a href="#模块八-从自然语言到-agent-交付的完整链路">模块八 · 从自然语言到 Agent 交付的完整链路</a></li>
-<li class="lvl3"><a href="#81-离线训练线">8.1 离线训练线</a></li>
-<li class="lvl3"><a href="#82-在线单次问答线">8.2 在线单次问答线</a></li>
-<li class="lvl3"><a href="#83-在线-agent-执行线">8.3 在线 Agent 执行线</a></li>
-<li class="lvl3"><a href="#84-从零训练或构建-agent-的可执行路线">8.4 从零训练或构建 Agent 的可执行路线</a></li>
-<li class="lvl3"><a href="#85-01b-实验与-mac-的现实边界">8.5 0.1B 实验与 Mac 的现实边界</a></li>
-<li class="lvl2"><a href="#模块九-数据格式-工程控制-安全与上下文工程">模块九 · 数据格式 工程控制 安全与上下文工程</a></li>
-<li class="lvl3"><a href="#91-markdown-json-与-json-schema">9.1 Markdown JSON 与 JSON Schema</a></li>
-<li class="lvl3"><a href="#92-状态机-循环控制器-异常捕获与死锁">9.2 状态机 循环控制器 异常捕获与死锁</a></li>
-<li class="lvl3"><a href="#93-agent-评测不是只用-rlhf-或-rlaif">9.3 Agent 评测不是只用 RLHF 或 RLAIF</a></li>
-<li class="lvl3"><a href="#94-computer-use-外链访问与高风险行为">9.4 Computer Use 外链访问与高风险行为</a></li>
-<li class="lvl3"><a href="#95-时效信息的核验规则">9.5 时效信息的核验规则</a></li>
-<li class="lvl2"><a href="#模块十-推理服务-性能优化-隐私与多-agent">模块十 · 推理服务 性能优化 隐私与多 Agent</a></li>
-<li class="lvl3"><a href="#101-从模型文件到可调用-api推理引擎在什么位置">10.1 从模型文件到可调用 API：推理引擎在什么位置</a></li>
-<li class="lvl3"><a href="#102-api-网关流量控制与可观测指标">10.2 API 网关、流量控制与可观测指标</a></li>
-<li class="lvl3"><a href="#103-webhook-与模型路由一个负责通知一个负责分发">10.3 Webhook 与模型路由：一个负责“通知”，一个负责“分发”</a></li>
-<li class="lvl3"><a href="#104-多-agent何时值得拆成多个角色">10.4 多 Agent：何时值得拆成多个角色</a></li>
-<li class="lvl3"><a href="#105-安全与隐私从-prompt-到工具动作的分层防线">10.5 安全与隐私：从 Prompt 到工具动作的分层防线</a></li>
-<li class="lvl3"><a href="#106-一次-agent-请求的完整运行链路">10.6 一次 Agent 请求的完整运行链路</a></li>
-</ul>
-</nav>
-<main>
-<h1 id="ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</h1>
-<blockquote>一份按概念依赖关系组织的体系化 AI 学习笔记，覆盖 <strong>大模型基础、Transformer、训练与对齐、Agent 与 RAG、缓存与推理、算力硬件、模型生态、产品工程和安全治理</strong>。  内容从“模型如何表示输入”开始，逐步讲到“模型如何训练、如何调用工具、如何部署和评测”。说明尽量通俗，同时保留必要的专业术语、流程图和工程边界。</blockquote>
+  <nav aria-label="文章目录"><h2>目录导航</h2><ul><li class="level-1"><a href="#ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</a></li>
+<li class="level-2"><a href="#目录">目录</a></li>
+<li class="level-3"><a href="#高频难点直达">高频难点直达</a></li>
+<li class="level-2"><a href="#0-知识体系总览">0. 知识体系总览</a></li>
+<li class="level-2"><a href="#模块一-大模型基础">模块一 · 大模型基础</a></li>
+<li class="level-3"><a href="#11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</a></li>
+<li class="level-3"><a href="#12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</a></li>
+<li class="level-3"><a href="#13-transformer-与-attention注意力机制">1.3 Transformer 与 Attention（注意力机制）</a></li>
+<li class="level-3"><a href="#131-为什么要有多层和多头">1.3.1 为什么要有多层和多头</a></li>
+<li class="level-3"><a href="#132-长上下文为什么会出现中间遗忘">1.3.2 长上下文为什么会出现中间遗忘</a></li>
+<li class="level-3"><a href="#14-预训练-vs-推理训练的本质">1.4 预训练 vs 推理（训练的本质）</a></li>
+<li class="level-3"><a href="#15-从零训一个-01b-模型的完整流程">1.5 从零训一个 0.1B 模型的完整流程</a></li>
+<li class="level-3"><a href="#16-moe-稀疏模型总参数-vs-激活参数">1.6 MoE 稀疏模型（总参数 vs 激活参数）</a></li>
+<li class="level-3"><a href="#17-开源协议mit-apache-20-gpl">1.7 开源协议：MIT / Apache 2.0 / GPL</a></li>
+<li class="level-3"><a href="#18-一个-transformer-block-里还发生了什么">1.8 一个 Transformer Block 里还发生了什么</a></li>
+<li class="level-3"><a href="#19-embedding-向量化-切块与-rag-向量不是一回事">1.9 Embedding 向量化 切块与 RAG 向量不是一回事</a></li>
+<li class="level-3"><a href="#110-bert-llm-nlp-与多模态编码器">1.10 BERT LLM NLP 与多模态编码器</a></li>
+<li class="level-3"><a href="#111-位置编码rope滑动窗口与-flashattention">1.11 位置编码、RoPE、滑动窗口与 FlashAttention</a></li>
+<li class="level-2"><a href="#模块二-训练与对齐">模块二 · 训练与对齐</a></li>
+<li class="level-3"><a href="#21-预训练-vs-后训练">2.1 预训练 vs 后训练</a></li>
+<li class="level-3"><a href="#22-对齐算法谱系">2.2 对齐算法谱系</a></li>
+<li class="level-3"><a href="#23-基座模型接着编的问题">2.3 基座模型「接着编」的问题</a></li>
+<li class="level-3"><a href="#24-scaling-law-与评测">2.4 Scaling Law 与评测</a></li>
+<li class="level-3"><a href="#25-微调一个大模型的流程">2.5 微调一个大模型的流程</a></li>
+<li class="level-3"><a href="#26-预训练-后训练-微调与对齐的边界">2.6 预训练 后训练 微调与对齐的边界</a></li>
+<li class="level-3"><a href="#27-ppo-dpo-orpo-kto-grpo-到底差在哪">2.7 PPO DPO ORPO KTO GRPO 到底差在哪</a></li>
+<li class="level-3"><a href="#28-reward-model-监督学习与强化学习">2.8 Reward Model 监督学习与强化学习</a></li>
+<li class="level-3"><a href="#29-全参数微调-lora-peft-与模型蒸馏">2.9 全参数微调 LoRA PEFT 与模型蒸馏</a></li>
+<li class="level-3"><a href="#210-loss-优化器与训练稳定性">2.10 Loss 优化器与训练稳定性</a></li>
+<li class="level-3"><a href="#211-多卡并行与显存优化">2.11 多卡并行与显存优化</a></li>
+<li class="level-2"><a href="#模块三-agent-体系">模块三 · Agent 体系</a></li>
+<li class="level-3"><a href="#31-agent-的完整定义">3.1 Agent 的完整定义</a></li>
+<li class="level-3"><a href="#32-harness执行运行时项目经理">3.2 Harness（执行运行时）=「项目经理」</a></li>
+<li class="level-3"><a href="#33-mcp模型上下文协议ai-世界的-usb-c">3.3 MCP（模型上下文协议）=「AI 世界的 USB-C」</a></li>
+<li class="level-3"><a href="#34-react-循环">3.4 ReAct 循环</a></li>
+<li class="level-3"><a href="#35-rag检索增强生成">3.5 RAG（检索增强生成）</a></li>
+<li class="level-3"><a href="#36-skill-vs-plugin">3.6 Skill vs Plugin</a></li>
+<li class="level-3"><a href="#37-编排框架langchain-langgraph-autogen-react">3.7 编排框架：LangChain / LangGraph / AutoGen / ReAct</a></li>
+<li class="level-3"><a href="#38-记忆检索与上下文">3.8 记忆检索与上下文</a></li>
+<li class="level-3"><a href="#39-新一代模型会怎样改进-agent-链路">3.9 新一代模型会怎样改进 Agent 链路</a></li>
+<li class="level-3"><a href="#310-kv-cache小学生版">3.10 KV-Cache（小学生版）</a></li>
+<li class="level-3"><a href="#311-prompt-cache-与-kv-cache-必须分开">3.11 Prompt Cache 与 KV Cache 必须分开</a></li>
+<li class="level-3"><a href="#312-上下文工程">3.12 上下文工程</a></li>
+<li class="level-3"><a href="#313-tree-of-thought-与-self-judge">3.13 Tree of Thought 与 self judge</a></li>
+<li class="level-3"><a href="#314-其他概念速记">3.14 其他概念速记</a></li>
+<li class="level-3"><a href="#315-workbuddy-走红的产品机制">3.15 WorkBuddy 走红的产品机制</a></li>
+<li class="level-2"><a href="#模块四-算力与硬件">模块四 · 算力与硬件</a></li>
+<li class="level-3"><a href="#41-算力-显存-带宽-三大件">4.1 算力 / 显存 / 带宽 三大件</a></li>
+<li class="level-3"><a href="#42-芯片如何训练大模型">4.2 芯片如何训练大模型</a></li>
+<li class="level-3"><a href="#43-为什么放显存跑能不能放内存">4.3 为什么放显存跑？能不能放内存？</a></li>
+<li class="level-3"><a href="#44-训练到使用的硬件旅程">4.4 训练到使用的硬件旅程</a></li>
+<li class="level-3"><a href="#45-cuda-生态详细展开">4.5 CUDA 生态（详细展开）</a></li>
+<li class="level-3"><a href="#46-ollama-与本地推理">4.6 Ollama 与本地推理</a></li>
+<li class="level-3"><a href="#47-windows-显存-vs-macos-统一内存">4.7 Windows 显存 vs macOS 统一内存</a></li>
+<li class="level-3"><a href="#48-mac-单核多核p-核e-核rtx-与常见显卡">4.8 Mac 单核/多核、P 核/E 核、RTX 与常见显卡</a></li>
+<li class="level-3"><a href="#49-rtx-5070ti-5090-与-mac-对标">4.9 RTX 5070Ti / 5090 与 Mac 对标</a></li>
+<li class="level-3"><a href="#410-大厂用什么训练">4.10 大厂用什么训练？</a></li>
+<li class="level-3"><a href="#411-32-gb-统一内存的-mac-能跑训练吗">4.11 32 GB 统一内存的 Mac 能跑训练吗？</a></li>
+<li class="level-3"><a href="#412-ollama-qwen354b-解析">4.12 Ollama `qwen3.5:4b` 解析</a></li>
+<li class="level-2"><a href="#模块五-大模型生态">模块五 · 大模型生态</a></li>
+<li class="level-3"><a href="#51-大模型家族总览思维导图">5.1 大模型家族总览（思维导图）</a></li>
+<li class="level-3"><a href="#52-gpt-家族55-56-6">5.2 GPT 家族：5.5 / 5.6 / 6</a></li>
+<li class="level-3"><a href="#53-垂类-vs-通用模型">5.3 垂类 vs 通用模型</a></li>
+<li class="level-3"><a href="#54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</a></li>
+<li class="level-3"><a href="#55-产业链芯片-云厂商-第三方服务商">5.5 产业链：芯片 / 云厂商 / 第三方服务商</a></li>
+<li class="level-3"><a href="#56-豆包的商业化">5.6 豆包的商业化</a></li>
+<li class="level-3"><a href="#57-小米-mimo-系列">5.7 小米 MiMo 系列</a></li>
+<li class="level-3"><a href="#58-各家通用模型擅长速查">5.8 各家通用模型擅长（速查）</a></li>
+<li class="level-3"><a href="#59-具体模型科普">5.9 具体模型科普</a></li>
+<li class="level-2"><a href="#模块六-ai-产品与交互工程">模块六 · AI 产品与交互工程</a></li>
+<li class="level-3"><a href="#61-ai-产品评测与标注">6.1 AI 产品评测与标注</a></li>
+<li class="level-3"><a href="#62-ai-系统产品工程">6.2 AI 系统产品工程</a></li>
+<li class="level-3"><a href="#63-ai-味为什么重">6.3 「AI 味」为什么重</a></li>
+<li class="level-3"><a href="#64-computer-use-如何操控软件与界面">6.4 Computer Use 如何操控软件与界面</a></li>
+<li class="level-3"><a href="#65-ai-输出的加粗-引用和表情如何实现">6.5 AI 输出的加粗 引用和表情如何实现</a></li>
+<li class="level-2"><a href="#模块七-关键原理速查">模块七 · 关键原理速查</a></li>
+<li class="level-2"><a href="#模块八-从自然语言到-agent-交付的完整链路">模块八 · 从自然语言到 Agent 交付的完整链路</a></li>
+<li class="level-3"><a href="#81-离线训练线">8.1 离线训练线</a></li>
+<li class="level-3"><a href="#82-在线单次问答线">8.2 在线单次问答线</a></li>
+<li class="level-3"><a href="#83-在线-agent-执行线">8.3 在线 Agent 执行线</a></li>
+<li class="level-3"><a href="#84-从零训练或构建-agent-的可执行路线">8.4 从零训练或构建 Agent 的可执行路线</a></li>
+<li class="level-3"><a href="#85-01b-实验与-mac-的现实边界">8.5 0.1B 实验与 Mac 的现实边界</a></li>
+<li class="level-2"><a href="#模块九-数据格式-工程控制-安全与上下文工程">模块九 · 数据格式 工程控制 安全与上下文工程</a></li>
+<li class="level-3"><a href="#91-markdown-json-与-json-schema">9.1 Markdown JSON 与 JSON Schema</a></li>
+<li class="level-3"><a href="#92-状态机-循环控制器-异常捕获与死锁">9.2 状态机 循环控制器 异常捕获与死锁</a></li>
+<li class="level-3"><a href="#93-agent-评测不是只用-rlhf-或-rlaif">9.3 Agent 评测不是只用 RLHF 或 RLAIF</a></li>
+<li class="level-3"><a href="#94-computer-use-外链访问与高风险行为">9.4 Computer Use 外链访问与高风险行为</a></li>
+<li class="level-3"><a href="#95-时效信息的核验规则">9.5 时效信息的核验规则</a></li>
+<li class="level-2"><a href="#模块十-推理服务-性能优化-隐私与多-agent">模块十 · 推理服务 性能优化 隐私与多 Agent</a></li>
+<li class="level-3"><a href="#101-从模型文件到可调用-api推理引擎在什么位置">10.1 从模型文件到可调用 API：推理引擎在什么位置</a></li>
+<li class="level-3"><a href="#102-api-网关流量控制与可观测指标">10.2 API 网关、流量控制与可观测指标</a></li>
+<li class="level-3"><a href="#103-webhook-与模型路由一个负责通知一个负责分发">10.3 Webhook 与模型路由：一个负责“通知”，一个负责“分发”</a></li>
+<li class="level-3"><a href="#104-多-agent何时值得拆成多个角色">10.4 多 Agent：何时值得拆成多个角色</a></li>
+<li class="level-3"><a href="#105-安全与隐私从-prompt-到工具动作的分层防线">10.5 安全与隐私：从 Prompt 到工具动作的分层防线</a></li>
+<li class="level-3"><a href="#106-一次-agent-请求的完整运行链路">10.6 一次 Agent 请求的完整运行链路</a></li></ul></nav>
+  <main id="content"><h1 id="ai-学习笔记-全流程体系化完整版">AI 学习笔记 全流程体系化完整版</h1>
+<blockquote>一份按概念依赖关系组织的体系化 AI 学习笔记，覆盖 <strong>大模型基础、Transformer、训练与对齐、Agent 与 RAG、缓存与推理、算力硬件、模型生态、产品工程和安全治理</strong>。<br><br>内容从“模型如何表示输入”开始，逐步讲到“模型如何训练、如何调用工具、如何部署和评测”。说明尽量通俗，同时保留必要的专业术语、流程图和工程边界。</blockquote>
 <p><strong>整理者：VincesHu 胡中岳</strong></p>
 <p>这份笔记采用两层阅读结构：正文先讲主线，复杂概念提供可点击的深入解释。第一次阅读可以只看每节开头的“大白话结论”和流程图；需要弄清原理时，再展开对应的深挖内容。</p>
 <blockquote><strong>重点说明</strong>：凡是在原始对话中反复追问、要求“大白话解释”或明确表示没有理解的内容，本文都会同时回答四件事：它是什么、为什么需要它、它在完整链路的什么位置、最容易和什么概念混淆。</blockquote>
@@ -227,7 +238,7 @@ mindmap
 <h2 id="模块一-大模型基础">模块一 · 大模型基础</h2>
 <h3 id="11-大模型参数及其文件表现形式">1.1 大模型参数及其文件表现形式</h3>
 <p>用户下载的「大模型参数」本质上是<strong>成百上千万乃至上万亿个浮点数（权重）</strong>，训练结束后被序列化成二进制文件。常见格式：</p>
-<table class="tbl"><thead><tr><th>格式</th><th>全称 / 特点</th><th>典型使用方</th></tr></thead><tbody><tr><td><strong>GGUF</strong></td><td>GPT-Generated Unified Format， llama.cpp / Ollama 专用，单文件、自带分词器与元数据</td><td>本地推理（Ollama、LM Studio）</td></tr><tr><td><strong>Safetensors</strong></td><td>Hugging Face 推出，安全（无可执行代码）、极速加载的张量格式</td><td>HF 生态、训练/微调</td></tr><tr><td><strong>PyTorch <code>.bin</code> / <code>.pt</code></strong></td><td>传统 <code>torch.save</code> 权重，兼容性最好但加载较慢、有安全隐患</td><td>研究、旧模型</td></tr><tr><td><strong>AWQ / GPTQ</strong></td><td>量化（4-bit/8-bit）后的压缩权重，体积大幅缩小</td><td>显存受限的设备</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>格式</th><th>全称 / 特点</th><th>典型使用方</th></tr></thead><tbody><tr><td><strong>GGUF</strong></td><td>GPT-Generated Unified Format， llama.cpp / Ollama 专用，单文件、自带分词器与元数据</td><td>本地推理（Ollama、LM Studio）</td></tr><tr><td><strong>Safetensors</strong></td><td>Hugging Face 推出，安全（无可执行代码）、极速加载的张量格式</td><td>HF 生态、训练/微调</td></tr><tr><td><strong>PyTorch <code>.bin</code> / <code>.pt</code></strong></td><td>传统 <code>torch.save</code> 权重，兼容性最好但加载较慢、有安全隐患</td><td>研究、旧模型</td></tr><tr><td><strong>AWQ / GPTQ</strong></td><td>量化（4-bit/8-bit）后的压缩权重，体积大幅缩小</td><td>显存受限的设备</td></tr></tbody></table></div>
 <blockquote><strong>体积参考</strong>：一个 7B~8B 的 FP16 模型约 <strong>13–14 GB</strong>；量化到 4-bit 后可降到约 4–5 GB，才能在消费级显卡/ Mac 上跑起来。</blockquote>
 <h3 id="12-tokenizer分词器为什么重要">1.2 Tokenizer（分词器）为什么重要</h3>
 <p>Tokenizer 把人类文本切成模型能处理的 <strong>token（词元）</strong>。token 不是固定的“词”，也不必是最小语义单元；它可能是一个字、子词、标点或字节片段。它重要在：</p>
@@ -271,7 +282,7 @@ flowchart TD
 <p>先用大白话理解。假设一句话是“我把苹果放进冰箱，因为它容易坏”。模型读到“它”时，需要判断“它”指苹果还是冰箱。</p>
 <ul><li>Q 是当前位置提出的问题：这里的“它”在寻找谁？</li><li>K 是每个历史 token 提供的索引标签：“苹果”可能是物品，“冰箱”可能是容器</li><li>Q 与 K 的相似度决定该看谁更多</li><li>V 是每个位置真正携带、可被取回的信息</li></ul>
 <p>模型不是拿用户的 Q 去匹配“模型参数里预先存好的 K”。正确过程是：每一层都把当前隐藏向量分别乘以三个可学习矩阵 <code>Wq</code>、<code>Wk</code>、<code>Wv</code>，现场算出 Q、K、V。</p>
-<pre class="code"><code>Q = X × Wq
+<pre><code class="language-text">Q = X × Wq
 K = X × Wk
 V = X × Wv
 注意力输出 = softmax(Q × Kᵀ / √d) × V</code></pre>
@@ -311,11 +322,11 @@ flowchart TD
 <ul><li>某个 MoE 可以拥有很大的总参数池，但每个 token 只经过少数专家；若引用 MiMo 等具体型号的参数数字，应以对应版本的官方技术报告为准。</li><li>具体商业模型是否采用 MoE、总参数与激活参数是多少，必须以官方技术报告为准；用户产品还可能在多个模型之间路由。</li></ul>
 <blockquote>对 MoE 应分别报告总参数、每 token 激活参数和实测计算量；三者不能相互替代，也不能只凭参数量推断效果。</blockquote>
 <h3 id="17-开源协议mit-apache-20-gpl">1.7 开源协议：MIT / Apache 2.0 / GPL</h3>
-<table class="tbl"><thead><tr><th>协议</th><th>宽松度</th><th>关键差异</th><th>典型模型</th></tr></thead><tbody><tr><td><strong>MIT</strong></td><td>最宽松</td><td>几乎无限制，只需保留版权声明</td><td>Qwen 部分、众多开源项目</td></tr><tr><td><strong>Apache 2.0</strong></td><td>宽松</td><td>含专利授权条款，商用友好</td><td>Qwen3-8B、Llama 系</td></tr><tr><td><strong>GPL</strong></td><td>强 copyleft</td><td>衍生作品必须同样开源</td><td>较少用于大模型权重</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>协议</th><th>宽松度</th><th>关键差异</th><th>典型模型</th></tr></thead><tbody><tr><td><strong>MIT</strong></td><td>最宽松</td><td>几乎无限制，只需保留版权声明</td><td>Qwen 部分、众多开源项目</td></tr><tr><td><strong>Apache 2.0</strong></td><td>宽松</td><td>含专利授权条款，商用友好</td><td>Qwen3-8B、Llama 系</td></tr><tr><td><strong>GPL</strong></td><td>强 copyleft</td><td>衍生作品必须同样开源</td><td>较少用于大模型权重</td></tr></tbody></table></div>
 <blockquote><strong>MIT 协议</strong>通俗说：你可以随意用、改、闭源商用，只要保留原作者署名即可。</blockquote>
 <h3 id="18-一个-transformer-block-里还发生了什么">1.8 一个 Transformer Block 里还发生了什么</h3>
 <p>只记住 Q/K/V 还不够。一个现代 Decoder-only LLM 的单层通常可以概括为：</p>
-<pre class="code"><code>隐藏状态 x
+<pre><code class="language-text">隐藏状态 x
   → LayerNorm / RMSNorm
   → 因果自注意力
   → 残差相加
@@ -327,7 +338,7 @@ flowchart TD
 <p>一个常见误解是“用户输入的 Q 向量去匹配模型参数中的 K 向量”。正确说法是：模型参数里存的是投影矩阵 <code>Wq/Wk/Wv</code>；每一层用当前隐藏状态分别乘这些矩阵，现场算出 Q、K、V。Q 与 K 决定“该关注谁”，加权后的 V 携带“取回来的内容”。</p>
 <h3 id="19-embedding-向量化-切块与-rag-向量不是一回事">1.9 Embedding 向量化 切块与 RAG 向量不是一回事</h3>
 <p>“把文字切块、向量化”在不同语境中至少有三层含义：</p>
-<table class="tbl"><thead><tr><th>环节</th><th>切分单位</th><th>向量是什么</th><th>用途</th></tr></thead><tbody><tr><td>LLM 输入</td><td>token</td><td>token embedding + 位置表示</td><td>进入 Transformer 计算</td></tr><tr><td>RAG 建库</td><td>文档 chunk</td><td>独立 embedding 模型生成的语义向量</td><td>相似度检索</td></tr><tr><td>多模态输入</td><td>图像 patch、音频帧等</td><td>多模态编码器输出的向量</td><td>与文本表示对齐后送入模型</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>环节</th><th>切分单位</th><th>向量是什么</th><th>用途</th></tr></thead><tbody><tr><td>LLM 输入</td><td>token</td><td>token embedding + 位置表示</td><td>进入 Transformer 计算</td></tr><tr><td>RAG 建库</td><td>文档 chunk</td><td>独立 embedding 模型生成的语义向量</td><td>相似度检索</td></tr><tr><td>多模态输入</td><td>图像 patch、音频帧等</td><td>多模态编码器输出的向量</td><td>与文本表示对齐后送入模型</td></tr></tbody></table></div>
 <p>因此，输入 LLM 时不是必须先做 RAG 式“文档切块”，也不是把一句话只变成一个向量。普通文本会先变成一串 token id，再查 embedding 表得到一串向量。RAG 则是在模型外部，把长文档分块并建立可检索索引。</p>
 <h3 id="110-bert-llm-nlp-与多模态编码器">1.10 BERT LLM NLP 与多模态编码器</h3>
 <ul><li><strong>NLP（自然语言处理）</strong>是学科与任务集合；LLM 是当代 NLP 的一类核心技术，但 NLP 还包括传统分词、规则系统、统计模型、信息抽取等。</li><li><strong>BERT</strong>是双向编码器模型，擅长理解、分类、检索和抽取；它能同时看左右文。GPT 类通常是因果解码器，擅长自回归生成，只看当前位置之前的 token。</li><li><strong>多模态编码器</strong>把图片、音频、视频等转换成模型可消费的向量。视觉里常把图片切成 patch；音频里常按帧或谱图编码。随后通过投影层、交叉注意力或统一 token 空间与语言模型连接。</li><li><strong>OCR</strong>负责从图像中识别文字；视觉语言模型还能理解布局、图表与画面关系。OCR 是能力模块，不等于完整多模态理解。</li></ul>
@@ -355,7 +366,7 @@ flowchart TD
   RLVR --> ReasonRL[Reasoning RL<br/>强化推理链]
 </div>
 <ul><li><strong>SFT（Supervised Fine-Tuning）</strong>：用「指令-回答」示范数据微调，教模型按格式/指令作答。</li><li><strong>RLHF（Reinforcement Learning from Human Feedback）</strong>：训练一个<strong>奖励模型 RM</strong> 学习人类偏好，再用 <strong>PPO</strong> 强化学习让模型输出更高分回答。</li><li><strong>DPO（Direct Preference Optimization）</strong>：绕开单独训练 RM 与 PPO，直接在「偏好对（更优/更劣）」上优化，更简洁稳定。</li><li><strong>RLAIF</strong>：用 AI 反馈替代人类反馈，降低标注成本。</li><li><strong>RLVR（Reinforcement Learning with Verifiable Rewards）</strong>：当答案<strong>可验证</strong>（数学有标准解、代码能跑通测试）时，用「对/错」作为奖励，比主观偏好更可靠。</li><li><strong>GRPO</strong>：组内样本相对打分，省去价值网络（critic），训练更高效，是 DeepSeek 等常用的强化变体。</li><li><strong>ORPO</strong>：把「偏好对齐」合并进 SFT 一步完成。</li><li><strong>AgentRL / Reasoning RL</strong>：在 Agent 执行轨迹 / 长链推理上做强化学习。</li></ul>
-<blockquote><strong>记忆法</strong>：SFT＝「照着标准答案抄」；RLHF＝「请老师打分再改」；DPO＝「直接告诉你 A 比 B 好，你往 A 靠」；RLVR＝「做有标准答案的题，对了给糖」。 <strong>叠加顺序</strong>：实际工业界常把 SFT → RLHF/DPO → RLVR/AgentRL 串起来用，并非互斥。</blockquote>
+<blockquote><strong>记忆法</strong>：SFT＝「照着标准答案抄」；RLHF＝「请老师打分再改」；DPO＝「直接告诉你 A 比 B 好，你往 A 靠」；RLVR＝「做有标准答案的题，对了给糖」。<br><strong>叠加顺序</strong>：实际工业界常把 SFT → RLHF/DPO → RLVR/AgentRL 串起来用，并非互斥。</blockquote>
 <h3 id="23-基座模型接着编的问题">2.3 基座模型「接着编」的问题</h3>
 <p>预训练底座只是「续写机器」，你问它问题，它可能<strong>顺着问题继续编下去</strong>（幻觉/不跟随指令）。这正是对齐（SFT/RLHF/推理强化）要解决的：把「续写」改造成「听懂指令、基于事实作答」。</p>
 <h3 id="24-scaling-law-与评测">2.4 Scaling Law 与评测</h3>
@@ -368,7 +379,7 @@ flowchart TD
 <p>这四个词不是同一层级：</p>
 <ul><li><strong>预训练</strong>：从大量通用数据学习语言、知识和基础能力，产出基座模型。</li><li><strong>后训练</strong>：预训练之后所有面向“可用性”的训练总称，可包含 SFT、偏好优化、安全对齐、推理强化、工具使用训练等。</li><li><strong>微调</strong>：用较小数据继续更新全部或部分参数的技术动作。它既可以做领域适配，也可以服务于对齐。</li><li><strong>对齐</strong>：让模型行为符合人类意图、偏好、安全规范或可验证目标，是目标；SFT、DPO、RLHF 等是手段。</li></ul>
 <p>常见但并非唯一的顺序是：</p>
-<pre class="code"><code>数据治理 → 预训练 → 继续预训练 可选 → SFT → 偏好或安全对齐 → 推理或工具强化 → 评测与部署</code></pre>
+<pre><code class="language-text">数据治理 → 预训练 → 继续预训练 可选 → SFT → 偏好或安全对齐 → 推理或工具强化 → 评测与部署</code></pre>
 <p>没有规定“必须先 RM 再所有微调”。只有采用典型 RLHF 管线时，才需要先收集偏好数据、训练 Reward Model，再用 PPO 一类算法优化策略模型。DPO、ORPO、KTO 等路线可以不训练独立 RM。</p>
 <a id="deep-training-order"></a>
 <details>
@@ -380,7 +391,7 @@ flowchart TD
 </details>
 <hr>
 <h3 id="27-ppo-dpo-orpo-kto-grpo-到底差在哪">2.7 PPO DPO ORPO KTO GRPO 到底差在哪</h3>
-<table class="tbl"><thead><tr><th>方法</th><th>训练信号</th><th>是否通常需要独立 RM</th><th>核心用途与直觉</th></tr></thead><tbody><tr><td><strong>PPO</strong></td><td>奖励值 + 策略梯度</td><td>不一定；RLHF 中通常需要</td><td>在限制模型别偏离太远的同时，提高期望奖励</td></tr><tr><td><strong>RLHF</strong></td><td>人类偏好</td><td>是，经典路线需要</td><td>完整流程，不是一个单独优化器；PPO 只是其中常见一环</td></tr><tr><td><strong>DPO</strong></td><td>chosen/rejected 偏好对</td><td>否</td><td>直接提高优选回答相对劣选回答的概率</td></tr><tr><td><strong>ORPO</strong></td><td>SFT 数据 + 偏好对</td><td>否</td><td>把监督学习与偏好约束合并到一个目标中</td></tr><tr><td><strong>KTO</strong></td><td>单条回答的好/坏标签</td><td>否</td><td>不要求严格成对偏好，更适合只有二元反馈的数据</td></tr><tr><td><strong>GRPO</strong></td><td>同一问题多份答案的组内相对奖励</td><td>通常不需要单独 critic</td><td>用组内基线降低成本，常用于可验证推理训练</td></tr><tr><td><strong>RLVR</strong></td><td>规则、执行器或标准答案给出的可验证奖励</td><td>否</td><td>数学、代码、游戏或工具任务中“答案可判定”</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>方法</th><th>训练信号</th><th>是否通常需要独立 RM</th><th>核心用途与直觉</th></tr></thead><tbody><tr><td><strong>PPO</strong></td><td>奖励值 + 策略梯度</td><td>不一定；RLHF 中通常需要</td><td>在限制模型别偏离太远的同时，提高期望奖励</td></tr><tr><td><strong>RLHF</strong></td><td>人类偏好</td><td>是，经典路线需要</td><td>完整流程，不是一个单独优化器；PPO 只是其中常见一环</td></tr><tr><td><strong>DPO</strong></td><td>chosen/rejected 偏好对</td><td>否</td><td>直接提高优选回答相对劣选回答的概率</td></tr><tr><td><strong>ORPO</strong></td><td>SFT 数据 + 偏好对</td><td>否</td><td>把监督学习与偏好约束合并到一个目标中</td></tr><tr><td><strong>KTO</strong></td><td>单条回答的好/坏标签</td><td>否</td><td>不要求严格成对偏好，更适合只有二元反馈的数据</td></tr><tr><td><strong>GRPO</strong></td><td>同一问题多份答案的组内相对奖励</td><td>通常不需要单独 critic</td><td>用组内基线降低成本，常用于可验证推理训练</td></tr><tr><td><strong>RLVR</strong></td><td>规则、执行器或标准答案给出的可验证奖励</td><td>否</td><td>数学、代码、游戏或工具任务中“答案可判定”</td></tr></tbody></table></div>
 <p>缩写“PO”容易混淆：它可能只是 Preference Optimization（偏好优化）的泛称，也可能是某篇方法名的缩写；没有上下文时不要把它当成与 PPO/DPO 同等明确的标准算法。</p>
 <p><strong>会不会同时用？</strong> 会，但通常是分阶段而不是同一批次全部叠加。例如 SFT 打底，DPO 调偏好，再对可验证推理做 GRPO/RLVR；是否值得叠加要靠消融实验决定。</p>
 <a id="deep-alignment"></a>
@@ -402,7 +413,7 @@ flowchart TD
 <summary><strong>深入解释：LoRA 的 A B 两个矩阵到底在做什么</strong></summary>
 <p>假设基座模型里有一个很大的权重矩阵 <code>W</code>。全参数微调会直接修改 <code>W</code> 里的大量数字，显存还要保存这些参数对应的梯度和优化器状态，成本很高。</p>
 <p>LoRA 冻结 <code>W</code>，另加一条较窄的旁路：先用矩阵 <code>A</code> 把高维输入压到很小的秩 <code>r</code>，再用矩阵 <code>B</code> 把它投影回原来的输出维度。两者相乘形成对原权重的修正量：</p>
-<pre class="code"><code>原输出 = W × x
+<pre><code class="language-text">原输出 = W × x
 LoRA 输出 = W × x + B × A × x
 权重修正 = ΔW = B × A</code></pre>
 <p>如果 <code>W</code> 是 <code>4096 × 4096</code>，直接训练它需要更新约 1678 万个参数。若 rank <code>r=8</code>，<code>A</code> 与 <code>B</code> 合计只需约 6.5 万个参数，数量会小很多。</p>
@@ -414,7 +425,7 @@ LoRA 输出 = W × x + B × A × x
 <h3 id="210-loss-优化器与训练稳定性">2.10 Loss 优化器与训练稳定性</h3>
 <ul><li><strong>损失函数（Loss）</strong>：把预测错误压成一个可优化的数。因果语言模型常用交叉熵；loss 越低表示对训练分布中的下一个 token 预测越准，但不等于真实世界表现一定更好。</li><li><strong>反向传播</strong>：用微积分链式法则求每个参数对 loss 的梯度。</li><li><strong>AdamW</strong>：按参数历史梯度自适应调整步长，并把权重衰减与梯度更新解耦，是 Transformer 训练常用优化器。</li><li><strong>Warmup</strong>：开局逐渐增大学习率，避免随机初始化或新训练阶段被大步更新打崩。</li><li><strong>Decay / Cooldown</strong>：中后期逐步降低学习率，让模型更细致收敛。</li><li><strong>梯度裁剪</strong>：当梯度过大时限制其范数，降低训练突然发散的风险。</li><li><strong>FP16 / BF16 混合精度</strong>：用低精度加速矩阵计算、节省显存，并在关键环节保留较高精度。BF16 动态范围更大，通常更稳；硬件需支持。</li></ul>
 <h3 id="211-多卡并行与显存优化">2.11 多卡并行与显存优化</h3>
-<table class="tbl"><thead><tr><th>技术</th><th>拆什么</th><th>适合场景</th><th>主要代价</th></tr></thead><tbody><tr><td>数据并行 DP/DDP</td><td>不同卡处理不同样本</td><td>模型能装进单卡</td><td>每步同步梯度</td></tr><tr><td>张量并行 TP</td><td>一层里的大矩阵</td><td>单层太大装不下</td><td>卡间通信频繁</td></tr><tr><td>流水线并行 PP</td><td>不同层放不同卡</td><td>层数多、模型很大</td><td>流水气泡与调度复杂</td></tr><tr><td>模型并行</td><td>泛指把模型拆到多卡</td><td>单卡装不下</td><td>通信和实现复杂</td></tr><tr><td>ZeRO/FSDP</td><td>参数、梯度、优化器状态分片</td><td>训练大模型</td><td>gather/scatter 通信</td></tr><tr><td>梯度检查点</td><td>少存中间激活，反向时重算</td><td>显存紧张</td><td>以计算换显存</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>技术</th><th>拆什么</th><th>适合场景</th><th>主要代价</th></tr></thead><tbody><tr><td>数据并行 DP/DDP</td><td>不同卡处理不同样本</td><td>模型能装进单卡</td><td>每步同步梯度</td></tr><tr><td>张量并行 TP</td><td>一层里的大矩阵</td><td>单层太大装不下</td><td>卡间通信频繁</td></tr><tr><td>流水线并行 PP</td><td>不同层放不同卡</td><td>层数多、模型很大</td><td>流水气泡与调度复杂</td></tr><tr><td>模型并行</td><td>泛指把模型拆到多卡</td><td>单卡装不下</td><td>通信和实现复杂</td></tr><tr><td>ZeRO/FSDP</td><td>参数、梯度、优化器状态分片</td><td>训练大模型</td><td>gather/scatter 通信</td></tr><tr><td>梯度检查点</td><td>少存中间激活，反向时重算</td><td>显存紧张</td><td>以计算换显存</td></tr></tbody></table></div>
 <p>多卡不一定线性加速。要同时测吞吐量、每 token 延迟、峰值显存、通信占比和扩展效率；如果模型很小，通信开销可能抵消多卡收益。</p>
 <hr>
 <h2 id="模块三-agent-体系">模块三 · Agent 体系</h2>
@@ -440,7 +451,7 @@ flowchart TD
 <details>
 <summary><strong>深入解释：LLM Harness MCP Skill Plugin Tool 为什么不能混成一件事</strong></summary>
 <p>把一个办公 Agent 想成真正做项目的团队：</p>
-<table class="tbl"><thead><tr><th>组件</th><th>大白话角色</th><th>实际职责</th><th>不负责什么</th></tr></thead><tbody><tr><td>LLM</td><td>会思考和表达的大脑</td><td>理解上下文、规划下一步、生成工具调用或最终答案</td><td>不直接点击界面、读硬盘或执行代码</td></tr><tr><td>Harness</td><td>项目经理和运行控制器</td><td>保存状态、调用模型、执行工具、重试、超时、审计、终止循环</td><td>不代替模型做语言推理</td></tr><tr><td>MCP</td><td>统一插座和通信规范</td><td>规定工具、资源怎样被发现和调用，参数与结果怎样传递</td><td>不自动提供智能，也不是长期记忆本身</td></tr><tr><td>Tool</td><td>一个具体动作</td><td>搜索、读文件、运行代码、查询数据库</td><td>不理解完整业务目标</td></tr><tr><td>Skill</td><td>工作方法或 SOP</td><td>规定任务步骤、模板、检查项、允许使用的工具</td><td>不一定包含可执行代码</td></tr><tr><td>Plugin</td><td>可安装扩展包</td><td>打包 Skill、Tool、连接器、MCP Server 或界面能力</td><td>不等于所有平台都采用同一结构</td></tr><tr><td>Memory</td><td>跨步骤或跨会话保存的信息</td><td>保存用户偏好、任务进度、历史事实，按需检索</td><td>不等于 KV Cache，也不应被误写成 MCP</td></tr><tr><td>Context</td><td>这一次真正交给模型看的内容</td><td>系统规则、用户输入、记忆、RAG 证据、工具结果</td><td>不会自动永久保存</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>组件</th><th>大白话角色</th><th>实际职责</th><th>不负责什么</th></tr></thead><tbody><tr><td>LLM</td><td>会思考和表达的大脑</td><td>理解上下文、规划下一步、生成工具调用或最终答案</td><td>不直接点击界面、读硬盘或执行代码</td></tr><tr><td>Harness</td><td>项目经理和运行控制器</td><td>保存状态、调用模型、执行工具、重试、超时、审计、终止循环</td><td>不代替模型做语言推理</td></tr><tr><td>MCP</td><td>统一插座和通信规范</td><td>规定工具、资源怎样被发现和调用，参数与结果怎样传递</td><td>不自动提供智能，也不是长期记忆本身</td></tr><tr><td>Tool</td><td>一个具体动作</td><td>搜索、读文件、运行代码、查询数据库</td><td>不理解完整业务目标</td></tr><tr><td>Skill</td><td>工作方法或 SOP</td><td>规定任务步骤、模板、检查项、允许使用的工具</td><td>不一定包含可执行代码</td></tr><tr><td>Plugin</td><td>可安装扩展包</td><td>打包 Skill、Tool、连接器、MCP Server 或界面能力</td><td>不等于所有平台都采用同一结构</td></tr><tr><td>Memory</td><td>跨步骤或跨会话保存的信息</td><td>保存用户偏好、任务进度、历史事实，按需检索</td><td>不等于 KV Cache，也不应被误写成 MCP</td></tr><tr><td>Context</td><td>这一次真正交给模型看的内容</td><td>系统规则、用户输入、记忆、RAG 证据、工具结果</td><td>不会自动永久保存</td></tr></tbody></table></div>
 <p>为什么 LLM 与 Harness 是两步？LLM 输出的是“意图”，例如 <code>search_docs(query=&quot;KV Cache&quot;)</code>。Harness 必须先校验工具是否存在、参数是否合法、用户是否授权，再真正执行。工具返回 Observation 后，Harness 把结果加入上下文，LLM 才进行下一轮判断。把两者合成一个黑盒，会很难做权限控制、失败重试和日志审计。</p>
 <p>ChatGPT、WorkBuddy 等成品在产品层面可以是 Agent；它们内部使用某个 LLM 作为基础模型。问“ChatGPT 是 Agent 还是 LLM”时，要区分品牌产品和底层模型：底层是 LLM，带上工具、记忆、运行时和权限系统后形成 Agent 产品能力。</p>
 </details>
@@ -523,7 +534,7 @@ flowchart TD
 <p>KV Cache 的真实形态是多维浮点或量化张量，不是文字草稿，也不是模型“理解后的中文总结”。其典型维度与 <code>层数 × batch × KV头数 × 序列长度 × 每头维度 × K/V两份</code> 有关。上下文越长、并发越高，它越占显存。它通常放在加速器显存中以保证速度，但工程上也可以分层、分页、量化或卸载到 CPU 内存，代价是延迟增加，所以“只能放显存”并不绝对。</p>
 <p><strong>推理时 KV 会变化吗？</strong> 会。每生成一个 token，就追加该 token 在每层的 K/V；历史部分通常不变，新部分持续增长。滑动窗口或上下文截断时，旧部分可能被淘汰。</p>
 <h3 id="311-prompt-cache-与-kv-cache-必须分开">3.11 Prompt Cache 与 KV Cache 必须分开</h3>
-<table class="tbl"><thead><tr><th>概念</th><th>作用范围</th><th>缓存内容</th><th>典型命中条件</th><th>主要收益</th></tr></thead><tbody><tr><td>KV Cache</td><td>同一次生成请求内部，也可由服务端会话机制延续</td><td>每层历史 token 的 K/V 张量</td><td>当前生成继续沿用相同前缀</td><td>降低每个输出 token 的重复计算</td></tr><tr><td>Prompt/Prefix Cache</td><td>API 产品层，可跨请求复用</td><td>固定前缀经预填充后的中间状态或等价缓存</td><td>新请求前缀与已缓存前缀完全匹配到规定长度</td><td>降低重复输入的预填充成本和延迟</td></tr><tr><td>应用缓存</td><td>业务层</td><td>完整响应或检索结果</td><td>请求键相同或语义相近</td><td>直接复用结果，甚至不调用模型</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>概念</th><th>作用范围</th><th>缓存内容</th><th>典型命中条件</th><th>主要收益</th></tr></thead><tbody><tr><td>KV Cache</td><td>同一次生成请求内部，也可由服务端会话机制延续</td><td>每层历史 token 的 K/V 张量</td><td>当前生成继续沿用相同前缀</td><td>降低每个输出 token 的重复计算</td></tr><tr><td>Prompt/Prefix Cache</td><td>API 产品层，可跨请求复用</td><td>固定前缀经预填充后的中间状态或等价缓存</td><td>新请求前缀与已缓存前缀完全匹配到规定长度</td><td>降低重复输入的预填充成本和延迟</td></tr><tr><td>应用缓存</td><td>业务层</td><td>完整响应或检索结果</td><td>请求键相同或语义相近</td><td>直接复用结果，甚至不调用模型</td></tr></tbody></table></div>
 <p>“跨 API 请求复用”就是：第一次请求包含一大段固定系统提示或相同文档，服务商计算后暂存；第二次独立 HTTP 请求仍以完全相同前缀开头，就可以从缓存继续，而不必重算这段前缀。是否自动启用、最小长度、保留时间和价格由服务商规则决定。</p>
 <p><strong>缓存命中不只发生在不同聊天轮次</strong>：只要 API 的前缀缓存机制允许，两个独立请求也可能命中；同一请求内逐 token 生成则是 KV Cache，不应叫“缓存输入计费命中”。</p>
 <p><strong>为什么输出 token 通常更贵？</strong> 输入 prompt 的 prefill 可以把许多 token 并行处理；输出必须自回归，一个 token 接一个 token 地执行完整模型，并占用服务时间和 KV Cache。它不是因为“每次把历史文字重新读一遍”——KV Cache 正是在避免重算历史 K/V——而是因为每个新 token 仍要经过所有层、读取不断增长的缓存并完成一次解码。API 账单里的 cached input、uncached input 和 output 通常是不同计费项，输出不会因为读取 KV Cache 自动变成“缓存输入价”。</p>
@@ -556,7 +567,7 @@ flowchart TD
 <h3 id="313-tree-of-thought-与-self-judge">3.13 Tree of Thought 与 self judge</h3>
 <ul><li><strong>Chain of Thought</strong>：沿一条候选推理路径前进。</li><li><strong>Tree of Thought</strong>：生成多个候选分支，评估后保留更有希望的路径；更像搜索算法，成本也更高。</li><li><strong>self-judge / self-reflection</strong>：模型或独立评审器根据验收标准检查结果，必要时重试。它不保证正确，因为“生成者”和“评审者”可能共享盲点。</li><li><strong>可验证环境</strong>：优先用单元测试、编译器、数学验证器、规则引擎、网页状态或业务断言判定结果；能用外部验证时，不应只靠模型自评。</li></ul>
 <h3 id="314-其他概念速记">3.14 其他概念速记</h3>
-<ul><li><strong>OpenClaw vs ChatGPT Computer Use</strong>：都是「让模型操作电脑界面」的能力；Computer Use 是 ChatGPT 原生的屏幕操作；OpenClaw 类是开源/第三方的同类方案。</li><li><strong>Hugging Face</strong>：全球最大的开源模型/数据集/工具社区（「AI 的 GitHub」）。</li><li><strong>模型/工具/上下文/记忆/任务执行</strong> 的关系：输入文本 → 记忆检索 → 进上下文 → LLM 思考 → Harness 调工具 → 结果回上下文 → 循环。LLM 是「脑」，Harness 是「手脚」，两者是两步而非一步（脑决策、手脚执行）。</li><li><strong>ChatGPT 是 Agent 还是 LLM？</strong> 它既是 LLM（底座），也通过工具/Computer Use 构成了 Agent 能力——是「带 Agent 外壳的 LLM」。</li><li><strong>豆包答案突然 <code></strong></code> 加粗**：Markdown 加粗语法被前端渲染成富文本，属输出格式控制，与回答内容正确性无关。</li></ul>
+<ul><li><strong>OpenClaw vs ChatGPT Computer Use</strong>：都是「让模型操作电脑界面」的能力；Computer Use 是 ChatGPT 原生的屏幕操作；OpenClaw 类是开源/第三方的同类方案。</li><li><strong>Hugging Face</strong>：全球最大的开源模型/数据集/工具社区（「AI 的 GitHub」）。</li><li><strong>模型/工具/上下文/记忆/任务执行</strong> 的关系：输入文本 → 记忆检索 → 进上下文 → LLM 思考 → Harness 调工具 → 结果回上下文 → 循环。LLM 是「脑」，Harness 是「手脚」，两者是两步而非一步（脑决策、手脚执行）。</li><li><strong>ChatGPT 是 Agent 还是 LLM？</strong> 它既是 LLM（底座），也通过工具/Computer Use 构成了 Agent 能力——是「带 Agent 外壳的 LLM」。</li><li><strong>豆包答案突然 <code>**</code> 加粗</strong>：Markdown 加粗语法被前端渲染成富文本，属输出格式控制，与回答内容正确性无关。</li></ul>
 <h3 id="315-workbuddy-走红的产品机制">3.15 WorkBuddy 走红的产品机制</h3>
 <p>WorkBuddy 的产品定位可以概括为“从文字建议走向可验证交付”。其走红通常是以下几层共同作用：</p>
 <ol><li><strong>任务价值</strong>：用户得到文件、表格、报告或执行结果，而不只是文字建议；</li><li><strong>门槛</strong>：桌面端、模板/技能市场和自然语言入口降低了搭 Agent 的配置成本；</li><li><strong>运行时</strong>：Harness 把模型、文件、浏览器、代码和重试串成可持续多步任务；</li><li><strong>分发与时机</strong>：AI 办公需求、竞品教育和真实案例传播形成窗口；</li><li><strong>生态</strong>：办公软件、IM、云服务或企业权限集成决定能否进入日常流程；</li><li><strong>信任</strong>：本地文件权限、沙箱、确认机制、可撤销性和日志决定用户是否敢让它做事。</li></ol>
@@ -633,7 +644,7 @@ mindmap
 <ul><li><strong>通用模型</strong>（GPT/豆包/DeepSeek）：啥都能聊，但缺行业深度与私有数据。</li><li><strong>垂类模型</strong>（如美团「问小团」、携程酒旅大模型）：= <strong>基座 + 私有知识库 + 交易 API + Agent</strong>。优势是行业精准、可直连业务（订酒店/推线路）；劣势是泛化弱、维护成本高、依赖基座能力。</li><li><strong>美团「问小团」</strong>：属<strong>垂类大模型</strong>（酒旅场景），并非通用模型。</li></ul>
 <h3 id="54-开放权重open-weight改变四种成本">5.4 开放权重（Open Weight）改变四种成本</h3>
 <p>芯片、云和应用公司支持开放权重的核心逻辑，是<strong>不希望模型层独占全部利润与生态控制权</strong>：</p>
-<table class="tbl"><thead><tr><th>成本</th><th>封闭 API</th><th>开放权重</th></tr></thead><tbody><tr><td><strong>调用成本</strong></td><td>永远按次付费给单一供应商</td><td>可自部署，不被 API 次数绑定</td></tr><tr><td><strong>迁移成本</strong></td><td>难以改模型</td><td>可按自身环境修改</td></tr><tr><td><strong>数据治理成本</strong></td><td>敏感数据出域</td><td>数据可留本地</td></tr><tr><td><strong>竞争成本</strong></td><td>供应商垂直整合</td><td>芯片/云/应用/开发者围绕同一模型抢客户</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>成本</th><th>封闭 API</th><th>开放权重</th></tr></thead><tbody><tr><td><strong>调用成本</strong></td><td>永远按次付费给单一供应商</td><td>可自部署，不被 API 次数绑定</td></tr><tr><td><strong>迁移成本</strong></td><td>难以改模型</td><td>可按自身环境修改</td></tr><tr><td><strong>数据治理成本</strong></td><td>敏感数据出域</td><td>数据可留本地</td></tr><tr><td><strong>竞争成本</strong></td><td>供应商垂直整合</td><td>芯片/云/应用/开发者围绕同一模型抢客户</td></tr></tbody></table></div>
 <blockquote>反过来，领先模型公司强调安全、质量、持续服务以维持集中部署。芯片/云/应用公司支持开放权重，是因为<strong>模型越易得，对算力、部署、微调、安全、行业应用的需求越大，价值向其他环节扩散</strong>。</blockquote>
 <h3 id="55-产业链芯片-云厂商-第三方服务商">5.5 产业链：芯片 / 云厂商 / 第三方服务商</h3>
 <ul><li><strong>芯片企业</strong>（NVIDIA/AMD/华为昇腾）：提供算力硬件，是「发动机」。</li><li><strong>云厂商</strong>（阿里云/腾讯云/火山引擎）：建好机房堆 GPU，按需出租算力——<strong>租机器的房东</strong>（还提供现成大模型 API）。叫「云」是因为算力像水电一样隔着网络按需取用。</li><li><strong>第三方服务商</strong>（vLLM/LangChain 类）：不造机器、不建机房，只做软件工具把模型改造成业务系统——<strong>装修队/家具商</strong>。</li><li><strong>三者在产业链的意义</strong>：芯片造算力 → 云厂商出租算力 → 第三方把算力变成可用 AI 产品。例：美团买火山引擎 GPU（云），用 LangChain（第三方）做酒旅 Agent。</li></ul>
@@ -650,7 +661,7 @@ mindmap
 <h3 id="61-ai-产品评测与标注">6.1 AI 产品评测与标注</h3>
 <ul><li><strong>评测</strong>：建基准集（功能/安全/对齐/业务指标），自动化跑分 + 人工抽检，持续回归。</li><li><strong>标注</strong>：构建「指令-偏好/事实-标注」数据，用于 SFT/RLHF；大厂有专业标注团队与质检流程，分采集、标注、审核、入库环节。</li></ul>
 <p>一套可落地的评测不能只看“回答像不像人”，而要把问题拆成几层：</p>
-<table class="tbl"><thead><tr><th>层级</th><th>要回答的问题</th><th>常见指标或方法</th></tr></thead><tbody><tr><td>基础模型</td><td>知识、推理、代码能力是否够用</td><td>MMLU、GPQA、HumanEval 等公开基准，外加业务自建题集</td></tr><tr><td>生成质量</td><td>答案是否正确、相关、完整、可读</td><td>精确匹配、事实核验、人工评分、LLM-as-a-judge</td></tr><tr><td>RAG</td><td>是否找对资料、答案是否忠于资料</td><td>Recall@K、MRR、nDCG、引用正确率、忠实度</td></tr><tr><td>Agent</td><td>是否真的完成任务，而非只说完成了</td><td>最终状态断言、工具参数正确率、步骤数、恢复率</td></tr><tr><td>工程体验</td><td>是否足够快、稳、便宜</td><td>TTFT、TPS、错误率、P95/P99 延迟、单任务成本</td></tr><tr><td>安全</td><td>是否泄密、越权或被提示注入劫持</td><td>红队通过率、越权率、敏感信息泄漏率</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>层级</th><th>要回答的问题</th><th>常见指标或方法</th></tr></thead><tbody><tr><td>基础模型</td><td>知识、推理、代码能力是否够用</td><td>MMLU、GPQA、HumanEval 等公开基准，外加业务自建题集</td></tr><tr><td>生成质量</td><td>答案是否正确、相关、完整、可读</td><td>精确匹配、事实核验、人工评分、LLM-as-a-judge</td></tr><tr><td>RAG</td><td>是否找对资料、答案是否忠于资料</td><td>Recall@K、MRR、nDCG、引用正确率、忠实度</td></tr><tr><td>Agent</td><td>是否真的完成任务，而非只说完成了</td><td>最终状态断言、工具参数正确率、步骤数、恢复率</td></tr><tr><td>工程体验</td><td>是否足够快、稳、便宜</td><td>TTFT、TPS、错误率、P95/P99 延迟、单任务成本</td></tr><tr><td>安全</td><td>是否泄密、越权或被提示注入劫持</td><td>红队通过率、越权率、敏感信息泄漏率</td></tr></tbody></table></div>
 <p>标注流程通常不是“一人随手打分”，而是：先写清标注规范与正反例，再让标注员独立判断；对分歧样本做复审或仲裁；抽样计算一致性；最后把低质量、重复、泄露答案或边界不清的样本剔除。偏好数据常让标注员在两个候选回答中选更好者，并说明判断维度，这些数据可用于奖励模型、DPO 或产品评测。</p>
 <p><strong>离线评测</strong>适合上线前重复跑同一题集，便于比较模型和 Prompt 版本；<strong>在线评测</strong>观察真实用户的完成率、重试、点踩、人工接管和留存。线上结果更真实，却受用户群、流量分配和产品界面影响，因此不能替代可复现的离线回归集。公开榜单也不能代替业务评测：排行榜分数高，只说明它在那套题和评分规则下表现好。</p>
 <h3 id="62-ai-系统产品工程">6.2 AI 系统产品工程</h3>
@@ -735,7 +746,7 @@ flowchart TD
 <h3 id="91-markdown-json-与-json-schema">9.1 Markdown JSON 与 JSON Schema</h3>
 <ul><li><strong>Markdown</strong>是面向人阅读的轻量标记文本，<code>#</code> 表示标题，<code>**</code> 表示加粗，代码围栏表示代码块。它仍是纯文本，前端可渲染成富文本。</li><li><strong>JSON</strong>是机器交换数据的结构化文本，用对象、数组、字符串、数字、布尔值和 null 表达数据；它不允许随意注释，键名和字符串通常用双引号。</li><li><strong>JSON 输出能力</strong>是模型按 JSON 语法返回；<strong>Structured Outputs / JSON Schema</strong>进一步规定必填字段、类型、枚举和嵌套结构，便于 Harness 安全解析。</li></ul>
 <p>示例：</p>
-<pre class="code"><code>{
+<pre><code class="language-json">{
   &quot;name&quot;: &quot;search_docs&quot;,
   &quot;arguments&quot;: {
     &quot;query&quot;: &quot;KV Cache 与 Prompt Cache 的区别&quot;,
@@ -747,7 +758,7 @@ flowchart TD
 <ul><li><strong>状态机</strong>：明确任务处于 <code>planning / waiting_tool / reviewing / completed / failed</code> 等状态，以及哪些转换合法。</li><li><strong>循环控制器</strong>：每轮调用模型或工具后决定继续、重试、换工具、请求用户还是结束。</li><li><strong>异常捕获</strong>：捕捉超时、网络错误、参数错误、权限拒绝、工具崩溃，转成可处理状态，而不是整个任务直接退出。</li><li><strong>循环死锁</strong>：Agent 一直重复相同步骤，状态没有进展。应设置最大步数、重复动作检测、总预算、超时和升级给人类的条件。</li><li><strong>幂等</strong>：重试同一操作不会重复扣款、重复发信或重复删除。对有副作用的工具尤其重要。</li></ul>
 <h3 id="93-agent-评测不是只用-rlhf-或-rlaif">9.3 Agent 评测不是只用 RLHF 或 RLAIF</h3>
 <p>训练方法和评测方法不要混为一谈。Agent 评测通常包括：</p>
-<table class="tbl"><thead><tr><th>层级</th><th>代表指标</th></tr></thead><tbody><tr><td>模型层</td><td>知识、推理、代码、多模态、事实性</td></tr><tr><td>工具层</td><td>工具选择正确率、参数正确率、调用成功率</td></tr><tr><td>任务层</td><td>端到端完成率、步骤数、耗时、成本</td></tr><tr><td>恢复层</td><td>超时、网页变化、工具失败后的恢复率</td></tr><tr><td>安全层</td><td>越权率、提示注入成功率、敏感数据泄漏率</td></tr><tr><td>体验层</td><td>用户满意度、人工接管率、解释清晰度</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>层级</th><th>代表指标</th></tr></thead><tbody><tr><td>模型层</td><td>知识、推理、代码、多模态、事实性</td></tr><tr><td>工具层</td><td>工具选择正确率、参数正确率、调用成功率</td></tr><tr><td>任务层</td><td>端到端完成率、步骤数、耗时、成本</td></tr><tr><td>恢复层</td><td>超时、网页变化、工具失败后的恢复率</td></tr><tr><td>安全层</td><td>越权率、提示注入成功率、敏感数据泄漏率</td></tr><tr><td>体验层</td><td>用户满意度、人工接管率、解释清晰度</td></tr></tbody></table></div>
 <p>自动验证器适合代码测试、文件 diff、数据库断言和网页状态；LLM-as-a-judge 适合开放文本，但要校准偏差并抽样人工复核。红队数据集故意包含越权、诱导泄密、提示注入、边界内容和资源耗尽攻击，用来发现系统在恶意条件下的失败方式。</p>
 <h3 id="94-computer-use-外链访问与高风险行为">9.4 Computer Use 外链访问与高风险行为</h3>
 <p>Computer Use 通常以截图/可访问性树为观察，以点击、键入、滚动等动作操作界面。浏览器或网站可能把自动化行为判为高风险，原因包括设备指纹、速度模式、登录地变化、反机器人策略或高风险操作本身。因此：</p>
@@ -799,11 +810,11 @@ flowchart LR
 <details>
 <summary><strong>深入解释：RPM、TPM、并发、路由、TTFT、TPS 与链路追踪</strong></summary>
 <h4 id="流量控制四件套">流量控制四件套</h4>
-<table class="tbl"><thead><tr><th>概念</th><th>大白话</th><th>它限制或决定什么</th></tr></thead><tbody><tr><td><strong>RPM</strong></td><td>一分钟最多敲多少次门</td><td>Requests Per Minute，每分钟请求数</td></tr><tr><td><strong>TPM</strong></td><td>一分钟最多搬多少字</td><td>Tokens Per Minute，输入与输出 token 总量额度</td></tr><tr><td><strong>并发限制</strong></td><td>同一时刻最多多少件事正在办</td><td>同时执行中的请求或任务数</td></tr><tr><td><strong>负载均衡</strong></td><td>把人分到不同窗口</td><td>在多个相同或相近实例之间分流</td></tr><tr><td><strong>路由分发</strong></td><td>判断应该去哪个部门</td><td>按任务、模型版本、地区、成本或权限选择不同后端</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>概念</th><th>大白话</th><th>它限制或决定什么</th></tr></thead><tbody><tr><td><strong>RPM</strong></td><td>一分钟最多敲多少次门</td><td>Requests Per Minute，每分钟请求数</td></tr><tr><td><strong>TPM</strong></td><td>一分钟最多搬多少字</td><td>Tokens Per Minute，输入与输出 token 总量额度</td></tr><tr><td><strong>并发限制</strong></td><td>同一时刻最多多少件事正在办</td><td>同时执行中的请求或任务数</td></tr><tr><td><strong>负载均衡</strong></td><td>把人分到不同窗口</td><td>在多个相同或相近实例之间分流</td></tr><tr><td><strong>路由分发</strong></td><td>判断应该去哪个部门</td><td>按任务、模型版本、地区、成本或权限选择不同后端</td></tr></tbody></table></div>
 <p>RPM 低不代表负载一定低：一分钟 10 个超长文档请求，可能比 100 个短问答更耗算力。因此网关通常同时看 RPM、TPM、并发数和最大上下文长度。超限时可返回限流错误、排队、降级到小模型，或让客户端按退避策略重试。</p>
 <p><strong>负载均衡与路由的区别</strong>：负载均衡主要在“能做同一件事的多个实例”之间摊流量；路由则先判断“应该由哪类模型或 Agent 做”。例如代码任务路由到代码模型，随后再由负载均衡选该集群里最合适的一台实例。</p>
 <h4 id="性能与稳定性指标">性能与稳定性指标</h4>
-<table class="tbl"><thead><tr><th>指标</th><th>正确定义</th><th>诊断价值</th></tr></thead><tbody><tr><td><strong>TTFT</strong></td><td>从请求发出到收到第一个输出 token 的时间</td><td>受排队、网络、输入长度、Prefill 和缓存命中影响</td></tr><tr><td><strong>ITL / TPOT</strong></td><td>相邻输出 token 的间隔 / 每输出 token 时间</td><td>反映 Decode 阶段是否流畅</td></tr><tr><td><strong>TPS</strong></td><td>每秒处理或生成的 token 数；必须注明按单请求还是整机统计</td><td>衡量生成速度或系统吞吐</td></tr><tr><td><strong>E2E Latency</strong></td><td>从请求到完整回答结束的总时间</td><td>同时包含排队、Prefill、Decode 与工具时间</td></tr><tr><td><strong>错误率</strong></td><td>超时、服务错误、参数错误等失败请求占比</td><td>判断服务稳定性；应按错误类型拆分</td></tr><tr><td><strong>缓存命中率</strong></td><td>可复用前缀或其他缓存被命中的比例</td><td>解释 TTFT 和输入计算成本变化</td></tr><tr><td><strong>token 长度分布</strong></td><td>输入、输出长度的均值及 P50/P95/P99</td><td>发现极长请求和成本异常</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>指标</th><th>正确定义</th><th>诊断价值</th></tr></thead><tbody><tr><td><strong>TTFT</strong></td><td>从请求发出到收到第一个输出 token 的时间</td><td>受排队、网络、输入长度、Prefill 和缓存命中影响</td></tr><tr><td><strong>ITL / TPOT</strong></td><td>相邻输出 token 的间隔 / 每输出 token 时间</td><td>反映 Decode 阶段是否流畅</td></tr><tr><td><strong>TPS</strong></td><td>每秒处理或生成的 token 数；必须注明按单请求还是整机统计</td><td>衡量生成速度或系统吞吐</td></tr><tr><td><strong>E2E Latency</strong></td><td>从请求到完整回答结束的总时间</td><td>同时包含排队、Prefill、Decode 与工具时间</td></tr><tr><td><strong>错误率</strong></td><td>超时、服务错误、参数错误等失败请求占比</td><td>判断服务稳定性；应按错误类型拆分</td></tr><tr><td><strong>缓存命中率</strong></td><td>可复用前缀或其他缓存被命中的比例</td><td>解释 TTFT 和输入计算成本变化</td></tr><tr><td><strong>token 长度分布</strong></td><td>输入、输出长度的均值及 P50/P95/P99</td><td>发现极长请求和成本异常</td></tr></tbody></table></div>
 <p>“TPS”这个缩写在不同系统中也可能指 Transactions Per Second，因此文档和仪表盘必须写清口径。只报平均延迟也容易掩盖长尾，线上服务通常更关注 P95/P99。</p>
 <h4 id="日志埋点与链路追踪">日志埋点与链路追踪</h4>
 <p><strong>日志埋点</strong>是在关键事件记录结构化数据，例如请求到达、路由结果、Prompt 版本、模型版本、输入输出 token、工具开始/结束、错误码和耗时。日志不是把所有敏感 Prompt 无条件永久保存；应做脱敏、权限控制和保留期管理。</p>
@@ -832,7 +843,7 @@ flowchart TD
 <p>多 Agent 不天然比单 Agent 聪明。它会增加 token、延迟、通信歧义和状态冲突；如果任务无法并行、没有独立验证器，拆角色可能只是让多个模型互相复述。值得采用的条件通常是：子任务边界清楚、能并行、各角色工具或权限不同，而且最终结果可合并、可验证。</p>
 <p><strong>通信协议</strong>规定消息结构、任务 ID、输入输出 Schema、超时和错误语义；<strong>共享状态</strong>存放已完成步骤与制品。角色 Prompt 只定义“你负责什么”，Harness 才负责真正的并发、状态锁、失败恢复和终止条件。</p>
 <h3 id="105-安全与隐私从-prompt-到工具动作的分层防线">10.5 安全与隐私：从 Prompt 到工具动作的分层防线</h3>
-<table class="tbl"><thead><tr><th>风险</th><th>发生方式</th><th>主要防线</th></tr></thead><tbody><tr><td>Prompt Injection</td><td>网页或文档把恶意文字伪装成系统指令</td><td>区分指令与不可信数据、工具白名单、输出校验</td></tr><tr><td>越狱</td><td>用户诱导模型绕开内容或权限规则</td><td>分层策略、输入输出检测、红队与持续回归</td></tr><tr><td>工具越权</td><td>Agent 调用本不该用的文件、支付或删除能力</td><td>最小权限、短期凭证、参数校验、人类确认</td></tr><tr><td>数据泄露</td><td>Prompt、日志、RAG 或记忆暴露敏感信息</td><td>脱敏、访问控制、租户隔离、保留期和审计</td></tr><tr><td>沙箱逃逸</td><td>生成代码访问宿主机或网络敏感资源</td><td>进程/容器隔离、网络与文件白名单、资源配额</td></tr></tbody></table>
+<div class="table-wrap"><table><thead><tr><th>风险</th><th>发生方式</th><th>主要防线</th></tr></thead><tbody><tr><td>Prompt Injection</td><td>网页或文档把恶意文字伪装成系统指令</td><td>区分指令与不可信数据、工具白名单、输出校验</td></tr><tr><td>越狱</td><td>用户诱导模型绕开内容或权限规则</td><td>分层策略、输入输出检测、红队与持续回归</td></tr><tr><td>工具越权</td><td>Agent 调用本不该用的文件、支付或删除能力</td><td>最小权限、短期凭证、参数校验、人类确认</td></tr><tr><td>数据泄露</td><td>Prompt、日志、RAG 或记忆暴露敏感信息</td><td>脱敏、访问控制、租户隔离、保留期和审计</td></tr><tr><td>沙箱逃逸</td><td>生成代码访问宿主机或网络敏感资源</td><td>进程/容器隔离、网络与文件白名单、资源配额</td></tr></tbody></table></div>
 <h4 id="差分隐私是什么">差分隐私是什么</h4>
 <p><strong>差分隐私（Differential Privacy, DP）</strong>通过裁剪单个样本的影响并加入校准噪声，使外部观察者难以判断某个人的数据是否参与了统计或训练。隐私预算通常用 ε（epsilon）描述：在其他条件相同的情况下，ε 越小保护越强，但噪声更大、可用性可能下降。DP 不是简单“给数据随便加噪声”，必须定义邻接数据集、查询灵敏度和预算累计。</p>
 <h4 id="联邦学习与联邦推理是什么">联邦学习与“联邦推理”是什么</h4>
@@ -867,14 +878,10 @@ sequenceDiagram
   H-->>G: 最终答案与指标
   G-->>U: 流式或完整响应
 </div>
-<p>这条链路中最容易混淆的边界是：<strong>模型负责生成决策候选，Harness 负责控制循环，工具负责改变外部世界，验证器负责确认结果，网关负责管理流量，推理引擎负责高效算 token。</strong>把这些职责分开，才知道性能慢在哪里、错误由谁兜底、权限应该加在哪一层。</p>
-<div class="foot">本笔记由 VincesHu 胡中岳整理 · Markdown 与 HTML 双版本。Mermaid 图表需联网加载（jsDelivr CDN）；若离线则显示源码。</div>
-</main>
+<p>这条链路中最容易混淆的边界是：<strong>模型负责生成决策候选，Harness 负责控制循环，工具负责改变外部世界，验证器负责确认结果，网关负责管理流量，推理引擎负责高效算 token。</strong>把这些职责分开，才知道性能慢在哪里、错误由谁兜底、权限应该加在哪一层。</p><div class="page-foot">Markdown 是内容源文件；本页由仓库内 <code>build_html.py</code> 生成。流程图由 Mermaid 在浏览器中渲染。</div></main>
 </div>
 <script>
-  if (window.mermaid) {
-    mermaid.initialize({ startOnLoad:true, theme:'dark', securityLevel:'loose', flowchart:{ curve:'basis' } });
-  }
+if (window.mermaid) { mermaid.initialize({ startOnLoad:true, theme:"dark", securityLevel:"loose", flowchart:{ curve:"basis" } }); }
 </script>
 </body>
 </html>

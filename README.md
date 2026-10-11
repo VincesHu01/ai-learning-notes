@@ -1,8 +1,10 @@
 # AI Learning Notes
 
-[Read the interactive HTML](https://ai-learning-notes-psi.vercel.app/) · [中文说明](./README_ZH.md) · [Markdown](./ai-learning-notes.md) · [Word](./ai-learning-notes.docx)
+[Read the interactive HTML](https://ai-learning-notes-psi.vercel.app/) · [AI Product Manager Playbook](https://ai-learning-notes-psi.vercel.app/ai-product-manager-playbook.html) · [中文说明](./README_ZH.md)
 
 This repository presents a structured learning path from large-language-model fundamentals to production AI systems. The material is organized by conceptual dependency and end-to-end execution flow.
+
+It now includes a second, linked handbook that translates technical principles into product metrics, optimization decisions, trade-offs, evaluation plans, portfolio evidence, and interview answers for AI product managers. Use the **AI 产品经理手册** button on the website homepage to open it.
 
 ```text
 Natural-language input
@@ -42,3 +44,6 @@ Natural-language input
 - `ai-learning-notes.md`: canonical text with Mermaid diagrams.
 - `index.html` / `ai-learning-notes.html`: interactive browser edition with navigation and rendered diagrams.
 - `ai-learning-notes.docx`: offline, printable edition with embedded diagrams.
+- `ai-product-manager-playbook.md`: canonical AI product manager handbook.
+- `ai-product-manager-playbook.html`: interactive browser edition of the handbook.
+- `build_html.py`: dependency-free generator for both HTML editions; run `python3 build_html.py` after editing either Markdown source.
